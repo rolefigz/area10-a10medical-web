@@ -1,0 +1,24 @@
+# dipendenze e build
+node_modules/
+dist/
+.astro/
+
+# ambiente e segreti
+.env
+.env.*
+!.env.example
+
+# sistema operativo / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# risultati dei test
+test-results/
+playwright-report/
+tests/screenshots/
+lighthouse/
+
+# documenti interni (brief commerciale, non va pubblicato)
+BRIEF_*.md
