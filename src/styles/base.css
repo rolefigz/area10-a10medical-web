@@ -1,0 +1,383 @@
+/* ==========================================================================
+   BASE: reset leggero, tipografia, link, focus, bottoni e utilità condivise.
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* lo header fisso e la barra mobile non devono coprire i titoli raggiunti con le ancore */
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+  scroll-padding-bottom: calc(var(--barra-h) + 1rem);
+  background-color: var(--sfondo);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  background-color: var(--sfondo);
+  color: var(--testo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+picture {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--titoli-font);
+  font-weight: var(--titoli-peso);
+  text-transform: var(--titoli-maiuscolo);
+  line-height: var(--titoli-interlinea);
+  letter-spacing: var(--titoli-spaziatura);
+  text-wrap: balance;
+}
+.titolo-fitness,
+.titolo-medical {
+  font-family: var(--titoli-font);
+  font-weight: var(--titoli-peso);
+  text-transform: var(--titoli-maiuscolo);
+  line-height: var(--titoli-interlinea);
+  letter-spacing: var(--titoli-spaziatura);
+}
+
+p,
+ul,
+ol,
+dl,
+figure,
+blockquote {
+  margin: 0;
+}
+p {
+  text-wrap: pretty;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+strong,
+b {
+  font-weight: 700;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accento-testo);
+  outline-offset: 3px;
+}
+
+::selection {
+  background-color: var(--accento);
+  color: var(--su-accento);
+}
+
+/* l'attributo hidden vince sempre sugli stili dei componenti */
+[hidden] {
+  display: none !important;
+}
+
+/* --- Utilità ------------------------------------------------------------- */
+.contenitore {
+  width: min(100% - 2 * var(--gutter), var(--larghezza));
+  margin-inline: auto;
+}
+
+.sezione {
+  padding-block: var(--sezione);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--gutter);
+  top: -100px;
+  z-index: calc(var(--z-menu) + 1);
+  padding: 0.75rem 1rem;
+  background: var(--cta-sfondo);
+  color: var(--cta-testo);
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+.misura {
+  max-width: var(--misura);
+}
+
+.lead {
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--testo-2);
+}
+
+.piccolo {
+  font-size: var(--step--1);
+  color: var(--testo-2);
+}
+
+/* Orari e numeri: cifre condensate da tabellone sportivo */
+.cifre {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Nota TODO visibile solo agli sviluppatori in modalità sviluppo (vedi Base.astro) */
+.todo-dev {
+  outline: 2px dashed #d33;
+}
+
+/* --- Bottoni ------------------------------------------------------------- */
+.btn {
+  --btn-sfondo: var(--cta-sfondo);
+  --btn-testo: var(--cta-testo);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.7rem 1.35rem;
+  border: 0;
+  border-radius: var(--raggio-btn);
+  background-color: var(--btn-sfondo);
+  color: var(--btn-testo);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 200ms ease,
+    color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn svg {
+  width: 1.2em;
+  height: 1.2em;
+  flex: none;
+}
+
+/* Area10: il bottone principale è un parallelogramma (taglio sportivo).
+   La forma sta in uno pseudo-elemento, così il contorno del focus resta visibile. */
+[data-area='fitness'] .btn,
+[data-surface='ink'] .btn,
+.btn--fitness {
+  background-color: transparent;
+  border-radius: 0;
+  padding-inline: 1.6rem;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+[data-area='fitness'] .btn::before,
+[data-surface='ink'] .btn::before,
+.btn--fitness::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--btn-sfondo);
+  clip-path: polygon(0.7rem 0, 100% 0, calc(100% - 0.7rem) 100%, 0 100%);
+  transition: background-color 200ms ease;
+}
+
+.btn--secondario {
+  --btn-sfondo: transparent;
+  --btn-testo: var(--testo);
+  box-shadow: inset 0 0 0 1.5px var(--linea-forte);
+}
+[data-area='fitness'] .btn--secondario,
+[data-surface='ink'] .btn--secondario {
+  box-shadow: none;
+}
+[data-area='fitness'] .btn--secondario::before,
+[data-surface='ink'] .btn--secondario::before {
+  background-color: var(--linea-forte);
+}
+[data-area='fitness'] .btn--secondario::after,
+[data-surface='ink'] .btn--secondario::after {
+  content: '';
+  position: absolute;
+  inset: 1.5px 2px;
+  z-index: -1;
+  background-color: var(--sfondo);
+  clip-path: polygon(0.62rem 0, 100% 0, calc(100% - 0.62rem) 100%, 0 100%);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    --btn-sfondo: color-mix(in srgb, var(--cta-sfondo) 86%, var(--sfondo));
+  }
+  .btn--secondario:hover {
+    --btn-sfondo: color-mix(in srgb, var(--testo) 8%, transparent);
+  }
+}
+
+/* Link testuale con freccia (usato con parsimonia) */
+.link-freccia {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1.5px solid currentColor;
+  padding-bottom: 0.1rem;
+}
+.link-freccia svg {
+  width: 1.05em;
+  height: 1.05em;
+  transition: transform 200ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .link-freccia:hover svg {
+    transform: translateX(3px);
+  }
+}
+
+/* Icone */
+.icona {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+}
+.icona :where(path, circle, rect, line, polyline) {
+  stroke-width: 1.6;
+}
+
+/* --- Il "taglio": bordo diagonale tra due aree ---------------------------- */
+.taglio-sopra {
+  clip-path: polygon(0 var(--taglio), 100% 0, 100% 100%, 0 100%);
+  margin-top: calc(-1 * var(--taglio));
+  padding-top: calc(var(--sezione) + var(--taglio));
+}
+.taglio-sotto {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--taglio)), 0 100%);
+  padding-bottom: calc(var(--sezione) + var(--taglio));
+}
+
+/* --- Texture ------------------------------------------------------------- */
+/* Curve di livello (dai poster 2026/27): maschera SVG colorata con l'accento */
+.texture-topo {
+  position: relative;
+  isolation: isolate;
+}
+.texture-topo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--accento);
+  opacity: var(--topo-opacita, 0.16);
+  -webkit-mask: url('../assets/textures/topografia.svg') center / cover no-repeat;
+  mask: url('../assets/textures/topografia.svg') center / cover no-repeat;
+}
+
+/* Carta millimetrata (A10 Medical): linee sottili turchesi, zero immagini */
+.texture-mm {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--accento) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--accento) 18%, transparent) 1px, transparent 1px),
+    linear-gradient(to right, color-mix(in srgb, var(--accento) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--accento) 7%, transparent) 1px, transparent 1px);
+  background-size:
+    2.5rem 2.5rem,
+    2.5rem 2.5rem,
+    0.5rem 0.5rem,
+    0.5rem 0.5rem;
+}
+
+/* --- Comparsa allo scroll (solo se il JS è attivo e il movimento è ammesso) */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-rivela] {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity 700ms var(--ease-out),
+      transform 700ms var(--ease-out);
+    transition-delay: var(--ritardo, 0ms);
+  }
+  .js [data-rivela].visibile {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

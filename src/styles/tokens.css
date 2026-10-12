@@ -1,0 +1,258 @@
+/* ==========================================================================
+   TOKEN DI DESIGN
+   Un solo sito, due identità:
+   - data-area="fitness"  Area10 Fitness Club: nero profondo, bianco osso, oro.
+   - data-area="medical"  A10 Medical: bianco clinico, turchese, carbone.
+   Le parti comuni (home, contatti, legali) usano i token "casa" definiti su :root.
+   Tema scuro: data-theme="dark" su <html>, impostato da uno script in <head>
+   (preferenza salvata oppure quella del sistema operativo).
+   Tutte le coppie testo/sfondo sono verificate WCAG AA (vedi README).
+   ========================================================================== */
+
+:root {
+  /* --- Palette grezza -------------------------------------------------- */
+  --nero: #0f0e0c;
+  --nero-2: #1b1a17;
+  --nero-3: #2a2824;
+  --osso: #ecebe5;
+  --osso-2: #e0ded6;
+  --osso-scuro: #a9a59a;
+  --oro: #d8a838;
+  --oro-chiaro: #e9c46a;
+  --ocra: #735409;
+  /* TODO: campionare il turchese esatto dal file originale del logo A10 Medical */
+  --teal: #0fa89e;
+  --teal-scuro: #067068;
+  --teal-chiaro: #3fcabe;
+  --bianco: #fafdfd;
+  --nebbia: #e6f3f2;
+  --carbone: #132322;
+  --carbone-2: #43585a;
+  --abisso: #0a1817;
+  --abisso-2: #11221f;
+  --abisso-3: #18302c;
+  --carta: #f4f4f0;
+  --carta-2: #e8e8e1;
+  --inchiostro: #12110f;
+  --inchiostro-2: #4f4c45;
+
+  /* --- Tipografia ------------------------------------------------------ */
+  /* --font-display (Big Shoulders Display) e --font-sans (Figtree) arrivano da <Font /> */
+  --step--2: 0.8125rem;
+  --step--1: 0.9rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(1.75rem, 1.35rem + 1.6vw, 2.375rem);
+  --step-4: clamp(2.25rem, 1.45rem + 3.2vw, 3.875rem);
+  --step-5: clamp(3rem, 1.8rem + 5.6vw, 6.25rem);
+
+  /* --- Spazi e griglia ------------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sezione: clamp(4rem, 2.8rem + 5vw, 7.5rem);
+  --gutter: clamp(1rem, 0.55rem + 1.9vw, 2rem);
+  --larghezza: 82.5rem;
+  --misura: 62ch;
+  /* altezza della diagonale (il "taglio") che separa le due aree */
+  --taglio: clamp(1.75rem, 5.5vw, 5.5rem);
+  --header-h: 4rem;
+  --barra-h: 0px;
+
+  /* --- Movimento ------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* --- Livelli --------------------------------------------------------- */
+  --z-barra: 40;
+  --z-header: 50;
+  --z-menu: 60;
+
+  /* --- Token semantici "casa" (tema chiaro) ---------------------------- */
+  color-scheme: light;
+  --sfondo: var(--carta);
+  --sfondo-2: var(--carta-2);
+  --testo: var(--inchiostro);
+  --testo-2: var(--inchiostro-2);
+  --linea: rgb(18 17 15 / 0.14);
+  --linea-forte: rgb(18 17 15 / 0.42);
+  --accento: var(--inchiostro);
+  --accento-testo: var(--inchiostro);
+  --su-accento: var(--carta);
+  --cta-sfondo: var(--inchiostro);
+  --cta-testo: var(--carta);
+  --raggio: 0.375rem;
+  --raggio-btn: 0.375rem;
+  /* stile dei titoli: cambia con l'area (vedi base.css) */
+  --titoli-font: var(--font-sans);
+  --titoli-peso: 750;
+  --titoli-maiuscolo: none;
+  --titoli-interlinea: 1.06;
+  --titoli-spaziatura: -0.022em;
+}
+
+/* --- Area10 (chiaro) ----------------------------------------------------- */
+[data-area='fitness'] {
+  --sfondo: var(--osso);
+  --sfondo-2: var(--osso-2);
+  --testo: var(--nero);
+  --testo-2: #4a4740;
+  --linea: rgb(15 14 12 / 0.15);
+  --linea-forte: rgb(15 14 12 / 0.45);
+  --accento: var(--oro);
+  --accento-testo: var(--ocra);
+  --su-accento: var(--nero);
+  --cta-sfondo: var(--nero);
+  --cta-testo: var(--osso);
+  --raggio: 0px;
+  --raggio-btn: 0px;
+  --titoli-font: var(--font-display);
+  --titoli-peso: 800;
+  --titoli-maiuscolo: uppercase;
+  --titoli-interlinea: 0.94;
+  --titoli-spaziatura: 0.005em;
+}
+
+/* --- A10 Medical (chiaro) ------------------------------------------------ */
+[data-area='medical'] {
+  --sfondo: var(--bianco);
+  --sfondo-2: var(--nebbia);
+  --testo: var(--carbone);
+  --testo-2: var(--carbone-2);
+  --linea: rgb(19 35 34 / 0.13);
+  --linea-forte: rgb(19 35 34 / 0.4);
+  --accento: var(--teal);
+  --accento-testo: var(--teal-scuro);
+  --su-accento: var(--carbone);
+  --cta-sfondo: var(--teal-scuro);
+  --cta-testo: #ffffff;
+  --raggio: 1rem;
+  --raggio-btn: 999px;
+  --titoli-font: var(--font-sans);
+  --titoli-peso: 650;
+  --titoli-maiuscolo: none;
+  --titoli-interlinea: 1.1;
+  --titoli-spaziatura: -0.018em;
+}
+
+/* --- Blocchi "poster" Area10: sempre scuri, in entrambi i temi ----------- */
+[data-surface='ink'] {
+  color-scheme: dark;
+  --sfondo: var(--nero);
+  --sfondo-2: var(--nero-2);
+  --testo: var(--osso);
+  --testo-2: var(--osso-scuro);
+  --linea: rgb(236 235 229 / 0.14);
+  --linea-forte: rgb(236 235 229 / 0.45);
+  --accento: var(--oro);
+  --accento-testo: var(--oro);
+  --su-accento: var(--nero);
+  --cta-sfondo: var(--oro);
+  --cta-testo: var(--nero);
+  --raggio: 0px;
+  --raggio-btn: 0px;
+  --titoli-font: var(--font-display);
+  --titoli-peso: 800;
+  --titoli-maiuscolo: uppercase;
+  --titoli-interlinea: 0.94;
+  --titoli-spaziatura: 0.005em;
+}
+
+/* Classi per forzare lo stile titoli di un'area su un singolo elemento */
+.titolo-fitness {
+  --titoli-font: var(--font-display);
+  --titoli-peso: 800;
+  --titoli-maiuscolo: uppercase;
+  --titoli-interlinea: 0.94;
+  --titoli-spaziatura: 0.005em;
+}
+.titolo-medical {
+  --titoli-font: var(--font-sans);
+  --titoli-peso: 650;
+  --titoli-maiuscolo: none;
+  --titoli-interlinea: 1.1;
+  --titoli-spaziatura: -0.018em;
+}
+
+/* ==========================================================================
+   TEMA SCURO
+   ========================================================================== */
+[data-theme='dark'] {
+  color-scheme: dark;
+  --sfondo: #141412;
+  --sfondo-2: #1e1d1a;
+  --testo: var(--osso);
+  --testo-2: var(--osso-scuro);
+  --linea: rgb(236 235 229 / 0.13);
+  --linea-forte: rgb(236 235 229 / 0.42);
+  --accento: var(--osso);
+  --accento-testo: var(--osso);
+  --su-accento: var(--inchiostro);
+  --cta-sfondo: var(--osso);
+  --cta-testo: var(--inchiostro);
+}
+
+[data-theme='dark'] [data-area='fitness'] {
+  --sfondo: var(--nero);
+  --sfondo-2: var(--nero-2);
+  --testo: var(--osso);
+  --testo-2: var(--osso-scuro);
+  --linea: rgb(236 235 229 / 0.13);
+  --linea-forte: rgb(236 235 229 / 0.42);
+  --accento: var(--oro);
+  --accento-testo: var(--oro);
+  --su-accento: var(--nero);
+  --cta-sfondo: var(--oro);
+  --cta-testo: var(--nero);
+}
+
+[data-theme='dark'] [data-area='medical'] {
+  --sfondo: var(--abisso);
+  --sfondo-2: var(--abisso-2);
+  --testo: #e2f0ef;
+  --testo-2: #9fb8b6;
+  --linea: rgb(226 240 239 / 0.13);
+  --linea-forte: rgb(226 240 239 / 0.4);
+  --accento: var(--teal-chiaro);
+  --accento-testo: var(--teal-chiaro);
+  --su-accento: var(--abisso);
+  --cta-sfondo: var(--teal-chiaro);
+  --cta-testo: var(--abisso);
+}
+
+/* Le sezioni con un'area dipingono il proprio sfondo.
+   Con la classe .senza-sfondo l'elemento prende solo i colori (testo, accento) dell'area. */
+[data-area]:not(html, body, .senza-sfondo),
+[data-surface]:not(.senza-sfondo) {
+  background-color: var(--sfondo);
+  color: var(--testo);
+}
+.senza-sfondo {
+  color: var(--testo);
+}
+
+/* data-tinta: solo il colore d'accento dell'area, senza cambiare lo sfondo. */
+[data-tinta='fitness'] {
+  --tinta: var(--oro);
+  --tinta-testo: var(--ocra);
+}
+[data-tinta='medical'] {
+  --tinta: var(--teal);
+  --tinta-testo: var(--teal-scuro);
+}
+[data-theme='dark'] [data-tinta='fitness'],
+[data-surface='ink'] [data-tinta='fitness'] {
+  --tinta-testo: var(--oro);
+}
+[data-theme='dark'] [data-tinta='medical'],
+[data-surface='ink'] [data-tinta='medical'] {
+  --tinta: var(--teal-chiaro);
+  --tinta-testo: var(--teal-chiaro);
+}
