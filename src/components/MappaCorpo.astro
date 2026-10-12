@@ -1,0 +1,371 @@
+---
+// "Dove senti fastidio?": mappa del corpo in stile analisi del movimento (scheletro a punti e linee).
+// Ogni zona porta ai servizi pertinenti. Nessuna diagnosi: solo orientamento verso la visita giusta.
+// TODO: far rileggere i testi al team medico di A10 Medical.
+// Senza JavaScript tutte le zone restano visibili una sotto l'altra.
+import { url } from '../lib/url.js';
+import { centro, servizi } from '../lib/dati.js';
+
+const tutti = [...servizi.medical, ...servizi.area10];
+const nomeServizio = (id: string) => tutti.find((s) => s.id === id)?.nome ?? id;
+const linkServizio = (id: string) =>
+  servizi.area10.some((s) => s.id === id) ? url(`/area10/#${id}`) : url(`/medical/#${id}`);
+
+const zone = [
+  {
+    id: 'collo',
+    nome: 'Collo',
+    punto: [120, 80],
+    testo: 'Rigidità e dolore al collo, spesso legati alla postura e alle ore davanti a uno schermo.',
+    servizi: ['fisioterapia', 'palestra-fisioterapica'],
+    articolo: { href: '/lo-sai-che/lavoro-al-computer/', testo: 'Lavori al computer? Come proteggere collo e schiena' },
+  },
+  {
+    id: 'spalla',
+    nome: 'Spalla',
+    punto: [156, 98],
+    testo: 'Dolore nei movimenti sopra la testa, sovraccarichi sportivi, recupero dopo un intervento.',
+    servizi: ['fisioterapia-sportiva', 'ortopedia', 'recupero-post-operatorio'],
+  },
+  {
+    id: 'schiena',
+    nome: 'Schiena',
+    punto: [120, 190],
+    testo: 'Mal di schiena improvviso o che ritorna: postura, sedentarietà, core debole, stress.',
+    servizi: ['fisioterapia', 'palestra-fisioterapica', 'personal-pilates'],
+    articolo: { href: '/lo-sai-che/mal-di-schiena-cause/', testo: 'Mal di schiena: da dove nasce e come muoversi' },
+  },
+  {
+    id: 'anca',
+    nome: 'Anca',
+    punto: [100, 218],
+    testo: "Fastidi all'anca o all'inguine, rigidità, dolore quando cammini o corri.",
+    servizi: ['ortopedia', 'fisioterapia'],
+  },
+  {
+    id: 'ginocchio',
+    nome: 'Ginocchio',
+    punto: [145, 310],
+    testo: 'Distorsioni, sovraccarico, recupero dopo la ricostruzione del legamento crociato (LCA).',
+    servizi: ['fisioterapia-sportiva', 'ortopedia', 'recupero-post-operatorio'],
+    articolo: {
+      href: '/lo-sai-che/tornare-allo-sport-dopo-infortunio/',
+      testo: "Niente più dolore? Il ritorno allo sport è solo all'inizio",
+    },
+  },
+  {
+    id: 'caviglia',
+    nome: 'Caviglia',
+    punto: [92, 398],
+    testo: 'Distorsioni e instabilità, ritorno alla corsa e allo sport in sicurezza.',
+    servizi: ['fisioterapia-sportiva', 'palestra-fisioterapica'],
+  },
+];
+
+// Scheletro: articolazioni e segmenti (coordinate nel viewBox 240x440)
+const P = {
+  collo: [120, 80], spSx: [84, 98], spDx: [156, 98], gomSx: [70, 160], gomDx: [170, 160],
+  polSx: [62, 218], polDx: [178, 218], dorso: [120, 150], lombi: [120, 190], bacino: [120, 214],
+  ancaSx: [100, 218], ancaDx: [140, 218], ginSx: [95, 310], ginDx: [145, 310],
+  cavSx: [92, 398], cavDx: [148, 398], piedeSx: [76, 412], piedeDx: [164, 412],
+} as const;
+type K = keyof typeof P;
+const ossa: [K, K][] = [
+  ['collo', 'spSx'], ['collo', 'spDx'], ['spSx', 'gomSx'], ['gomSx', 'polSx'], ['spDx', 'gomDx'], ['gomDx', 'polDx'],
+  ['collo', 'dorso'], ['dorso', 'lombi'], ['lombi', 'bacino'], ['bacino', 'ancaSx'], ['bacino', 'ancaDx'],
+  ['ancaSx', 'ginSx'], ['ginSx', 'cavSx'], ['cavSx', 'piedeSx'], ['ancaDx', 'ginDx'], ['ginDx', 'cavDx'], ['cavDx', 'piedeDx'],
+];
+const iniziale = 'ginocchio';
+---
+
+<div class="mappa-corpo" data-mappa-corpo>
+  <div class="mappa-corpo__figura texture-mm" aria-hidden="true">
+    <svg viewBox="0 0 240 440" class="scheletro" role="presentation">
+      <circle cx="120" cy="44" r="22" class="scheletro__testa" />
+      <g class="scheletro__busto">
+        <line x1={P.spSx[0]} y1={P.spSx[1]} x2={P.ancaSx[0]} y2={P.ancaSx[1]} />
+        <line x1={P.spDx[0]} y1={P.spDx[1]} x2={P.ancaDx[0]} y2={P.ancaDx[1]} />
+      </g>
+      <g class="scheletro__ossa">
+        {ossa.map(([a, b]) => <line x1={P[a][0]} y1={P[a][1]} x2={P[b][0]} y2={P[b][1]} />)}
+      </g>
+      <g class="scheletro__giunti">
+        {Object.values(P).map(([x, y]) => <circle cx={x} cy={y} r="4.5" />)}
+      </g>
+      {
+        zone.map((z) => (
+          <g class="zona" data-zona={z.id}>
+            <circle class="zona__alone" cx={z.punto[0]} cy={z.punto[1]} r="17" />
+            <circle class="zona__punto" cx={z.punto[0]} cy={z.punto[1]} r="9" />
+          </g>
+        ))
+      }
+    </svg>
+  </div>
+
+  <div class="mappa-corpo__pannello">
+    <h2 class="mappa-corpo__titolo">Dove senti fastidio?</h2>
+    <p class="mappa-corpo__intro">Scegli una zona: ti indichiamo a chi rivolgerti, qui o alla porta accanto.</p>
+
+    <div class="mappa-corpo__zone" role="group" aria-label="Zone del corpo" data-scelte>
+      {
+        zone.map((z) => (
+          <button type="button" class="zona-btn" data-scegli={z.id} aria-pressed={z.id === iniziale ? 'true' : 'false'} aria-controls={`zona-${z.id}`}>
+            {z.nome}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mappa-corpo__dettagli" aria-live="polite">
+      {
+        zone.map((z) => (
+          <section class="dettaglio" id={`zona-${z.id}`} data-dettaglio={z.id}>
+            <h3 class="dettaglio__nome">{z.nome}</h3>
+            <p class="dettaglio__testo">{z.testo}</p>
+            <p class="dettaglio__etichetta">Può aiutarti</p>
+            <ul class="dettaglio__servizi" role="list">
+              {z.servizi.map((id) => (
+                <li>
+                  <a href={linkServizio(id)} data-tinta={servizi.area10.some((s) => s.id === id) ? 'fitness' : 'medical'}>
+                    {nomeServizio(id)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            {z.articolo && (
+              <p class="dettaglio__articolo">
+                Da leggere: <a href={url(z.articolo.href)}>{z.articolo.testo}</a>
+              </p>
+            )}
+          </section>
+        ))
+      }
+    </div>
+
+    <p class="mappa-corpo__prenota">
+      Prenota una valutazione: <a href={`tel:${centro.medical.telefono}`}>{centro.medical.telefonoLeggibile}</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mappa-corpo]').forEach((mappa) => {
+    const bottoni = Array.from(mappa.querySelectorAll<HTMLButtonElement>('[data-scegli]'));
+    const dettagli = Array.from(mappa.querySelectorAll<HTMLElement>('[data-dettaglio]'));
+    const zoneSvg = Array.from(mappa.querySelectorAll<SVGGElement>('[data-zona]'));
+    mappa.classList.add('mappa-corpo--attiva');
+
+    const scegli = (id: string) => {
+      bottoni.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.scegli === id)));
+      dettagli.forEach((d) => (d.hidden = d.dataset.dettaglio !== id));
+      zoneSvg.forEach((z) => z.classList.toggle('zona--attiva', z.dataset.zona === id));
+    };
+    bottoni.forEach((b) => b.addEventListener('click', () => scegli(b.dataset.scegli!)));
+    // i punti sulla figura funzionano come scorciatoia per chi usa mouse o touch
+    zoneSvg.forEach((z) => z.addEventListener('click', () => scegli(z.dataset.zona!)));
+    const iniziale = bottoni.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.scegli ?? bottoni[0].dataset.scegli!;
+    scegli(iniziale);
+  });
+</script>
+
+<style>
+  .mappa-corpo {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+  .mappa-corpo__figura {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem 1rem;
+    border-radius: 1.25rem;
+    background-color: var(--sfondo-2);
+  }
+  .scheletro {
+    width: min(100%, 17rem);
+    height: auto;
+    overflow: visible;
+  }
+  .scheletro__testa {
+    fill: none;
+    stroke: var(--accento-testo);
+    stroke-width: 3;
+  }
+  .scheletro__ossa line {
+    stroke: var(--accento-testo);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .scheletro__busto line {
+    stroke: var(--accento-testo);
+    stroke-width: 1.5;
+    stroke-dasharray: 3 5;
+    opacity: 0.6;
+  }
+  .scheletro__giunti circle {
+    fill: var(--sfondo);
+    stroke: var(--accento-testo);
+    stroke-width: 2.5;
+  }
+  .zona {
+    cursor: pointer;
+  }
+  .zona__alone {
+    fill: color-mix(in srgb, var(--accento) 22%, transparent);
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: opacity 200ms ease;
+  }
+  .zona__punto {
+    fill: var(--sfondo);
+    stroke: var(--accento-testo);
+    stroke-width: 3;
+    transition: fill 200ms ease;
+  }
+  .zona:hover .zona__alone {
+    opacity: 0.6;
+  }
+  .zona--attiva .zona__punto {
+    fill: var(--accento-testo);
+  }
+  .zona--attiva .zona__alone {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .zona--attiva .zona__alone {
+      animation: alone-pulsa 2.2s var(--ease-out) infinite;
+    }
+  }
+  @keyframes alone-pulsa {
+    0% {
+      transform: scale(0.7);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+  }
+
+  .mappa-corpo__titolo {
+    font-size: var(--step-4);
+  }
+  .mappa-corpo__intro {
+    margin: 0.75rem 0 1.5rem;
+    color: var(--testo-2);
+  }
+  .mappa-corpo__zone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .zona-btn {
+    min-height: 2.75rem;
+    padding: 0 1.1rem;
+    border: 1.5px solid var(--linea-forte);
+    border-radius: 999px;
+    background-color: var(--sfondo);
+    font-weight: 650;
+    cursor: pointer;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 160ms var(--ease-out);
+  }
+  .zona-btn:active {
+    transform: scale(0.96);
+  }
+  .zona-btn[aria-pressed='true'] {
+    background-color: var(--cta-sfondo);
+    border-color: var(--cta-sfondo);
+    color: var(--cta-testo);
+  }
+  /* senza JS i pulsanti non servono: si vedono tutte le zone */
+  .mappa-corpo:not(.mappa-corpo--attiva) .mappa-corpo__zone {
+    display: none;
+  }
+  .mappa-corpo__dettagli {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .dettaglio {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--sfondo-2);
+  }
+  .dettaglio__nome {
+    font-size: var(--step-2);
+  }
+  .dettaglio__testo {
+    color: var(--testo-2);
+  }
+  .dettaglio__etichetta {
+    margin-top: 0.4rem;
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .dettaglio__servizi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .dettaglio__servizi a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    padding: 0 0.9rem;
+    border-radius: 999px;
+    background-color: var(--sfondo);
+    box-shadow: inset 0 0 0 1.5px var(--tinta);
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .dettaglio__servizi a[data-tinta='fitness'] {
+    border-radius: 0;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .dettaglio__servizi a:hover {
+      background-color: color-mix(in srgb, var(--tinta) 14%, var(--sfondo));
+    }
+  }
+  .dettaglio__articolo {
+    margin-top: 0.4rem;
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  .dettaglio__articolo a {
+    color: var(--testo);
+    font-weight: 650;
+  }
+  .mappa-corpo__prenota {
+    margin-top: 1.25rem;
+    font-weight: 650;
+  }
+  .mappa-corpo__prenota a {
+    font-weight: 800;
+    color: var(--accento-testo);
+  }
+
+  @media (min-width: 64em) {
+    .mappa-corpo {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 4rem;
+    }
+    .scheletro {
+      width: min(100%, 20rem);
+    }
+  }
+</style>

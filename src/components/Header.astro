@@ -1,0 +1,403 @@
+---
+// Intestazione fissa con navigazione principale e menu mobile (dialog nativo, accessibile da tastiera).
+import Marchio from './Marchio.astro';
+import ToggleTema from './ToggleTema.astro';
+import Icona from './Icona.astro';
+import { url } from '../lib/url.js';
+import { centro } from '../lib/dati.js';
+
+const corrente = Astro.url.pathname;
+const attivo = (href: string, esatto = false) => {
+  const target = url(href);
+  return esatto ? corrente === target : corrente.startsWith(target);
+};
+
+const gruppi = [
+  {
+    tinta: 'fitness',
+    titolo: 'Area10 Fitness Club',
+    voci: [
+      { href: '/area10/', testo: 'Area10', esteso: 'La palestra', esatto: true },
+      { href: '/area10/hyrox/', testo: 'HYROX', esteso: 'HYROX Training Club' },
+      { href: '/area10/corsi/', testo: 'Corsi', esteso: 'Corsi 2026/27' },
+    ],
+  },
+  {
+    tinta: 'medical',
+    titolo: 'A10 Medical',
+    voci: [
+      { href: '/medical/', testo: 'A10 Medical', esteso: 'Fisioterapia e visite', esatto: true },
+      { href: '/medical/visite-sportive/', testo: 'Visite sportive', esteso: 'Visite medico-sportive' },
+      { href: '/lo-sai-che/', testo: 'Lo sai che', esteso: 'Lo sai che...' },
+    ],
+  },
+];
+---
+
+<header class="header">
+  <div class="header__barra contenitore">
+    <a href={url('/')} class="header__marchio" aria-label="Area10 Fitness Club e A10 Medical: pagina iniziale">
+      <Marchio />
+    </a>
+
+    <nav class="header__nav" aria-label="Principale">
+      <ul role="list" class="header__lista">
+        {
+          gruppi.map((g) => (
+            <li class="header__gruppo" data-tinta={g.tinta}>
+              <ul role="list">
+                {g.voci.map((v) => (
+                  <li>
+                    <a href={url(v.href)} aria-current={attivo(v.href, v.esatto) ? 'page' : undefined}>
+                      {v.testo}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))
+        }
+        <li>
+          <a href={url('/contatti/')} aria-current={attivo('/contatti/') ? 'page' : undefined}>Contatti</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header__azioni">
+      <ToggleTema />
+      <a class="btn btn--piccolo header__cta" href={url('/contatti/#prova')}>Prova gratuita</a>
+      <button
+        type="button"
+        class="header__apri"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="menu-mobile"
+        data-apri-menu
+      >
+        <Icona nome="menu-2" />
+        <span>Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog class="menu" id="menu-mobile" aria-label="Menu del sito" data-menu>
+  <div class="menu__testa contenitore">
+    <Marchio />
+    <button type="button" class="menu__chiudi" data-chiudi-menu>
+      <Icona nome="x" />
+      <span class="visually-hidden">Chiudi il menu</span>
+    </button>
+  </div>
+  <nav class="menu__corpo contenitore" aria-label="Menu mobile">
+    {
+      gruppi.map((g) => (
+        <section class="menu__gruppo" data-tinta={g.tinta}>
+          <h2 class="menu__titolo">{g.titolo}</h2>
+          <ul role="list">
+            {g.voci.map((v) => (
+              <li>
+                <a href={url(v.href)} aria-current={attivo(v.href, v.esatto) ? 'page' : undefined}>
+                  {v.esteso}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+    <section class="menu__gruppo">
+      <ul role="list">
+        <li><a href={url('/contatti/')}>Contatti e orari</a></li>
+        <li><a href={url('/contatti/#prova')}>Prenota la prova gratuita</a></li>
+      </ul>
+    </section>
+    <div class="menu__telefoni">
+      <a href={`tel:${centro.area10.telefono}`} data-tinta="fitness">
+        <Icona nome="phone" />
+        <span>Area10 <strong>{centro.area10.telefonoLeggibile}</strong></span>
+      </a>
+      <a href={`tel:${centro.medical.telefono}`} data-tinta="medical">
+        <Icona nome="phone" />
+        <span>A10 Medical <strong>{centro.medical.telefonoLeggibile}</strong></span>
+      </a>
+    </div>
+    <div class="menu__tema">
+      <span>Tema</span>
+      <ToggleTema />
+    </div>
+  </nav>
+</dialog>
+
+<script>
+  const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
+  const apri = document.querySelector<HTMLButtonElement>('[data-apri-menu]');
+  const chiudi = document.querySelector<HTMLButtonElement>('[data-chiudi-menu]');
+  if (menu && apri && chiudi) {
+    apri.addEventListener('click', () => {
+      menu.showModal();
+      apri.setAttribute('aria-expanded', 'true');
+    });
+    chiudi.addEventListener('click', () => menu.close());
+    menu.addEventListener('close', () => {
+      apri.setAttribute('aria-expanded', 'false');
+      apri.focus();
+    });
+    // un link interno chiude il menu (utile per le ancore nella stessa pagina)
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => menu.close()));
+    // se lo schermo si allarga oltre il breakpoint, il menu mobile non serve più
+    matchMedia('(min-width: 75em)').addEventListener('change', (e) => e.matches && menu.open && menu.close());
+  }
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+    background-color: color-mix(in srgb, var(--sfondo) 94%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--linea);
+  }
+  .header__barra {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: var(--header-h);
+  }
+  .header__marchio {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    text-decoration: none;
+  }
+
+  .header__nav {
+    margin-inline-start: auto;
+    display: none;
+  }
+  .header__lista,
+  .header__gruppo > ul {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .header__lista {
+    gap: 0.5rem;
+  }
+  /* separatore sottile tra i gruppi delle due aree */
+  .header__gruppo {
+    display: flex;
+    align-items: center;
+    padding-inline-end: 0.5rem;
+    border-inline-end: 1px solid var(--linea);
+  }
+  .header__nav a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--testo);
+  }
+  .header__nav a::after {
+    content: '';
+    position: absolute;
+    inset: auto 0.6rem 0.45rem;
+    height: 2px;
+    background-color: var(--tinta, var(--testo));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 220ms var(--ease-out);
+  }
+  .header__nav a[aria-current='page'] {
+    font-weight: 750;
+  }
+  .header__nav a[aria-current='page']::after {
+    transform: scaleX(1);
+    height: 3px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .header__nav a:hover::after {
+      transform: scaleX(1);
+    }
+  }
+
+  .header__azioni {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-inline-start: auto;
+  }
+  .btn--piccolo {
+    min-height: 2.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+  }
+  .header__cta {
+    display: none;
+  }
+
+  .header__apri {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    padding: 0 0.85rem;
+    border: 1.5px solid var(--linea-forte);
+    border-radius: 999px;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .header__apri :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  @media (min-width: 48em) {
+    .header__cta {
+      display: inline-flex;
+    }
+  }
+  @media (min-width: 75em) {
+    .header__nav {
+      display: block;
+    }
+    .header__azioni {
+      margin-inline-start: 0;
+    }
+    .header__apri {
+      display: none;
+    }
+  }
+
+  /* --- Menu mobile -------------------------------------------------------- */
+  .menu {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0 0 2rem;
+    border: 0;
+    background-color: var(--sfondo);
+    color: var(--testo);
+    overflow-y: auto;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 220ms var(--ease-out),
+      transform 280ms var(--ease-out),
+      overlay 280ms allow-discrete,
+      display 280ms allow-discrete;
+  }
+  .menu:not([open]) {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+  @starting-style {
+    .menu[open] {
+      opacity: 0;
+      transform: translateY(-0.75rem);
+    }
+  }
+  .menu::backdrop {
+    background: transparent;
+  }
+  :global(html:has(dialog[open])) {
+    overflow: hidden;
+  }
+
+  .menu__testa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    border-bottom: 1px solid var(--linea);
+  }
+  .menu__chiudi {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1.5px solid var(--linea-forte);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+  }
+  .menu__corpo {
+    display: grid;
+    gap: 2rem;
+    padding-top: 2rem;
+  }
+  .menu__gruppo ul {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .menu__titolo {
+    margin-bottom: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--tinta-testo, var(--testo-2));
+  }
+  .menu__gruppo a {
+    display: inline-flex;
+    min-height: 2.9rem;
+    align-items: center;
+    font-size: 1.6rem;
+    font-weight: 650;
+    line-height: 1.1;
+    text-decoration: none;
+  }
+  .menu__gruppo[data-tinta='fitness'] a {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .menu__gruppo a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--tinta, currentColor);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.25em;
+  }
+  .menu__telefoni {
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--linea);
+  }
+  .menu__telefoni a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.75rem;
+    text-decoration: none;
+  }
+  .menu__telefoni :global(svg) {
+    color: var(--tinta-testo);
+  }
+  .menu__tema {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--linea);
+    font-weight: 600;
+  }
+</style>

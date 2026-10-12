@@ -1,0 +1,101 @@
+---
+// Indicatore "Aperto ora / Chiuso" calcolato nel browser con l'orario reale (fuso Europe/Rome).
+// La logica è in src/lib/orari.js ed è coperta dai test in tests/unit/orari.test.js.
+interface Props {
+  settimana: Record<string, string[][]>;
+  chiusure?: string[];
+  /** es. "Sala pesi e cardio" */
+  etichetta: string;
+  class?: string;
+}
+const { settimana, chiusure = [], etichetta, class: classe } = Astro.props;
+---
+
+<p
+  class:list={['stato', classe]}
+  data-stato
+  data-orari={JSON.stringify(settimana)}
+  data-chiusure={JSON.stringify(chiusure)}
+  role="status"
+>
+  <span class="stato__punto" aria-hidden="true"></span>
+  <span class="stato__testo">
+    <span class="stato__etichetta" data-stato-etichetta>{etichetta}</span>
+    <span class="stato__dettaglio" data-stato-dettaglio>Orari qui sotto</span>
+  </span>
+  <span class="visually-hidden">({etichetta})</span>
+</p>
+
+<script>
+  import { statoApertura, testoStato } from '../lib/orari.js';
+
+  function aggiorna() {
+    document.querySelectorAll<HTMLElement>('[data-stato]').forEach((el) => {
+      const settimana = JSON.parse(el.dataset.orari ?? '{}');
+      const chiusure = JSON.parse(el.dataset.chiusure ?? '[]');
+      const stato = statoApertura(settimana, new Date(), { chiusure });
+      const testo = testoStato(stato);
+      el.dataset.aperto = String(stato.aperto);
+      el.querySelector('[data-stato-etichetta]')!.textContent = testo.etichetta;
+      el.querySelector('[data-stato-dettaglio]')!.textContent = testo.dettaglio;
+    });
+  }
+  aggiorna();
+  setInterval(aggiorna, 60_000);
+</script>
+
+<style>
+  .stato {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.25rem;
+    padding: 0.5rem 1.1rem 0.5rem 0.9rem;
+    border: 1px solid var(--linea-forte);
+    border-radius: var(--raggio-btn);
+    background-color: color-mix(in srgb, var(--sfondo) 85%, transparent);
+  }
+  .stato__punto {
+    position: relative;
+    width: 0.8rem;
+    height: 0.8rem;
+    flex: none;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 2px var(--testo-2);
+  }
+  .stato[data-aperto='true'] .stato__punto {
+    background-color: var(--accento);
+    box-shadow: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .stato[data-aperto='true'] .stato__punto::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 2px solid var(--accento);
+      animation: stato-pulsa 2.4s var(--ease-out) infinite;
+    }
+  }
+  @keyframes stato-pulsa {
+    from {
+      transform: scale(0.6);
+      opacity: 0.9;
+    }
+    to {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+  .stato__testo {
+    display: grid;
+    line-height: 1.25;
+  }
+  .stato__etichetta {
+    font-weight: 750;
+  }
+  .stato__dettaglio {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+</style>

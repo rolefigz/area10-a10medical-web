@@ -1,0 +1,179 @@
+---
+// Contatti delle due aree + mappa + modulo "prova gratuita". Usato in fondo alla home e nella pagina Contatti.
+import Icona from './Icona.astro';
+import MappaFacciata from './MappaFacciata.astro';
+import ModuloContatti from './ModuloContatti.astro';
+import { centro, indirizzoTesto } from '../lib/dati.js';
+
+interface Props {
+  /** livello del titolo principale */
+  titolo?: string;
+  livello?: 'h1' | 'h2';
+}
+const { titolo = 'Vieni a trovarci', livello = 'h2' } = Astro.props;
+const Titolo = livello;
+const a = centro.area10;
+const m = centro.medical;
+---
+
+<section class="contatti sezione" aria-labelledby="contatti-titolo">
+  <div class="contenitore contatti__griglia">
+    <div class="contatti__info">
+      <Titolo id="contatti-titolo" class="contatti__titolo">{titolo}</Titolo>
+      <p class="lead">Due porte una accanto all'altra, in via Formaleoni a Podenzano.</p>
+
+      <div class="sedi">
+        <article class="sede" data-tinta="fitness">
+          <h3 class="sede__nome titolo-fitness">Area10 Fitness Club</h3>
+          <p class="sede__indirizzo">{indirizzoTesto(a.indirizzo)}</p>
+          <ul class="sede__contatti" role="list">
+            <li>
+              <a href={`tel:${a.telefono}`}>
+                <Icona nome="phone" />
+                <span>{a.telefonoLeggibile}</span>
+              </a>
+            </li>
+            <li>
+              <a href={a.instagram} rel="noopener" target="_blank">
+                <Icona nome="brand-instagram" />
+                <span>{a.instagramHandle}<span class="visually-hidden"> (Instagram, nuova scheda)</span></span>
+              </a>
+            </li>
+          </ul>
+        </article>
+        <article class="sede" data-tinta="medical">
+          <h3 class="sede__nome titolo-medical">A10 Medical</h3>
+          <p class="sede__indirizzo">{indirizzoTesto(m.indirizzo)}</p>
+          <ul class="sede__contatti" role="list">
+            <li>
+              <a href={`tel:${m.telefono}`}>
+                <Icona nome="phone" />
+                <span>{m.telefonoLeggibile}</span>
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${m.email}`}>
+                <Icona nome="mail" />
+                <span>{m.email}</span>
+              </a>
+            </li>
+            <li>
+              <a href={m.instagram} rel="noopener" target="_blank">
+                <Icona nome="brand-instagram" />
+                <span>{m.instagramHandle}<span class="visually-hidden"> (Instagram, nuova scheda)</span></span>
+              </a>
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <MappaFacciata />
+    </div>
+
+    <div class="contatti__modulo" id="prova">
+      <h3 class="contatti__modulo-titolo">Prenota la prova gratuita</h3>
+      <p class="contatti__modulo-testo">
+        Lasciaci un recapito: ti richiamiamo per fissare la prova in palestra o per darti informazioni su visite e
+        trattamenti.
+      </p>
+      <ModuloContatti />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contatti__griglia {
+    display: grid;
+    gap: 3.5rem;
+  }
+  .contatti__info {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+  .contatti__titolo {
+    font-size: var(--step-5);
+    letter-spacing: -0.04em;
+  }
+  .sedi {
+    display: grid;
+    gap: 1rem;
+  }
+  .sede {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.25rem 1.25rem 1rem;
+    border-top: 3px solid var(--tinta);
+    background-color: var(--sfondo-2);
+  }
+  .sede__nome {
+    font-size: 1.6rem;
+  }
+  .sede__nome.titolo-medical {
+    font-size: 1.35rem;
+  }
+  .sede__indirizzo {
+    color: var(--testo-2);
+  }
+  .sede__contatti {
+    display: grid;
+    margin: 0.4rem 0 0;
+    padding: 0;
+  }
+  .sede__contatti a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    font-weight: 650;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .sede__contatti :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--tinta-testo);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .sede__contatti a:hover span {
+      text-decoration: underline;
+    }
+  }
+
+  .contatti__modulo {
+    align-self: start;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    border-radius: 1rem;
+    background-color: var(--sfondo-2);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  .contatti__modulo-titolo {
+    font-size: var(--step-3);
+    letter-spacing: -0.03em;
+  }
+  .contatti__modulo-testo {
+    margin: 0.75rem 0 1.75rem;
+    color: var(--testo-2);
+  }
+  .contatti__modulo :global(.campo input:not([type='checkbox'])),
+  .contatti__modulo :global(.campo select),
+  .contatti__modulo :global(.campo textarea) {
+    background-color: var(--sfondo);
+  }
+
+  @media (min-width: 48em) {
+    .sedi {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64em) {
+    .contatti__griglia {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+    .contatti__modulo {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+// Fasce orarie di un giorno, una per riga: [["09:00","13:30"],["16:30","21:00"]] -> 9:00-13:30 / 16:30-21:00
+import { formattaOra } from '../lib/dati.js';
+
+interface Props {
+  fasce: string[][];
+  class?: string;
+}
+const { fasce, class: classe } = Astro.props;
+---
+
+<span class:list={['fasce', 'cifre', classe, { 'fasce--chiuso': !fasce.length }]}>
+  {fasce.length ? fasce.map(([a, b]) => <span class="fasce__riga">{`${formattaOra(a)}-${formattaOra(b)}`}</span>) : 'Chiuso'}
+</span>
+
+<style>
+  .fasce {
+    display: inline-grid;
+    justify-items: end;
+    line-height: 1.15;
+  }
+  .fasce--chiuso {
+    opacity: 0.75;
+  }
+</style>

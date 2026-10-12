@@ -1,0 +1,329 @@
+---
+// Modulo "prova gratuita / informazioni" senza backend, inviato con Web3Forms (https://web3forms.com).
+// La chiave pubblica NON è nel codice: si imposta come variabile PUBLIC_WEB3FORMS_KEY in fase di build
+// (su GitHub: Settings > Secrets and variables > Actions > Variables). Senza chiave il modulo
+// resta dimostrativo e, all'invio, propone di chiamare. Anti-spam: campo esca (honeypot) "botcheck".
+import { PUBLIC_WEB3FORMS_KEY } from 'astro:env/client';
+import Icona from './Icona.astro';
+import { url } from '../lib/url.js';
+import { centro } from '../lib/dati.js';
+
+const chiave = PUBLIC_WEB3FORMS_KEY ?? '';
+const interessi = [
+  { gruppo: 'Area10 Fitness Club', voci: ['Prova gratuita in palestra', 'Personal training', 'Pilates', 'Corsi', 'HYROX'] },
+  {
+    gruppo: 'A10 Medical',
+    voci: ['Fisioterapia', 'Visita ortopedica', 'Visita medico-sportiva', 'Nutrizionista'],
+  },
+];
+---
+
+<form class="modulo" data-modulo data-chiave={chiave} action="https://api.web3forms.com/submit" method="POST" novalidate>
+  <input type="hidden" name="access_key" value={chiave} />
+  <input type="hidden" name="subject" value="Nuova richiesta dal sito Area10 / A10 Medical" />
+  <input type="hidden" name="from_name" value="Sito Area10 / A10 Medical" />
+  <!-- campo esca per i bot: le persone non lo vedono e non lo compilano -->
+  <input type="checkbox" name="botcheck" class="modulo__esca" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <div class="campo">
+    <label for="m-nome">Nome e cognome</label>
+    <input id="m-nome" name="nome" type="text" autocomplete="name" required aria-describedby="m-nome-err" />
+    <p class="campo__errore" id="m-nome-err" data-errore="Scrivi il tuo nome, così sappiamo chi richiamare."></p>
+  </div>
+
+  <div class="campo">
+    <label for="m-tel">Telefono</label>
+    <input
+      id="m-tel"
+      name="telefono"
+      type="tel"
+      inputmode="tel"
+      autocomplete="tel"
+      required
+      pattern="[0-9 +().-]{6,20}"
+      aria-describedby="m-tel-aiuto m-tel-err"
+    />
+    <p class="campo__aiuto" id="m-tel-aiuto">Ti richiamiamo a questo numero.</p>
+    <p class="campo__errore" id="m-tel-err" data-errore="Inserisci un numero di telefono valido, ad esempio 338 1234567."></p>
+  </div>
+
+  <div class="campo">
+    <label for="m-email">Email <span class="campo__facoltativo">(facoltativa)</span></label>
+    <input id="m-email" name="email" type="email" autocomplete="email" aria-describedby="m-email-err" />
+    <p class="campo__errore" id="m-email-err" data-errore="Controlla l'indirizzo email: sembra incompleto."></p>
+  </div>
+
+  <div class="campo">
+    <label for="m-interesse">Ti interessa</label>
+    <select id="m-interesse" name="interesse" required aria-describedby="m-interesse-err">
+      <option value="">Scegli un'opzione</option>
+      {
+        interessi.map((g) => (
+          <optgroup label={g.gruppo}>
+            {g.voci.map((v) => (
+              <option value={v}>{v}</option>
+            ))}
+          </optgroup>
+        ))
+      }
+      <option value="Altro">Altro</option>
+    </select>
+    <p class="campo__errore" id="m-interesse-err" data-errore="Scegli cosa ti interessa."></p>
+  </div>
+
+  <div class="campo campo--largo">
+    <label for="m-messaggio">Messaggio <span class="campo__facoltativo">(facoltativo)</span></label>
+    <textarea id="m-messaggio" name="messaggio" rows="4" maxlength="1500"></textarea>
+  </div>
+
+  <div class="campo campo--largo campo--check">
+    <input id="m-privacy" name="privacy" type="checkbox" value="accettata" required aria-describedby="m-privacy-err" />
+    <label for="m-privacy">
+      Ho letto l'<a href={url('/privacy/')}>informativa privacy</a> e acconsento a essere ricontattato.
+    </label>
+    <p class="campo__errore" id="m-privacy-err" data-errore="Per inviare la richiesta serve il consenso."></p>
+  </div>
+
+  <div class="modulo__invio campo--largo">
+    <button type="submit" class="btn" data-invia>
+      <span data-invia-testo>Invia la richiesta</span>
+    </button>
+    <p class="modulo__oppure">
+      Oppure chiama: <a href={`tel:${centro.area10.telefono}`}>Area10 {centro.area10.telefonoLeggibile}</a> ·
+      <a href={`tel:${centro.medical.telefono}`}>A10 Medical {centro.medical.telefonoLeggibile}</a>
+    </p>
+  </div>
+
+  <div class="modulo__esito campo--largo" data-esito role="status" aria-live="polite" tabindex="-1" hidden>
+    <Icona nome="circle-check" class="modulo__esito-icona" />
+    <div>
+      <p class="modulo__esito-titolo" data-esito-titolo></p>
+      <p class="modulo__esito-testo" data-esito-testo></p>
+    </div>
+  </div>
+</form>
+
+<script>
+  const MESSAGGI = {
+    inviato: {
+      titolo: 'Richiesta inviata.',
+      testo: 'Grazie! Ti ricontattiamo al numero che ci hai lasciato.',
+    },
+    demo: {
+      titolo: 'Modulo dimostrativo.',
+      testo: "In questa versione l'invio non è ancora attivo: per ora chiamaci ai numeri qui sopra.",
+    },
+    errore: {
+      titolo: 'Invio non riuscito.',
+      testo: 'Controlla la connessione e riprova, oppure chiamaci: rispondiamo negli orari di apertura.',
+    },
+  } as const;
+
+  document.querySelectorAll<HTMLFormElement>('[data-modulo]').forEach((modulo) => {
+    const campi = Array.from(modulo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[aria-describedby]'));
+    const esito = modulo.querySelector<HTMLElement>('[data-esito]')!;
+    const bottone = modulo.querySelector<HTMLButtonElement>('[data-invia]')!;
+    const testoBottone = modulo.querySelector<HTMLElement>('[data-invia-testo]')!;
+
+    // Mostra o nasconde l'errore di un campo, con testi chiari scritti nel markup (data-errore).
+    const verifica = (campo: HTMLInputElement | HTMLSelectElement) => {
+      const idErrore = campo.getAttribute('aria-describedby')!.split(' ').find((id) => id.endsWith('-err'));
+      const errore = idErrore ? modulo.querySelector<HTMLElement>(`#${idErrore}`) : null;
+      const valido = campo.checkValidity();
+      campo.setAttribute('aria-invalid', String(!valido));
+      if (errore) errore.textContent = valido ? '' : (errore.dataset.errore ?? '');
+      return valido;
+    };
+
+    campi.forEach((campo) => {
+      campo.addEventListener('blur', () => campo.value && verifica(campo));
+      campo.addEventListener('input', () => campo.getAttribute('aria-invalid') === 'true' && verifica(campo));
+      campo.addEventListener('change', () => campo.getAttribute('aria-invalid') === 'true' && verifica(campo));
+    });
+
+    const mostraEsito = (tipo: keyof typeof MESSAGGI) => {
+      esito.hidden = false;
+      esito.dataset.tipo = tipo;
+      esito.querySelector('[data-esito-titolo]')!.textContent = MESSAGGI[tipo].titolo;
+      esito.querySelector('[data-esito-testo]')!.textContent = MESSAGGI[tipo].testo;
+      esito.focus();
+    };
+
+    modulo.addEventListener('submit', async (evento) => {
+      evento.preventDefault();
+      const nonValidi = campi.filter((c) => !verifica(c));
+      if (nonValidi.length) {
+        nonValidi[0].focus();
+        return;
+      }
+      // il campo esca compilato indica un bot: fingiamo l'invio senza inviare nulla
+      const esca = modulo.querySelector<HTMLInputElement>('[name="botcheck"]');
+      if (esca?.checked) {
+        mostraEsito('inviato');
+        return;
+      }
+      if (!modulo.dataset.chiave) {
+        mostraEsito('demo');
+        return;
+      }
+
+      bottone.disabled = true;
+      testoBottone.textContent = 'Invio in corso...';
+      try {
+        const dati = new FormData(modulo);
+        dati.set('subject', `Richiesta dal sito: ${dati.get('interesse')}`);
+        const risposta = await fetch(modulo.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: dati,
+        });
+        const json = await risposta.json().catch(() => ({}));
+        if (!risposta.ok || json.success === false) throw new Error(json.message ?? 'Errore di invio');
+        modulo.reset();
+        campi.forEach((c) => c.removeAttribute('aria-invalid'));
+        mostraEsito('inviato');
+      } catch {
+        mostraEsito('errore');
+      } finally {
+        bottone.disabled = false;
+        testoBottone.textContent = 'Invia la richiesta';
+      }
+    });
+  });
+</script>
+
+<style>
+  .modulo {
+    display: grid;
+    gap: 1.15rem;
+  }
+  .campo {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+  }
+  .campo label {
+    font-weight: 650;
+  }
+  .campo__facoltativo,
+  .campo__aiuto {
+    font-weight: 400;
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  .campo input:not([type='checkbox']),
+  .campo select,
+  .campo textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.9rem;
+    border: 1.5px solid var(--linea-forte);
+    border-radius: 0.5rem;
+    background-color: var(--sfondo);
+    color: var(--testo);
+    font-size: 1rem;
+    line-height: 1.4;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+  .campo textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+  .campo :is(input, select, textarea):focus-visible {
+    outline: none;
+    border-color: var(--testo);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--testo) 22%, transparent);
+  }
+  .campo [aria-invalid='true'] {
+    border-color: #b42318 !important;
+  }
+  .campo__errore {
+    min-height: 0;
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: #b42318;
+  }
+  .campo__errore:empty {
+    display: none;
+  }
+  :global([data-theme='dark']) .campo__errore {
+    color: #ff9b8f;
+  }
+  :global([data-theme='dark']) .campo [aria-invalid='true'] {
+    border-color: #ff9b8f !important;
+  }
+
+  .campo--check {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    column-gap: 0.75rem;
+  }
+  .campo--check input {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin: 0.15rem 0 0;
+    accent-color: var(--testo);
+  }
+  .campo--check label {
+    font-weight: 400;
+  }
+  .campo--check .campo__errore {
+    grid-column: 1 / -1;
+  }
+
+  .modulo__esca {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .modulo__invio {
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+  }
+  .modulo__invio .btn[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+  .modulo__oppure {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  .modulo__oppure a {
+    color: var(--testo);
+    font-weight: 650;
+    white-space: nowrap;
+  }
+  .modulo__esito {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    border-radius: 0.75rem;
+    background-color: var(--sfondo-2);
+    outline-offset: 3px;
+  }
+  .modulo__esito :global(.modulo__esito-icona) {
+    width: 1.75rem;
+    height: 1.75rem;
+    color: var(--testo);
+  }
+  .modulo__esito-titolo {
+    font-weight: 750;
+  }
+  .modulo__esito-testo {
+    color: var(--testo-2);
+  }
+
+  @media (min-width: 40em) {
+    .modulo {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1rem;
+    }
+    .campo--largo {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

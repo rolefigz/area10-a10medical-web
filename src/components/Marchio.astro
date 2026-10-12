@@ -1,0 +1,107 @@
+---
+// Marchio doppio "Area10 / A10 Medical".
+// Se in assets/brand/ ci sono i loghi originali (area10-logo.svg|png, a10-medical-logo.svg|png)
+// vengono usati quelli, così come sono. Finché mancano, mostriamo i nomi in testo semplice:
+// i loghi non vanno ridisegnati né imitati.
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  /** "doppio" (header), "fitness" o "medical" */
+  variante?: 'doppio' | 'fitness' | 'medical';
+  class?: string;
+}
+const { variante = 'doppio', class: classe } = Astro.props;
+
+const loghi = import.meta.glob<{ default: ImageMetadata }>('/assets/brand/*.{svg,png,webp,SVG,PNG,WEBP}', {
+  eager: true,
+});
+const cerca = (nome: string) =>
+  Object.entries(loghi).find(([p]) => p.toLowerCase().includes(`/${nome}.`))?.[1].default;
+const logoArea10 = cerca('area10-logo');
+const logoMedical = cerca('a10-medical-logo');
+---
+
+<span class:list={['marchio', `marchio--${variante}`, classe]}>
+  {
+    variante !== 'medical' && (
+      <span class="marchio__area10">
+        {logoArea10 ? (
+          <Image src={logoArea10} alt="Area10 Fitness Club" height={40} class="marchio__logo" />
+        ) : (
+          <>
+            <span class="marchio__nome-fitness">Area10</span>
+            <span class="marchio__sotto">Fitness Club</span>
+          </>
+        )}
+      </span>
+    )
+  }
+  {variante === 'doppio' && <span class="marchio__taglio" aria-hidden="true" />}
+  {
+    variante !== 'fitness' && (
+      <span class="marchio__medical">
+        {logoMedical ? (
+          <Image src={logoMedical} alt="A10 Medical" height={40} class="marchio__logo" />
+        ) : (
+          <span class="marchio__nome-medical">A10 Medical</span>
+        )}
+      </span>
+    )
+  }
+</span>
+
+<style>
+  .marchio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: inherit;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .marchio__area10 {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+  .marchio__nome-fitness {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .marchio__sotto {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.75;
+  }
+  /* la barra diagonale oro-turchese riprende il "taglio" tra le due aree */
+  .marchio__taglio {
+    width: 2px;
+    height: 1.9rem;
+    background: linear-gradient(to bottom, var(--oro), var(--teal));
+    transform: skewX(-18deg);
+    border-radius: 1px;
+  }
+  .marchio__nome-medical {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+  .marchio__logo {
+    height: 2.25rem;
+    width: auto;
+  }
+
+  @media (max-width: 26em) {
+    .marchio__sotto {
+      display: none;
+    }
+  }
+</style>

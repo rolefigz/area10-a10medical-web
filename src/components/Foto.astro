@@ -1,0 +1,154 @@
+---
+// Spazio foto. Se in assets/photos/ esiste un file con l'id indicato (jpg, png, webp, avif)
+// viene mostrata la foto vera, ottimizzata in AVIF/WebP a 480/960/1600 px con srcset;
+// altrimenti compare un segnaposto elegante con l'etichetta "Foto reale in arrivo".
+// Gli id e i testi alternativi sono in data/foto.json.
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import { foto } from '../lib/dati.js';
+
+interface Props {
+  /** es. "area10/sala-pesi" -> assets/photos/area10/sala-pesi.jpg */
+  id: string;
+  /** rapporto larghezza/altezza, es. "4/3" */
+  rapporto?: string;
+  sizes?: string;
+  /** true solo per la prima immagine visibile (fetchpriority="high", niente lazy) */
+  priorita?: boolean;
+  /** riempie il contenitore (es. celle di una griglia) invece di usare il rapporto */
+  riempi?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  rapporto = '4/3',
+  sizes = '(min-width: 64em) 50vw, 100vw',
+  priorita = false,
+  riempi = false,
+  class: classe,
+} = Astro.props;
+
+const voce = foto.foto.find((f) => f.id === id);
+if (!voce) throw new Error(`Foto "${id}" non presente in data/foto.json`);
+
+const file = import.meta.glob<{ default: ImageMetadata }>(
+  '/assets/photos/**/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}',
+  { eager: true },
+);
+const trovata = Object.entries(file).find(
+  ([percorso]) =>
+    percorso
+      .replace(/^\/assets\/photos\//, '')
+      .replace(/\.[^.]+$/, '')
+      .toLowerCase() === id.toLowerCase(),
+);
+const area = id.startsWith('medical/') ? 'medical' : 'fitness';
+---
+
+<figure
+  class:list={['foto', { 'foto--riempi': riempi }, classe]}
+  style={riempi ? undefined : `aspect-ratio: ${rapporto}`}
+  data-tinta={area}
+>
+  {
+    trovata ? (
+      <Picture
+        src={trovata[1].default}
+        alt={voce.alt}
+        formats={['avif', 'webp']}
+        widths={[480, 960, 1600]}
+        sizes={sizes}
+        priority={priorita}
+        quality={72}
+      />
+    ) : (
+      <div class="foto__segnaposto" role="img" aria-label={`${voce.alt} (foto in arrivo)`}>
+        <Fragment set:html={`<!-- TODO foto: salvare assets/photos/${id}.jpg (${voce.formato}) -->`} />
+        <span class="foto__etichetta">Foto reale in arrivo</span>
+        <span class="foto__descrizione">{voce.alt}</span>
+      </div>
+    )
+  }
+</figure>
+
+<style>
+  .foto {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    border-radius: var(--raggio);
+    background-color: var(--sfondo-2);
+  }
+  .foto--riempi {
+    height: 100%;
+    min-height: 9rem;
+  }
+  .foto :global(picture),
+  .foto :global(img) {
+    width: 100%;
+    height: 100%;
+  }
+  .foto :global(img) {
+    object-fit: cover;
+  }
+
+  /* Segnaposto Area10: nero caldo con curve di livello dorate */
+  .foto__segnaposto {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.2rem;
+    padding: clamp(0.9rem, 3%, 1.5rem);
+    isolation: isolate;
+    background:
+      radial-gradient(120% 90% at 85% 10%, rgb(216 168 56 / 0.2), transparent 60%),
+      linear-gradient(160deg, var(--nero-3), var(--nero) 70%);
+    color: var(--osso);
+  }
+  .foto__segnaposto::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--oro);
+    opacity: 0.22;
+    -webkit-mask: url('../assets/textures/topografia.svg') center / cover no-repeat;
+    mask: url('../assets/textures/topografia.svg') center / cover no-repeat;
+  }
+
+  /* Segnaposto A10 Medical: bianco-turchese con carta millimetrata */
+  [data-tinta='medical'] .foto__segnaposto {
+    background:
+      linear-gradient(to right, rgb(6 112 104 / 0.12) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      linear-gradient(to bottom, rgb(6 112 104 / 0.12) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      linear-gradient(150deg, var(--nebbia), #c9ebe7 75%);
+    color: var(--carbone);
+  }
+  [data-tinta='medical'] .foto__segnaposto::before {
+    display: none;
+  }
+  :global([data-theme='dark']) [data-tinta='medical'] .foto__segnaposto {
+    background:
+      linear-gradient(to right, rgb(63 202 190 / 0.12) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      linear-gradient(to bottom, rgb(63 202 190 / 0.12) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      linear-gradient(150deg, var(--abisso-3), var(--abisso-2) 75%);
+    color: #e2f0ef;
+  }
+
+  .foto__etichetta {
+    font-size: var(--step--2);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  .foto__descrizione {
+    max-width: 30ch;
+    font-size: var(--step--1);
+    line-height: 1.35;
+    opacity: 0.7;
+  }
+</style>

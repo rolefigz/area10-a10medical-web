@@ -1,0 +1,89 @@
+---
+// HYROX Training Club: il tratto distintivo di Area10, in evidenza come un manifesto.
+// Nessun logo HYROX finché non è verificata la guida all'uso del marchio (TODO).
+import StazioniHyrox from '../StazioniHyrox.astro';
+import Foto from '../Foto.astro';
+import { url } from '../../lib/url.js';
+---
+
+<section class="hyrox texture-topo" data-surface="ink" aria-labelledby="hyrox-titolo">
+  <div class="contenitore hyrox__griglia">
+    <div class="hyrox__testo">
+      <p class="hyrox__da">Da ottobre 2025</p>
+      <h2 id="hyrox-titolo" class="hyrox__titolo">
+        <span>Siamo</span>
+        <span class="hyrox__marchio">HYROX</span>
+        <span>Training Club</span>
+      </h2>
+      <p class="hyrox__lead">
+        HYROX, da dove si comincia: un corso ufficiale per preparare la gara in ogni sua parte, dalla corsa alle otto
+        stazioni.
+      </p>
+      <div class="hyrox__azioni">
+        <a class="btn" href={url('/area10/hyrox/')}>Scopri il corso HYROX</a>
+      </div>
+    </div>
+    <Foto id="area10/hyrox" rapporto="4/3" class="hyrox__foto" sizes="(min-width: 64em) 40vw, 100vw" />
+  </div>
+
+  <div class="contenitore hyrox__formato">
+    <h3 class="hyrox__formato-titolo">La gara: 8 km di corsa, 8 stazioni</h3>
+    <StazioniHyrox />
+  </div>
+</section>
+
+<style>
+  .hyrox {
+    --topo-opacita: 0.12;
+    position: relative;
+    z-index: 2;
+    padding-block: calc(var(--sezione) + var(--taglio)) var(--sezione);
+    margin-top: calc(-1 * var(--taglio));
+    clip-path: polygon(0 var(--taglio), 100% 0, 100% 100%, 0 100%);
+  }
+  .hyrox__griglia {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .hyrox__da {
+    font-weight: 700;
+    color: var(--accento);
+  }
+  .hyrox__titolo {
+    display: grid;
+    margin-top: 0.75rem;
+    font-size: clamp(2.75rem, 9vw, 5.25rem);
+    line-height: 0.9;
+  }
+  .hyrox__marchio {
+    font-size: 1.85em;
+    font-weight: 900;
+    line-height: 0.85;
+    color: var(--accento);
+  }
+  .hyrox__lead {
+    max-width: 34rem;
+    margin-top: 1.5rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--testo-2);
+  }
+  .hyrox__azioni {
+    margin-top: 2rem;
+  }
+  .hyrox__formato {
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+  .hyrox__formato-titolo {
+    margin-bottom: 1.25rem;
+    font-size: var(--step-3);
+  }
+
+  @media (min-width: 64em) {
+    .hyrox__griglia {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+    }
+  }
+</style>

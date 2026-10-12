@@ -1,0 +1,57 @@
+---
+// Home: tre articoli di "Lo sai che..." in evidenza (un falso mito grande + due schede).
+import { getCollection } from 'astro:content';
+import ArticoloScheda from '../ArticoloScheda.astro';
+import { url } from '../../lib/url.js';
+
+const tutti = (await getCollection('loSaiChe')).sort((a, b) => a.data.ordine - b.data.ordine);
+const principale = tutti.find((a) => a.id === 'niente-dolore-niente-problemi') ?? tutti[0];
+const altri = tutti.filter((a) => a.id !== principale.id).slice(0, 2);
+---
+
+<section class="vetrina taglio-sopra" data-area="medical" aria-labelledby="vetrina-titolo">
+  <div class="contenitore">
+    <header class="vetrina__testa">
+      <h2 id="vetrina-titolo" class="vetrina__titolo">Lo sai che...</h2>
+      <p class="lead misura">Piccole verità su dolore, movimento e prevenzione, spiegate dal team di A10 Medical.</p>
+    </header>
+    <div class="vetrina__griglia">
+      <ArticoloScheda articolo={principale} grande />
+      {altri.map((a) => <ArticoloScheda articolo={a} />)}
+    </div>
+    <a class="vetrina__tutti link-freccia" href={url('/lo-sai-che/')}>Tutti gli articoli</a>
+  </div>
+</section>
+
+<style>
+  .vetrina {
+    padding-bottom: var(--sezione);
+  }
+  .vetrina__testa {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .vetrina__titolo {
+    font-size: var(--step-5);
+    letter-spacing: -0.04em;
+  }
+  .vetrina__griglia {
+    display: grid;
+    gap: 1rem;
+  }
+  .vetrina__tutti {
+    margin-top: 2rem;
+    color: var(--accento-testo);
+  }
+  @media (min-width: 64em) {
+    .vetrina__griglia {
+      grid-template-columns: 1.3fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1.25rem;
+    }
+    .vetrina__griglia > :global(:first-child) {
+      grid-row: 1 / 3;
+    }
+  }
+</style>

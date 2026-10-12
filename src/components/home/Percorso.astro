@@ -1,0 +1,183 @@
+---
+// "Un unico centro, due anime": il percorso allenamento -> riabilitazione -> ritorno -> prevenzione.
+// È una vera sequenza, per questo i passaggi sono numerati.
+import { url } from '../../lib/url.js';
+
+const passi = [
+  {
+    area: null,
+    etichetta: 'Lo stop',
+    titolo: 'Succede anche a chi si allena',
+    testo: 'Un infortunio, un intervento, un dolore che non passa. Il primo passo è capire cosa è successo.',
+  },
+  {
+    area: 'medical',
+    etichetta: 'A10 Medical, civico 8',
+    titolo: 'Fisioterapia e palestra fisioterapica',
+    testo: 'Valutazione, trattamenti ed esercizio terapeutico per ritrovare mobilità, forza e fiducia.',
+    link: { href: '/medical/', testo: 'I servizi di A10 Medical' },
+  },
+  {
+    area: 'fitness',
+    etichetta: 'Area10, civico 6',
+    titolo: 'Il ritorno in palestra',
+    testo: 'Recupero post operatorio e personal training, con carichi graduali e obiettivi chiari.',
+    link: { href: '/area10/', testo: 'La palestra Area10' },
+  },
+  {
+    area: null,
+    etichetta: 'Dopo',
+    titolo: 'Prevenzione, ogni settimana',
+    testo: 'Allenamento regolare e controlli quando servono: il modo migliore per non fermarsi di nuovo.',
+  },
+];
+---
+
+<section class="percorso sezione" aria-labelledby="percorso-titolo">
+  <div class="contenitore">
+    <header class="percorso__testa">
+      <h2 id="percorso-titolo" class="percorso__titolo">Un unico centro, due anime.</h2>
+      <p class="lead misura">
+        Allenamento, riabilitazione e prevenzione sotto lo stesso tetto. Se ti fai male, la fisioterapia è alla porta
+        accanto; quando sei pronto, la palestra ti aspetta di nuovo.
+      </p>
+    </header>
+
+    <p class="percorso__esempio">
+      Un esempio: il ginocchio dopo la ricostruzione del legamento crociato (LCA).
+    </p>
+
+    <ol class="percorso__passi" role="list">
+      {
+        passi.map((p, i) => (
+          <li class="passo" data-tinta={p.area ?? undefined} data-rivela style={`--ritardo: ${i * 90}ms`}>
+            <span class="passo__numero cifre" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <span class="passo__etichetta">{p.etichetta}</span>
+            <h3 class="passo__titolo">{p.titolo}</h3>
+            <p class="passo__testo">{p.testo}</p>
+            {p.link && (
+              <a class="passo__link" href={url(p.link.href)}>
+                {p.link.testo}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .percorso__testa {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 52rem;
+  }
+  .percorso__titolo {
+    font-size: var(--step-4);
+  }
+  .percorso__esempio {
+    margin-top: 3rem;
+    padding-left: 1rem;
+    border-left: 3px solid;
+    border-image: linear-gradient(to bottom, var(--oro), var(--teal)) 1;
+    font-weight: 650;
+  }
+
+  .percorso__passi {
+    --linea-passi: linear-gradient(to bottom, var(--testo-2) 0 12%, var(--teal) 30% 45%, var(--oro) 62% 80%, var(--testo-2));
+    position: relative;
+    display: grid;
+    gap: 2.25rem;
+    margin: 2.5rem 0 0;
+    padding: 0 0 0 2.75rem;
+  }
+  /* la linea del percorso: grigio, poi turchese (A10 Medical), oro (Area10), di nuovo neutro */
+  .percorso__passi::before {
+    content: '';
+    position: absolute;
+    left: 0.9rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 3px;
+    background: var(--linea-passi);
+    border-radius: 2px;
+  }
+
+  .passo {
+    position: relative;
+    display: grid;
+    gap: 0.4rem;
+    max-width: 32rem;
+  }
+  .passo::before {
+    content: '';
+    position: absolute;
+    left: -2.36rem;
+    top: 0.35rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: var(--sfondo);
+    box-shadow:
+      inset 0 0 0 3px var(--tinta, var(--testo-2)),
+      0 0 0 4px var(--sfondo);
+  }
+  .passo[data-tinta='fitness']::before {
+    border-radius: 0;
+    transform: skewX(-14deg);
+  }
+  .passo__numero {
+    font-size: 1rem;
+    color: var(--testo-2);
+  }
+  .passo__etichetta {
+    font-size: var(--step--1);
+    font-weight: 700;
+    color: var(--tinta-testo, var(--testo-2));
+  }
+  .passo__titolo {
+    font-size: var(--step-2);
+    letter-spacing: -0.02em;
+  }
+  .passo[data-tinta='fitness'] .passo__titolo {
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+  .passo__testo {
+    color: var(--testo-2);
+  }
+  .passo__link {
+    justify-self: start;
+    margin-top: 0.35rem;
+    font-weight: 700;
+    text-decoration-color: var(--tinta);
+    text-decoration-thickness: 2px;
+  }
+
+  @media (min-width: 64em) {
+    .percorso__passi {
+      --linea-passi: linear-gradient(to right, var(--testo-2) 0 10%, var(--teal) 28% 42%, var(--oro) 60% 76%, var(--testo-2));
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2.5rem;
+      padding: 2.75rem 0 0;
+    }
+    .percorso__passi::before {
+      left: 0.5rem;
+      right: 0.5rem;
+      top: 0.45rem;
+      bottom: auto;
+      width: auto;
+      height: 3px;
+    }
+    .passo::before {
+      left: 0;
+      top: -2.75rem;
+    }
+  }
+</style>

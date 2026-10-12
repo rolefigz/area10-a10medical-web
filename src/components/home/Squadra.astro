@@ -1,0 +1,137 @@
+---
+// Le persone del centro. L'unico nome confermato è quello del Dott. Giancarlo Sportelli:
+// gli altri profili arriveranno con nomi e foto forniti dal cliente (TODO).
+import Foto from '../Foto.astro';
+import { url } from '../../lib/url.js';
+import { centro } from '../../lib/dati.js';
+
+const ruoli = [
+  { ruolo: 'Personal trainer', area: 'Area10', tinta: 'fitness' },
+  { ruolo: 'Istruttori dei corsi', area: 'Area10', tinta: 'fitness' },
+  { ruolo: 'Fisioterapisti', area: 'A10 Medical', tinta: 'medical' },
+  { ruolo: 'Ortopedico', area: 'A10 Medical', tinta: 'medical' },
+  { ruolo: 'Nutrizionista', area: 'A10 Medical', tinta: 'medical' },
+];
+---
+
+<section class="squadra sezione" aria-labelledby="squadra-titolo">
+  <div class="contenitore squadra__griglia">
+    <header class="squadra__testa">
+      <h2 id="squadra-titolo" class="squadra__titolo">Le persone</h2>
+      <p class="lead">Allenatori, istruttori, fisioterapisti e medici, nella stessa struttura. Nomi e volti del team in arrivo.</p>
+    </header>
+
+    <article class="medico" data-tinta="medical">
+      <Foto id="medical/dott-sportelli" rapporto="4/5" sizes="(min-width: 64em) 24vw, 70vw" class="medico__foto" />
+      <div class="medico__testo">
+        <h3 class="medico__nome">{centro.medical.medicoVisiteSportive}</h3>
+        <p class="medico__ruolo">Visite medico-sportive in A10 Medical</p>
+        <a class="medico__link" href={url('/medical/visite-sportive/')}>Come prenotare la visita</a>
+      </div>
+    </article>
+
+    <ul class="ruoli" role="list" aria-label="Le figure professionali del centro">
+      {
+        ruoli.map((r) => (
+          <li class="ruolo" data-tinta={r.tinta}>
+            <span class="ruolo__nome">{r.ruolo}</span>
+            <span class="ruolo__area">{r.area}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .squadra__griglia {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .squadra__testa {
+    display: grid;
+    gap: 1rem;
+    max-width: 40rem;
+  }
+  .squadra__titolo {
+    font-size: var(--step-5);
+    letter-spacing: -0.04em;
+  }
+  .medico {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.8fr) 1fr;
+    gap: 1.25rem;
+    align-items: end;
+  }
+  .medico :global(.medico__foto) {
+    border-radius: 1rem;
+  }
+  .medico__testo {
+    display: grid;
+    gap: 0.35rem;
+    padding-bottom: 0.5rem;
+  }
+  .medico__nome {
+    font-size: var(--step-2);
+    letter-spacing: -0.02em;
+  }
+  .medico__ruolo {
+    color: var(--testo-2);
+  }
+  .medico__link {
+    justify-self: start;
+    margin-top: 0.5rem;
+    font-weight: 700;
+    text-decoration-color: var(--tinta);
+    text-decoration-thickness: 2px;
+  }
+
+  .ruoli {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+  .ruolo {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1.1rem 1.15rem 1.2rem;
+    border-left: 3px solid var(--tinta);
+    background-color: var(--sfondo-2);
+  }
+  .ruolo__nome {
+    font-weight: 750;
+    font-size: 1.1rem;
+  }
+  .ruolo[data-tinta='fitness'] .ruolo__nome {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .ruolo__area {
+    font-size: var(--step--1);
+    font-weight: 650;
+    color: var(--tinta-testo);
+  }
+
+  @media (min-width: 64em) {
+    .squadra__griglia {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 4rem;
+      align-items: start;
+    }
+    .squadra__testa {
+      grid-column: 1 / -1;
+    }
+    .ruoli {
+      grid-template-columns: 1fr 1fr;
+      align-self: end;
+    }
+    .ruolo:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

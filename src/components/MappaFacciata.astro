@@ -1,0 +1,135 @@
+---
+// Mappa "a richiesta": finché il visitatore non la chiede non si carica nulla da terzi
+// (meglio per la privacy e per la velocità). I link aprono Google Maps o Apple Maps con le coordinate reali.
+import Icona from './Icona.astro';
+import { centro } from '../lib/dati.js';
+---
+
+<div class="mappa" data-mappa data-src={centro.mappe.osmEmbed}>
+  <div class="mappa__finta texture-topo" data-surface="ink">
+    <div class="mappa__perno" aria-hidden="true">
+      <span class="mappa__punto"></span>
+    </div>
+    <p class="mappa__indirizzo">
+      <strong>Via Formaleoni 6 e 8</strong>
+      <span>29027 Podenzano (PC)</span>
+      <span class="mappa__coord cifre">44.949094 N, 9.678713 E</span>
+    </p>
+    <button type="button" class="mappa__carica" data-carica-mappa>
+      <Icona nome="map-2" />
+      Mostra la mappa interattiva
+    </button>
+  </div>
+  <p class="mappa__nota">La mappa interattiva viene caricata da OpenStreetMap solo se la richiedi.</p>
+  <div class="mappa__link">
+    <a class="btn" href={centro.mappe.google} rel="noopener" target="_blank">
+      <Icona nome="route" />
+      Come arrivare<span class="visually-hidden"> con Google Maps (nuova scheda)</span>
+    </a>
+    <a class="btn btn--secondario" href={centro.mappe.apple} rel="noopener" target="_blank">
+      Apri in Apple Maps<span class="visually-hidden"> (nuova scheda)</span>
+    </a>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mappa]').forEach((box) => {
+    const bottone = box.querySelector<HTMLButtonElement>('[data-carica-mappa]');
+    bottone?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = box.dataset.src!;
+      iframe.title = 'Mappa di Area10 e A10 Medical, via Formaleoni a Podenzano (OpenStreetMap)';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer';
+      iframe.className = 'mappa__iframe';
+      const finta = box.querySelector('.mappa__finta')!;
+      finta.replaceWith(iframe);
+      iframe.focus();
+    });
+  });
+</script>
+
+<style>
+  .mappa {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .mappa__finta,
+  .mappa :global(.mappa__iframe) {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: 0;
+    border-radius: var(--raggio);
+  }
+  .mappa__finta {
+    --topo-opacita: 0.28;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    overflow: hidden;
+    text-align: center;
+  }
+  .mappa__perno {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50% 50% 50% 0;
+    background: linear-gradient(135deg, var(--oro) 50%, var(--teal) 50%);
+    transform: rotate(-45deg);
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+  }
+  .mappa__punto {
+    position: absolute;
+    inset: 0.95rem;
+    border-radius: 50%;
+    background-color: var(--nero);
+  }
+  .mappa__indirizzo {
+    display: grid;
+    gap: 0.1rem;
+  }
+  .mappa__indirizzo strong {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .mappa__coord {
+    margin-top: 0.3rem;
+    font-size: 0.95rem;
+    color: var(--testo-2);
+  }
+  .mappa__carica {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 1rem;
+    border: 1.5px solid var(--linea-forte);
+    background: transparent;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .mappa__carica :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .mappa__carica:hover {
+      background-color: rgb(236 235 229 / 0.08);
+    }
+  }
+  .mappa__nota {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  .mappa__link {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

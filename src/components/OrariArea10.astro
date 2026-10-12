@@ -1,0 +1,78 @@
+---
+// Orari di Area10 (sala e personal training) con l'indicatore "Aperto ora".
+// Riutilizzato in home, pagina Area10 e contatti. Dati: data/centro.json.
+import StatoApertura from './StatoApertura.astro';
+import Fasce from './Fasce.astro';
+import { centro, orariRaggruppati } from '../lib/dati.js';
+
+interface Props {
+  /** mostra anche l'indicatore live */
+  conStato?: boolean;
+}
+const { conStato = true } = Astro.props;
+const { sala, personal } = centro.area10.orari;
+const blocchi = [sala, personal].map((o) => ({ etichetta: o.etichetta, gruppi: orariRaggruppati(o.settimana) }));
+---
+
+<div class="orari">
+  {conStato && <StatoApertura settimana={sala.settimana} chiusure={centro.area10.chiusure} etichetta={sala.etichetta} />}
+  {
+    blocchi.map((b) => (
+      <div class="orari__blocco">
+        <h3 class="orari__titolo titolo-medical">{b.etichetta}</h3>
+        <dl class="orari__righe">
+          {b.gruppi.map((g) => (
+            <div class="orari__riga">
+              <dt>
+                <abbr title={g.giorniEstesi}>{g.giorni}</abbr>
+              </dt>
+              <dd>
+                <Fasce fasce={g.fasce} />
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .orari {
+    display: grid;
+    gap: 1.75rem;
+    justify-items: start;
+  }
+  .orari__blocco {
+    width: 100%;
+    max-width: 26rem;
+  }
+  .orari__titolo {
+    margin-bottom: 0.6rem;
+    font-size: var(--step-0);
+    font-weight: 700;
+    color: var(--testo-2);
+  }
+  .orari__righe {
+    display: grid;
+    gap: 0.3rem;
+    margin: 0;
+  }
+  .orari__riga {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .orari__riga dt {
+    font-weight: 650;
+  }
+  .orari__riga abbr {
+    text-decoration: none;
+  }
+  .orari__riga dd {
+    margin: 0;
+    font-size: 1.35rem;
+    text-align: end;
+  }
+</style>

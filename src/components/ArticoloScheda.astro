@@ -1,0 +1,165 @@
+---
+// Scheda di un articolo di "Lo sai che...". I falsi miti mostrano la frase sbagliata con il timbro "Falso".
+import type { CollectionEntry } from 'astro:content';
+import { url } from '../lib/url.js';
+
+interface Props {
+  articolo: CollectionEntry<'loSaiChe'>;
+  grande?: boolean;
+  livelloTitolo?: 'h2' | 'h3';
+}
+const { articolo, grande = false, livelloTitolo = 'h3' } = Astro.props;
+const { titolo, descrizione, tipo, mito, inBreve } = articolo.data;
+const Titolo = livelloTitolo;
+const href = url(`/lo-sai-che/${articolo.id}/`);
+---
+
+<article class:list={['scheda', { 'scheda--grande': grande, 'scheda--mito': tipo === 'mito' }]}>
+  {
+    tipo === 'mito' && mito ? (
+      <>
+        <p class="scheda__mito">
+          <span class="visually-hidden">Falso mito: </span>“{mito}”
+        </p>
+        <span class="scheda__timbro" aria-hidden="true">
+          Falso
+        </span>
+      </>
+    ) : (
+      <p class="scheda__tipo">Lo sai che...</p>
+    )
+  }
+  <Titolo class="scheda__titolo">
+    <a href={href} class="scheda__link">{titolo}</a>
+  </Titolo>
+  <p class="scheda__descrizione">{descrizione}</p>
+  {
+    grande && inBreve.length > 0 && (
+      <ul class="scheda__breve" role="list">
+        {inBreve.map((frase) => (
+          <li>{frase}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  .scheda {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: var(--raggio);
+    background-color: var(--sfondo-2);
+    transition: transform 240ms var(--ease-out);
+  }
+  .scheda--mito {
+    background-color: var(--sfondo);
+    box-shadow: inset 0 0 0 1px var(--linea-forte);
+  }
+  .scheda__tipo {
+    font-weight: 700;
+    color: var(--accento-testo);
+  }
+  .scheda__mito {
+    max-width: 26ch;
+    padding-right: 4.5rem;
+    font-size: var(--step-2);
+    font-weight: 650;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    text-decoration: line-through;
+    text-decoration-color: color-mix(in srgb, var(--accento-testo) 70%, transparent);
+    text-decoration-thickness: 2px;
+  }
+  .scheda--grande .scheda__mito {
+    font-size: var(--step-4);
+    line-height: 1.05;
+    text-decoration-thickness: 4px;
+  }
+  .scheda__timbro {
+    position: absolute;
+    top: clamp(1.1rem, 3vw, 1.8rem);
+    right: clamp(1.1rem, 3vw, 1.8rem);
+    padding: 0.3rem 0.7rem 0.25rem;
+    border: 2.5px solid var(--accento-testo);
+    border-radius: 0.4rem;
+    color: var(--accento-testo);
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: rotate(-8deg);
+  }
+  .scheda--grande .scheda__timbro {
+    font-size: 1.25rem;
+  }
+  .scheda__titolo {
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+  .scheda--grande .scheda__titolo {
+    font-size: var(--step-2);
+  }
+  /* tutta la scheda è cliccabile, il link resta l'unico elemento interattivo */
+  .scheda__link {
+    text-decoration: none;
+  }
+  .scheda__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+  .scheda__link:focus-visible {
+    outline: none;
+  }
+  .scheda:has(.scheda__link:focus-visible) {
+    outline: 3px solid var(--accento-testo);
+    outline-offset: 3px;
+  }
+  .scheda__descrizione {
+    color: var(--testo-2);
+    font-size: var(--step--1);
+  }
+  .scheda--grande .scheda__descrizione {
+    font-size: var(--step-0);
+  }
+  .scheda__breve {
+    display: grid;
+    gap: 0.6rem;
+    margin: auto 0 0;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid var(--linea);
+  }
+  .scheda__breve li {
+    position: relative;
+    padding-left: 1.6rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .scheda__breve li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.42em;
+    width: 0.85rem;
+    height: 0.5rem;
+    border-left: 2.5px solid var(--accento-testo);
+    border-bottom: 2.5px solid var(--accento-testo);
+    transform: rotate(-45deg);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .scheda:hover {
+      transform: translateY(-3px);
+    }
+    .scheda:hover .scheda__titolo {
+      text-decoration: underline;
+      text-decoration-color: var(--accento);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.2em;
+    }
+  }
+</style>

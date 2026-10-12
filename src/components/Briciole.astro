@@ -1,0 +1,52 @@
+---
+// Briciole di pane visibili (le stesse finiscono nel JSON-LD tramite il layout).
+import { url } from '../lib/url.js';
+
+interface Props {
+  voci: { nome: string; url: string }[];
+}
+const { voci } = Astro.props;
+---
+
+<nav class="briciole" aria-label="Percorso di navigazione">
+  <ol role="list">
+    {
+      voci.map((v, i) => (
+        <li>
+          {i < voci.length - 1 ? <a href={url(v.url)}>{v.nome}</a> : <span aria-current="page">{v.nome}</span>}
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<style>
+  .briciole ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0;
+    margin: 0;
+    padding: 0;
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  .briciole li {
+    display: inline-flex;
+    align-items: center;
+  }
+  .briciole li + li::before {
+    content: '/';
+    margin-inline: 0.55rem;
+    opacity: 0.6;
+  }
+  .briciole a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    color: var(--testo);
+    text-decoration-color: var(--linea-forte);
+  }
+  .briciole [aria-current] {
+    font-weight: 650;
+  }
+</style>

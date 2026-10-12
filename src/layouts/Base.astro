@@ -1,0 +1,152 @@
+---
+// Layout comune a tutte le pagine: <head> con SEO, Open Graph, font, JSON-LD e tema;
+// header, contenuto, footer e barra mobile.
+import '../styles/tokens.css';
+import '../styles/base.css';
+import { Font } from 'astro:assets';
+import { PUBLIC_DEMO } from 'astro:env/client';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BarraMobile from '../components/BarraMobile.astro';
+import { url, urlAssoluto } from '../lib/url.js';
+import { grafoBase, briciole as bricioleLd, documento } from '../lib/jsonld.js';
+
+interface Props {
+  /** Titolo della pagina (max ~60 caratteri, con le parole chiave locali) */
+  titolo: string;
+  /** Meta description (max ~155 caratteri) */
+  descrizione: string;
+  /** Identità della pagina: Area10 ("fitness"), A10 Medical ("medical") o comune */
+  area?: 'fitness' | 'medical';
+  /** Immagine social in public/og/ */
+  immagine?: string;
+  /** Briciole di pane per il JSON-LD (la home le omette) */
+  briciole?: { nome: string; url: string }[];
+  /** Nodi JSON-LD aggiuntivi specifici della pagina */
+  jsonld?: object[];
+  /** Tipo Open Graph */
+  tipoOg?: 'website' | 'article';
+}
+
+const {
+  titolo,
+  descrizione,
+  area,
+  immagine = 'og/home.png',
+  briciole,
+  jsonld = [],
+  tipoOg = 'website',
+} = Astro.props;
+
+const site = Astro.site!;
+const canonico = new URL(Astro.url.pathname, site).href;
+const immagineAssoluta = urlAssoluto(`/${immagine}`, site);
+const datiStrutturati = documento([
+  grafoBase(site),
+  briciole ? bricioleLd(briciole, site) : null,
+  ...jsonld,
+]);
+const coloreTema = area === 'medical' ? '#fafdfd' : area === 'fitness' ? '#ecebe5' : '#f4f4f0';
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titolo}</title>
+    <meta name="description" content={descrizione} />
+    <link rel="canonical" href={canonico} />
+    {/* Sito dimostrativo: niente indicizzazione finché il cliente non approva (PUBLIC_DEMO=false) */}
+    {PUBLIC_DEMO && <meta name="robots" content="noindex, nofollow" />}
+    <meta name="theme-color" content={coloreTema} media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0e0c" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+
+    <meta property="og:type" content={tipoOg} />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content="Area10 Fitness Club e A10 Medical" />
+    <meta property="og:title" content={titolo} />
+    <meta property="og:description" content={descrizione} />
+    <meta property="og:url" content={canonico} />
+    <meta property="og:image" content={immagineAssoluta} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Area10 Fitness Club e A10 Medical, Podenzano" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-sans" preload={[{ style: 'normal' }]} />
+
+    <script is:inline>
+      // Tema prima del primo disegno (niente lampo bianco): scelta salvata o preferenza di sistema.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var salvato = null;
+        try {
+          salvato = localStorage.getItem('tema');
+        } catch (e) {}
+        var mq = window.matchMedia('(prefers-color-scheme: dark)');
+        d.dataset.theme = salvato || (mq.matches ? 'dark' : 'light');
+        mq.addEventListener('change', function (e) {
+          var ora = null;
+          try {
+            ora = localStorage.getItem('tema');
+          } catch (err) {}
+          if (!ora) {
+            d.dataset.theme = e.matches ? 'dark' : 'light';
+            window.dispatchEvent(new Event('tema-sistema'));
+          }
+        });
+      })();
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(datiStrutturati)} />
+    <slot name="head" />
+  </head>
+  <body data-area={area}>
+    <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+    <Header />
+    <main id="contenuto" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <BarraMobile area={area} />
+
+    <script>
+      // Comparsa progressiva degli elementi marcati con data-rivela (IntersectionObserver, una sola volta).
+      const elementi = document.querySelectorAll<HTMLElement>('[data-rivela]');
+      if ('IntersectionObserver' in window && elementi.length) {
+        const osservatore = new IntersectionObserver(
+          (voci) => {
+            for (const voce of voci) {
+              if (voce.isIntersecting) {
+                voce.target.classList.add('visibile');
+                osservatore.unobserve(voce.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+        );
+        elementi.forEach((el) => osservatore.observe(el));
+      } else {
+        elementi.forEach((el) => el.classList.add('visibile'));
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  main:focus {
+    outline: none;
+  }
+  @media (max-width: 47.99em) {
+    :root {
+      --barra-h: 4rem;
+    }
+  }
+</style>

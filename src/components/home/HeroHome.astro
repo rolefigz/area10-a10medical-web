@@ -1,0 +1,380 @@
+---
+// Hero della home: lo schermo è tagliato in diagonale tra le due anime del centro.
+// A sinistra (in alto su mobile) Area10: nero, oro, curve di livello.
+// A destra (in basso su mobile) A10 Medical: bianco, turchese, carta millimetrata.
+// Il "10" gigante, comune ai due nomi, è diviso dal taglio: metà oro, metà turchese.
+// Il titolo è un unico <h1> le cui parti si posizionano sulla griglia dell'hero (subgrid).
+import Icona from '../Icona.astro';
+import { url } from '../../lib/url.js';
+---
+
+<section class="hero" aria-labelledby="hero-titolo">
+  <div class="hero__pannello hero__pannello--medical" data-area="medical" aria-hidden="true">
+    <div class="hero__mm texture-mm"></div>
+    <div class="hero__scatola-dieci"><span class="hero__dieci">10</span></div>
+  </div>
+  <div class="hero__pannello hero__pannello--fitness texture-topo" data-surface="ink" aria-hidden="true">
+    <span class="hero__dieci">10</span>
+  </div>
+
+  <h1 id="hero-titolo" class="hero__titolo">
+    <span class="hero__parola hero__parola--fitness">Allenati.</span>
+    <span class="hero__parola hero__parola--medical senza-sfondo" data-area="medical">Recupera.</span>
+    <span class="hero__parola hero__parola--ponte">Resta in forma.</span>
+  </h1>
+
+  <a class="hero__porta hero__porta--fitness senza-sfondo" href={url('/area10/')} data-surface="ink">
+    <span class="hero__porta-nome">Area10 Fitness Club</span>
+    <span class="hero__porta-testo">Palestra, personal training, corsi e HYROX</span>
+    <Icona nome="arrow-right" class="hero__porta-freccia" />
+  </a>
+  <a class="hero__porta hero__porta--medical senza-sfondo" href={url('/medical/')} data-area="medical">
+    <span class="hero__porta-nome">A10 Medical</span>
+    <span class="hero__porta-testo">Fisioterapia, ortopedia, nutrizione e visite sportive</span>
+    <Icona nome="arrow-right" class="hero__porta-freccia" />
+  </a>
+
+  <div class="hero__azioni">
+    <p class="hero__lead">Palestra e poliambulatorio porta a porta a Podenzano: ti alleni al civico 6, ti curi al civico 8.</p>
+    <a class="btn btn--fitness hero__cta" href={url('/contatti/#prova')}>Prenota la prova gratuita</a>
+  </div>
+</section>
+
+<style>
+  /* ---------------------------------------------------------------------
+     Griglia: colonne a tutta larghezza + 12 colonne di contenuto.
+     Mobile: le due aree impilate con taglio diagonale orizzontale.
+     --------------------------------------------------------------------- */
+  .hero {
+    --colonna: minmax(0, calc(var(--larghezza) / 12));
+    --taglio-hero: clamp(2.5rem, 10vw, 4rem);
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(var(--gutter), 1fr) repeat(12, var(--colonna)) minmax(var(--gutter), 1fr);
+    grid-template-rows:
+      [f-inizio] 1.75rem
+      [f-parola] auto
+      [f-porta] auto
+      [taglio] var(--taglio-hero)
+      [m-parola] auto
+      [m-porta] auto
+      [m-fine] 1.75rem
+      [ponte] auto
+      [azioni] auto
+      [fine] 2.25rem;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero__pannello {
+    position: relative;
+    grid-column: 1 / -1;
+    overflow: hidden;
+  }
+  /* Il pannello medical è una subgrid: così la scatola del "10" coincide con il pannello fitness */
+  .hero__pannello--medical {
+    grid-row: f-inizio / ponte;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    z-index: 0;
+  }
+  .hero__pannello--fitness,
+  .hero__scatola-dieci {
+    grid-row: f-inizio / m-parola;
+  }
+  .hero__pannello--fitness {
+    z-index: 1;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--taglio-hero)), 0 100%);
+    --topo-opacita: 0.2;
+  }
+  .hero__scatola-dieci {
+    position: relative;
+    grid-column: 1 / -1;
+  }
+  .hero__mm {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(to top, #000 20%, transparent 85%);
+    mask-image: linear-gradient(to top, #000 20%, transparent 85%);
+  }
+
+  /* Il "10": stessa scatola e stessa posizione nei due pannelli, il taglio lo divide a metà */
+  .hero__dieci {
+    position: absolute;
+    left: 78%;
+    bottom: calc(var(--taglio-hero) * 0.22);
+    translate: -50% 50%;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(13rem, 70vw, 24rem);
+    line-height: 0.74;
+    letter-spacing: -0.02em;
+    color: var(--dieci-colore);
+    user-select: none;
+    pointer-events: none;
+  }
+  .hero__pannello--fitness .hero__dieci {
+    --dieci-colore: rgb(216 168 56 / 0.16);
+  }
+  .hero__pannello--medical .hero__dieci {
+    --dieci-colore: color-mix(in srgb, var(--accento) 15%, transparent);
+  }
+
+  /* Il titolo occupa tutta la griglia e ne eredita righe e colonne */
+  .hero__titolo {
+    grid-column: 1 / -1;
+    grid-row: f-inizio / fine;
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-template-rows: subgrid;
+    z-index: 2;
+    margin: 0;
+    pointer-events: none;
+  }
+  .hero__parola {
+    display: block;
+  }
+  .hero__parola--fitness {
+    grid-column: 2 / -2;
+    grid-row: f-parola;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(4rem, 23vw, 7.5rem);
+    line-height: 0.84;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--osso);
+  }
+  .hero__parola--medical {
+    grid-column: 2 / -2;
+    grid-row: m-parola;
+    font-family: var(--font-sans);
+    font-weight: 650;
+    font-size: clamp(2.75rem, 13.5vw, 4.75rem);
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+  .hero__parola--ponte {
+    grid-column: 2 / -2;
+    grid-row: ponte;
+    padding-top: 1.75rem;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: clamp(2.1rem, 9.5vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--testo);
+  }
+
+  /* Porte d'ingresso alle due aree */
+  .hero__porta {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1rem;
+    max-width: 26rem;
+    padding: 0.5rem 0;
+    text-decoration: none;
+  }
+  .hero__porta--fitness {
+    grid-column: 2 / -2;
+    grid-row: f-porta;
+    align-self: start;
+    margin-top: 1rem;
+  }
+  .hero__porta--medical {
+    grid-column: 2 / -2;
+    grid-row: m-porta;
+    margin-top: 0.6rem;
+  }
+  .hero__porta-nome {
+    grid-column: 1;
+    font-size: 1.15rem;
+    font-weight: 750;
+    line-height: 1.2;
+  }
+  .hero__porta--fitness .hero__porta-nome {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .hero__porta-testo {
+    grid-column: 1;
+    font-size: var(--step--1);
+    line-height: 1.4;
+    color: var(--testo-2);
+  }
+  .hero__porta :global(.hero__porta-freccia) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.62rem;
+    border-radius: 50%;
+    background-color: var(--accento);
+    color: var(--su-accento);
+    transition: transform 240ms var(--ease-out);
+  }
+  .hero__porta--fitness :global(.hero__porta-freccia) {
+    border-radius: 0;
+    clip-path: polygon(18% 0, 100% 0, 82% 100%, 0 100%);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hero__porta:hover :global(.hero__porta-freccia) {
+      transform: translateX(4px);
+    }
+    .hero__porta:hover .hero__porta-nome {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.2em;
+    }
+  }
+
+  .hero__azioni {
+    grid-column: 2 / -2;
+    grid-row: azioni;
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+    padding-top: 1rem;
+  }
+  .hero__lead {
+    max-width: 30rem;
+    color: var(--testo-2);
+  }
+
+  /* ---------------------------------------------------------------------
+     Desktop: le due aree affiancate, taglio diagonale quasi verticale
+     --------------------------------------------------------------------- */
+  @media (min-width: 64em) {
+    .hero {
+      min-height: min(calc(100dvh - var(--header-h)), 60rem);
+      grid-template-rows:
+        [f-inizio] minmax(2rem, 1fr)
+        [f-parola m-parola] auto
+        [f-porta m-porta] auto
+        [scena-fine] clamp(2.5rem, 7vh, 5rem)
+        [ponte azioni] auto
+        [fine] clamp(2rem, 5vh, 3.5rem);
+    }
+    .hero__pannello--medical,
+    .hero__pannello--fitness,
+    .hero__scatola-dieci {
+      grid-row: f-inizio / ponte;
+    }
+    .hero__pannello--fitness {
+      clip-path: polygon(0 0, 61% 0, 47% 100%, 0 100%);
+    }
+    .hero__mm {
+      -webkit-mask-image: linear-gradient(to left, #000 30%, transparent 70%);
+      mask-image: linear-gradient(to left, #000 30%, transparent 70%);
+    }
+    .hero__dieci {
+      left: 54%;
+      top: 50%;
+      bottom: auto;
+      translate: -50% -50%;
+      font-size: min(44rem, 86vh);
+    }
+    .hero__parola--fitness {
+      grid-column: 2 / 9;
+      align-self: end;
+      font-size: clamp(6rem, 11.2vw, 11.25rem);
+    }
+    .hero__parola--medical {
+      grid-column: 10 / 14;
+      align-self: end;
+      padding-bottom: 0.35rem;
+      font-size: clamp(3.25rem, 5.6vw, 6rem);
+    }
+    .hero__porta--fitness {
+      grid-column: 2 / 7;
+      margin-top: 2rem;
+    }
+    .hero__porta--medical {
+      grid-column: 10 / 14;
+      margin-top: 2rem;
+    }
+    .hero__parola--ponte {
+      grid-column: 2 / 8;
+      align-self: start;
+      padding-top: 2.4rem;
+      font-size: clamp(2.75rem, 4.2vw, 4.25rem);
+    }
+    .hero__azioni {
+      grid-column: 9 / 14;
+      padding-top: 2.5rem;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     Sequenza d'ingresso (l'unico momento "wow" del sito):
+     il nero entra da sinistra, le due metà del 10 si incastrano, poi le parole.
+     fill-mode "backwards": a fine animazione restano solo gli stili di base.
+     --------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__pannello--fitness {
+      animation: hero-sipario 950ms var(--ease-out) backwards;
+    }
+    .hero__pannello--fitness .hero__dieci {
+      animation: hero-dieci-sx 1300ms var(--ease-out) 100ms backwards;
+    }
+    .hero__pannello--medical .hero__dieci {
+      animation: hero-dieci-dx 1300ms var(--ease-out) 100ms backwards;
+    }
+    .hero__parola--fitness {
+      animation: hero-svela 850ms var(--ease-out) 220ms backwards;
+    }
+    .hero__parola--medical {
+      animation: hero-sali 750ms var(--ease-out) 420ms backwards;
+    }
+    .hero__porta,
+    .hero__parola--ponte,
+    .hero__azioni {
+      animation: hero-sali 700ms var(--ease-out) 620ms backwards;
+    }
+  }
+  @keyframes hero-sipario {
+    from {
+      clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+    }
+  }
+  @media (min-width: 64em) {
+    @keyframes hero-sipario {
+      from {
+        clip-path: polygon(0 0, 0 0, -14% 100%, 0 100%);
+      }
+    }
+  }
+  @keyframes hero-dieci-sx {
+    from {
+      transform: translateX(-14%);
+    }
+  }
+  @keyframes hero-dieci-dx {
+    from {
+      transform: translateX(14%);
+    }
+  }
+  @keyframes hero-svela {
+    from {
+      clip-path: inset(-10% 100% -10% 0);
+      transform: translateX(-0.12em);
+    }
+    to {
+      clip-path: inset(-10% -5% -10% 0);
+      transform: none;
+    }
+  }
+  @keyframes hero-sali {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+</style>

@@ -1,0 +1,245 @@
+---
+// Piè di pagina con i dati di entrambe le aree, link utili, avviso sanitario e credito della proposta.
+import Marchio from './Marchio.astro';
+import Icona from './Icona.astro';
+import Fasce from './Fasce.astro';
+import { url } from '../lib/url.js';
+import { centro, orariRaggruppati, indirizzoTesto } from '../lib/dati.js';
+
+const a = centro.area10;
+const m = centro.medical;
+const orariSala = orariRaggruppati(a.orari.sala.settimana);
+const anno = new Date().getFullYear();
+---
+
+<footer class="footer" data-surface="ink">
+  <div class="contenitore">
+    <div class="footer__griglia">
+      <section class="footer__blocco" data-tinta="fitness" aria-labelledby="footer-area10">
+        <h2 id="footer-area10" class="footer__titolo titolo-fitness">Area10 Fitness Club</h2>
+        <address>
+          <a href={centro.mappe.google} rel="noopener" target="_blank">
+            <Icona nome="map-pin" />
+            <span>{indirizzoTesto(a.indirizzo)}<span class="visually-hidden"> (apre Google Maps)</span></span>
+          </a>
+          <a href={`tel:${a.telefono}`}>
+            <Icona nome="phone" />
+            <span>{a.telefonoLeggibile}</span>
+          </a>
+          <a href={a.instagram} rel="noopener" target="_blank">
+            <Icona nome="brand-instagram" />
+            <span>{a.instagramHandle}<span class="visually-hidden"> (Instagram, nuova scheda)</span></span>
+          </a>
+        </address>
+        <dl class="footer__orari">
+          {
+            orariSala.map((o) => (
+              <div>
+                <dt>{o.giorni}</dt>
+                <dd>
+                  <Fasce fasce={o.fasce} />
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section class="footer__blocco" data-tinta="medical" aria-labelledby="footer-medical">
+        <h2 id="footer-medical" class="footer__titolo titolo-medical">A10 Medical</h2>
+        <address>
+          <a href={centro.mappe.google} rel="noopener" target="_blank">
+            <Icona nome="map-pin" />
+            <span>{indirizzoTesto(m.indirizzo)}<span class="visually-hidden"> (apre Google Maps)</span></span>
+          </a>
+          <a href={`tel:${m.telefono}`}>
+            <Icona nome="phone" />
+            <span>{m.telefonoLeggibile}</span>
+          </a>
+          <a href={`mailto:${m.email}`}>
+            <Icona nome="mail" />
+            <span>{m.email}</span>
+          </a>
+          <a href={m.instagram} rel="noopener" target="_blank">
+            <Icona nome="brand-instagram" />
+            <span>{m.instagramHandle}<span class="visually-hidden"> (Instagram, nuova scheda)</span></span>
+          </a>
+        </address>
+        <p class="footer__nota">Per informazioni e prenotazioni chiama o scrivi.</p>
+      </section>
+
+      <nav class="footer__blocco footer__mappa" aria-label="Mappa del sito">
+        <h2 class="footer__titolo titolo-medical">Il sito</h2>
+        <ul role="list">
+          <li><a href={url('/')}>Home</a></li>
+          <li><a href={url('/area10/')}>Area10, la palestra</a></li>
+          <li><a href={url('/area10/hyrox/')}>HYROX Training Club</a></li>
+          <li><a href={url('/area10/corsi/')}>Corsi 2026/27</a></li>
+          <li><a href={url('/medical/')}>A10 Medical</a></li>
+          <li><a href={url('/medical/visite-sportive/')}>Visite medico-sportive</a></li>
+          <li><a href={url('/lo-sai-che/')}>Lo sai che...</a></li>
+          <li><a href={url('/contatti/')}>Contatti</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer__marchio" aria-hidden="true">
+      <Marchio />
+    </div>
+
+    <div class="footer__fondo">
+      <p class="footer__avviso">
+        <Icona nome="info-circle" />
+        <span>Le informazioni di questo sito non sostituiscono la visita medica.</span>
+      </p>
+      <ul role="list" class="footer__legali">
+        <li><a href={url('/privacy/')}>Privacy</a></li>
+        <li><a href={url('/cookie/')}>Cookie</a></li>
+      </ul>
+      <Fragment set:html="<!-- TODO: ragione sociale e P.IVA di entrambe le attività (obbligatorie per legge) -->" />
+      <p class="footer__crediti">
+        Proposta di design realizzata da <strong>RoleFigz</strong>. Sito dimostrativo, non è il sito ufficiale del
+        centro. HYROX è un marchio dei rispettivi titolari. {anno}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    padding-block: var(--sezione) calc(2.5rem + var(--barra-h));
+    font-size: var(--step--1);
+  }
+  .footer__griglia {
+    display: grid;
+    gap: 2.75rem;
+  }
+  .footer__titolo {
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    color: var(--testo);
+  }
+  .footer__titolo.titolo-medical {
+    font-size: 1.3rem;
+  }
+  .footer address {
+    display: grid;
+    gap: 0.35rem;
+    font-style: normal;
+  }
+  .footer address a,
+  .footer__mappa a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.5rem;
+    text-decoration: none;
+    color: var(--testo);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .footer address a:hover span,
+    .footer__mappa a:hover {
+      text-decoration: underline;
+    }
+  }
+  .footer address :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--tinta-testo);
+  }
+  .footer__orari {
+    display: grid;
+    gap: 0.25rem;
+    margin: 1.25rem 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--linea);
+  }
+  .footer__orari div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .footer__orari dt {
+    color: var(--testo-2);
+  }
+  .footer__orari dd {
+    margin: 0;
+    font-size: 1.05rem;
+    text-align: end;
+  }
+  .footer__nota {
+    margin-top: 1rem;
+    color: var(--testo-2);
+  }
+  .footer__mappa ul {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+  }
+  .footer__mappa a {
+    min-height: 2.25rem;
+  }
+
+  .footer__marchio {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--linea);
+    font-size: 1rem;
+  }
+
+  .footer__fondo {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    color: var(--testo-2);
+  }
+  .footer__avviso {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    color: var(--testo);
+  }
+  .footer__avviso :global(svg) {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.15rem;
+    color: var(--teal-chiaro);
+  }
+  .footer__legali {
+    display: flex;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+  }
+  .footer__legali a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.25rem;
+    color: var(--testo);
+  }
+  .footer__crediti strong {
+    color: var(--testo);
+  }
+
+  @media (min-width: 48em) {
+    .footer__griglia {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64em) {
+    .footer__griglia {
+      grid-template-columns: 1.15fr 1.15fr 0.8fr;
+      gap: 4rem;
+    }
+    .footer__fondo {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+    .footer__crediti {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

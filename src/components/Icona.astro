@@ -1,0 +1,31 @@
+---
+// Icona SVG inline (set Tabler, licenza MIT) generata in fase di build: zero JavaScript nel browser.
+// Uso: <Icona nome="phone" />  - elenco completo su https://tabler.io/icons
+import { getIconData, iconToSVG, replaceIDs } from '@iconify/utils';
+import tabler from '@iconify-json/tabler/icons.json';
+
+interface Props {
+  nome: string;
+  class?: string;
+  /** Testo alternativo: se assente l'icona è decorativa (aria-hidden) */
+  titolo?: string;
+}
+
+const { nome, class: classe, titolo } = Astro.props;
+const dati = getIconData(tabler, nome);
+if (!dati) throw new Error(`Icona Tabler non trovata: "${nome}"`);
+const svg = iconToSVG(dati, { height: 24 });
+const corpo = (titolo ? `<title>${titolo}</title>` : '') + replaceIDs(svg.body);
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={svg.attributes.viewBox}
+  width="24"
+  height="24"
+  class:list={['icona', classe]}
+  aria-hidden={titolo ? undefined : 'true'}
+  role={titolo ? 'img' : undefined}
+  focusable="false"
+  set:html={corpo}
+/>

@@ -1,0 +1,529 @@
+---
+// Calendario dei corsi 2026/27 con filtri per giorno, disciplina e sede.
+// Desktop: tabella settimanale. Mobile: schede per giorno. Dati: data/corsi.json.
+// Senza JavaScript il calendario completo resta visibile; i filtri compaiono solo se il JS è attivo.
+// I filtri finiscono nell'indirizzo (es. ?giorno=gio&sede=san-polo), così si possono condividere.
+import { corsi, corsiOrdinati, giorniConCorsi, formattaOra, GIORNI_BREVI } from '../lib/dati.js';
+
+const giorni = giorniConCorsi();
+const elenco = corsiOrdinati();
+const orariInizio = [...new Set(elenco.map((c) => c.inizio))].sort();
+const disciplinePresenti = Object.entries(corsi.discipline).filter(([id]) => elenco.some((c) => c.disciplina === id));
+const sedi = Object.entries(corsi.sedi);
+const nomeDisciplina = (id: string) => corsi.discipline[id as keyof typeof corsi.discipline].nome;
+const nomeSede = (id: string) => corsi.sedi[id as keyof typeof corsi.sedi].nome;
+---
+
+<div class="calendario" data-calendario>
+  <form class="filtri" data-filtri aria-label="Filtra i corsi">
+    <fieldset class="filtri__gruppo">
+      <legend>Giorno</legend>
+      <div class="filtri__chips">
+        <input type="radio" name="giorno" id="f-giorno-tutti" value="" checked />
+        <label for="f-giorno-tutti">Tutti</label>
+        {
+          giorni.map((g) => (
+            <>
+              <input type="radio" name="giorno" id={`f-giorno-${g}`} value={g} />
+              <label for={`f-giorno-${g}`}>
+                <abbr title={corsi.giorni[g as keyof typeof corsi.giorni]}>{GIORNI_BREVI[g as keyof typeof GIORNI_BREVI]}</abbr>
+              </label>
+            </>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div class="filtri__gruppo filtri__select">
+      <label for="f-disciplina">Disciplina</label>
+      <select id="f-disciplina" name="disciplina">
+        <option value="">Tutte le discipline</option>
+        {disciplinePresenti.map(([id, d]) => <option value={id}>{d.nome}</option>)}
+      </select>
+    </div>
+
+    <fieldset class="filtri__gruppo">
+      <legend>Sede</legend>
+      <div class="filtri__chips">
+        <input type="radio" name="sede" id="f-sede-tutte" value="" checked />
+        <label for="f-sede-tutte">Tutte</label>
+        {
+          sedi.map(([id, s]) => (
+            <>
+              <input type="radio" name="sede" id={`f-sede-${id}`} value={id} />
+              <label for={`f-sede-${id}`}>{s.nome}</label>
+            </>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div class="filtri__stato">
+      <p class="filtri__conteggio" data-conteggio aria-live="polite">{elenco.length} corsi a settimana</p>
+      <button type="reset" class="filtri__azzera" data-azzera>Azzera i filtri</button>
+    </div>
+  </form>
+
+  <div class="tabella-contenitore">
+    <table class="tabella">
+      <caption class="visually-hidden">Calendario settimanale dei corsi {corsi.stagione}</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="tabella__ora-testa">Ora</th>
+          {
+            giorni.map((g) => (
+              <th scope="col" data-col={g}>
+                {corsi.giorni[g as keyof typeof corsi.giorni]}
+                <span class="oggi-etichetta">Oggi</span>
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody>
+        {
+          orariInizio.map((ora) => (
+            <tr data-riga>
+              <th scope="row" class="tabella__ora cifre">{formattaOra(ora)}</th>
+              {giorni.map((g) => (
+                <td data-col={g}>
+                  {elenco
+                    .filter((c) => c.giorno === g && c.inizio === ora)
+                    .map((c) => (
+                      <div
+                        class="slot"
+                        data-corso
+                        data-giorno={c.giorno}
+                        data-disciplina={c.disciplina}
+                        data-sede={c.sede}
+                      >
+                        <span class="slot__nome">{c.nome}</span>
+                        <span class="slot__orario cifre">
+                          {formattaOra(c.inizio)}-{formattaOra(c.fine)}
+                        </span>
+                        {c.sede !== 'podenzano' && <span class="slot__sede">Sede di {nomeSede(c.sede)}</span>}
+                      </div>
+                    ))}
+                </td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="schede">
+    {
+      giorni.map((g) => (
+        <section class="giorno-mob" data-giorno-sezione={g} aria-labelledby={`giorno-mob-${g}`}>
+          <h3 id={`giorno-mob-${g}`} class="giorno-mob__nome">
+            {corsi.giorni[g as keyof typeof corsi.giorni]}
+            <span class="oggi-etichetta">Oggi</span>
+          </h3>
+          <ul class="giorno-mob__lista" role="list">
+            {elenco
+              .filter((c) => c.giorno === g)
+              .map((c) => (
+                <li
+                  class="riga-corso"
+                  data-corso
+                  data-conta
+                  data-giorno={c.giorno}
+                  data-disciplina={c.disciplina}
+                  data-sede={c.sede}
+                >
+                  <span class="riga-corso__ora cifre">
+                    {formattaOra(c.inizio)}
+                    <span class="riga-corso__fine">-{formattaOra(c.fine)}</span>
+                  </span>
+                  <span class="riga-corso__nome">{c.nome}</span>
+                  <span class="riga-corso__dettagli">
+                    {nomeDisciplina(c.disciplina)}
+                    {c.sede !== 'podenzano' && <strong> · Sede di {nomeSede(c.sede)}</strong>}
+                  </span>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="vuoto" data-vuoto hidden>
+    <p class="vuoto__titolo">Nessun corso con questi filtri.</p>
+    <p>Prova a cambiare giorno o sede, oppure azzera i filtri per vedere tutta la settimana.</p>
+    <button type="button" class="btn btn--secondario" data-azzera-vuoto>Azzera i filtri</button>
+  </div>
+</div>
+
+<script>
+  import { oraLocale } from '../lib/orari.js';
+
+  document.querySelectorAll<HTMLElement>('[data-calendario]').forEach((cal) => {
+    const form = cal.querySelector<HTMLFormElement>('[data-filtri]')!;
+    const corsi = Array.from(cal.querySelectorAll<HTMLElement>('[data-corso]'));
+    const righe = Array.from(cal.querySelectorAll<HTMLElement>('[data-riga]'));
+    const colonne = Array.from(cal.querySelectorAll<HTMLElement>('[data-col]'));
+    const sezioni = Array.from(cal.querySelectorAll<HTMLElement>('[data-giorno-sezione]'));
+    const conteggio = cal.querySelector<HTMLElement>('[data-conteggio]')!;
+    const vuoto = cal.querySelector<HTMLElement>('[data-vuoto]')!;
+    const tabella = cal.querySelector<HTMLElement>('.tabella-contenitore')!;
+    const totale = cal.querySelectorAll('[data-conta]').length;
+    const CHIAVI = ['giorno', 'disciplina', 'sede'] as const;
+
+    // Giorno corrente (ora di Roma) evidenziato in tabella e nelle schede
+    const oggi = oraLocale().giorno;
+    cal.querySelectorAll(`[data-col="${oggi}"], [data-giorno-sezione="${oggi}"]`).forEach((el) => el.classList.add('oggi'));
+
+    const leggi = () => {
+      const dati = new FormData(form);
+      return Object.fromEntries(CHIAVI.map((k) => [k, String(dati.get(k) ?? '')])) as Record<(typeof CHIAVI)[number], string>;
+    };
+
+    const applica = (aggiornaIndirizzo = true) => {
+      const f = leggi();
+      let visibili = 0;
+      corsi.forEach((el) => {
+        const ok =
+          (!f.giorno || el.dataset.giorno === f.giorno) &&
+          (!f.disciplina || el.dataset.disciplina === f.disciplina) &&
+          (!f.sede || el.dataset.sede === f.sede);
+        el.hidden = !ok;
+        if (ok && el.hasAttribute('data-conta')) visibili++;
+      });
+      // tabella: nasconde le colonne degli altri giorni e le righe rimaste vuote
+      colonne.forEach((c) => (c.hidden = !!f.giorno && c.dataset.col !== f.giorno));
+      const filtriAttivi = CHIAVI.some((k) => f[k]);
+      righe.forEach((r) => {
+        r.hidden = filtriAttivi && !r.querySelector('[data-corso]:not([hidden])');
+      });
+      sezioni.forEach((s) => (s.hidden = !s.querySelector('[data-corso]:not([hidden])')));
+
+      vuoto.hidden = visibili > 0;
+      tabella.hidden = visibili === 0;
+      conteggio.textContent = filtriAttivi
+        ? `${visibili} ${visibili === 1 ? 'corso trovato' : 'corsi trovati'} su ${totale}`
+        : `${totale} corsi a settimana`;
+
+      if (aggiornaIndirizzo) {
+        const params = new URLSearchParams();
+        CHIAVI.forEach((k) => f[k] && params.set(k, f[k]));
+        const query = params.toString();
+        history.replaceState(null, '', query ? `?${query}` : location.pathname);
+      }
+    };
+
+    // Filtri iniziali dall'indirizzo (solo valori esistenti)
+    const params = new URLSearchParams(location.search);
+    CHIAVI.forEach((k) => {
+      const valore = params.get(k);
+      if (!valore) return;
+      const campo = form.elements.namedItem(k);
+      if (campo instanceof RadioNodeList) {
+        const radio = Array.from(campo).find((r) => (r as HTMLInputElement).value === valore) as HTMLInputElement | undefined;
+        if (radio) radio.checked = true;
+      } else if (campo instanceof HTMLSelectElement && Array.from(campo.options).some((o) => o.value === valore)) {
+        campo.value = valore;
+      }
+    });
+
+    form.addEventListener('change', () => applica());
+    form.addEventListener('reset', () => setTimeout(() => applica()));
+    form.addEventListener('submit', (e) => e.preventDefault());
+    cal.querySelector('[data-azzera-vuoto]')?.addEventListener('click', () => {
+      form.reset();
+      form.querySelector<HTMLInputElement>('input[name="giorno"]')?.focus();
+    });
+    applica(false);
+  });
+</script>
+
+<style>
+  .calendario {
+    display: grid;
+    gap: 1.75rem;
+  }
+
+  /* --- Filtri (visibili solo con JavaScript attivo) ---------------------- */
+  .filtri {
+    display: none;
+  }
+  :global(.js) .filtri {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background-color: var(--sfondo-2);
+  }
+  .filtri__gruppo {
+    display: grid;
+    gap: 0.5rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .filtri__gruppo legend,
+  .filtri__select label {
+    padding: 0;
+    margin-bottom: 0.5rem;
+    font-size: var(--step--1);
+    font-weight: 700;
+  }
+  .filtri__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .filtri__chips input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .filtri__chips label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    justify-content: center;
+    padding: 0 0.9rem;
+    border: 1.5px solid var(--linea-forte);
+    background-color: var(--sfondo);
+    font-weight: 650;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 160ms var(--ease-out);
+  }
+  .filtri__chips label:active {
+    transform: scale(0.96);
+  }
+  .filtri__chips label abbr {
+    text-decoration: none;
+  }
+  .filtri__chips input:checked + label {
+    background-color: var(--cta-sfondo);
+    border-color: var(--cta-sfondo);
+    color: var(--cta-testo);
+  }
+  .filtri__chips input:focus-visible + label {
+    outline: 3px solid var(--accento-testo);
+    outline-offset: 2px;
+  }
+  .filtri__select select {
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    border: 1.5px solid var(--linea-forte);
+    background-color: var(--sfondo);
+    font-weight: 600;
+  }
+  .filtri__stato {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .filtri__conteggio {
+    font-weight: 700;
+  }
+  .filtri__azzera {
+    min-height: 2.75rem;
+    padding: 0 0.25rem;
+    border: 0;
+    background: none;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--accento);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+  }
+
+  /* --- Tabella (desktop) -------------------------------------------------- */
+  .tabella-contenitore {
+    display: none;
+  }
+  .tabella {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0.4rem;
+    margin: -0.4rem;
+    width: calc(100% + 0.8rem);
+    table-layout: fixed;
+  }
+  .tabella th {
+    text-align: left;
+  }
+  .tabella thead th {
+    padding: 0.75rem 0.85rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--linea-forte);
+  }
+  .tabella__ora-testa {
+    width: 5rem;
+    font-family: var(--font-sans) !important;
+    font-size: var(--step--1) !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    color: var(--testo-2);
+    vertical-align: bottom;
+  }
+  .tabella thead th.oggi {
+    border-bottom-color: var(--accento);
+  }
+  .tabella__ora {
+    padding: 0.85rem 0.5rem;
+    vertical-align: top;
+    font-size: 1.4rem;
+    color: var(--accento-testo);
+  }
+  .tabella td {
+    vertical-align: top;
+    padding: 0;
+  }
+  .tabella td.oggi {
+    background-color: color-mix(in srgb, var(--accento) 10%, transparent);
+  }
+  .slot {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.8rem 0.85rem 0.9rem;
+    background-color: var(--sfondo-2);
+    border-left: 3px solid var(--accento);
+  }
+  .slot__nome {
+    font-weight: 750;
+    line-height: 1.25;
+  }
+  .slot__orario {
+    font-size: 1.05rem;
+    color: var(--testo-2);
+  }
+  .slot__sede {
+    justify-self: start;
+    margin-top: 0.3rem;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background-color: var(--cta-sfondo);
+    color: var(--cta-testo);
+  }
+
+  .oggi-etichetta {
+    display: none;
+    margin-left: 0.5rem;
+    padding: 0.1rem 0.45rem;
+    vertical-align: middle;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    background-color: var(--accento);
+    color: var(--su-accento);
+  }
+  .oggi .oggi-etichetta,
+  .oggi > .giorno-mob__nome .oggi-etichetta {
+    display: inline-block;
+  }
+
+  /* --- Schede (mobile) ---------------------------------------------------- */
+  .schede {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .giorno-mob__nome {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    font-size: 1.9rem;
+    border-bottom: 3px solid var(--linea-forte);
+  }
+  .giorno-mob.oggi .giorno-mob__nome {
+    border-bottom-color: var(--accento);
+  }
+  .giorno-mob__lista {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .riga-corso {
+    display: grid;
+    grid-template-columns: 5.25rem 1fr;
+    column-gap: 0.75rem;
+    padding: 0.85rem 0.9rem;
+    background-color: var(--sfondo-2);
+    border-left: 3px solid var(--accento);
+  }
+  .riga-corso__ora {
+    grid-row: 1 / span 2;
+    font-size: 1.45rem;
+    line-height: 1.1;
+    color: var(--accento-testo);
+  }
+  .riga-corso__fine {
+    display: block;
+    font-size: 1rem;
+    color: var(--testo-2);
+  }
+  .riga-corso__nome {
+    font-weight: 750;
+  }
+  .riga-corso__dettagli {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  .riga-corso__dettagli strong {
+    color: var(--testo);
+  }
+
+  .vuoto {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    padding: 2rem 1.5rem;
+    border: 1.5px dashed var(--linea-forte);
+  }
+  .vuoto__titolo {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+  .vuoto p:not(.vuoto__titolo) {
+    color: var(--testo-2);
+  }
+  .vuoto .btn {
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 64em) {
+    :global(.js) .filtri {
+      grid-template-columns: auto auto auto 1fr;
+      align-items: end;
+      gap: 1.5rem 2rem;
+    }
+    .filtri__stato {
+      justify-content: flex-end;
+    }
+    .tabella-contenitore {
+      display: block;
+    }
+    .tabella-contenitore[hidden] {
+      display: none;
+    }
+    .schede {
+      display: none;
+    }
+  }
+</style>

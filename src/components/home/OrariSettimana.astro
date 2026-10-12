@@ -1,0 +1,199 @@
+---
+// Home: orari di Area10 + la settimana dei corsi in sintesi (oggi evidenziato).
+import OrariArea10 from '../OrariArea10.astro';
+import { url } from '../../lib/url.js';
+import { corsi, corsiOrdinati, giorniConCorsi, formattaOra } from '../../lib/dati.js';
+
+const giorni = giorniConCorsi();
+const elenco = corsiOrdinati();
+---
+
+<section class="settimana sezione" data-area="fitness" aria-labelledby="settimana-titolo">
+  <div class="contenitore settimana__griglia">
+    <div class="settimana__orari">
+      <h2 id="settimana-titolo" class="settimana__titolo">Orari e corsi</h2>
+      <p class="settimana__lead">La sala è aperta dal lunedì al sabato. Il personal training anche dalle 8 del mattino.</p>
+      <OrariArea10 />
+    </div>
+
+    <div class="settimana__corsi">
+      <div class="settimana__testa-corsi">
+        <h3 class="settimana__sottotitolo">La settimana dei corsi {corsi.stagione}</h3>
+        <a class="settimana__link" href={url('/area10/corsi/')}>Calendario completo</a>
+      </div>
+      <ol class="settimana__giorni" role="list" data-settimana>
+        {
+          giorni.map((g) => (
+            <li class="giorno" data-giorno={g}>
+              <h4 class="giorno__nome">
+                {corsi.giorni[g]}
+                <span class="giorno__oggi">Oggi</span>
+              </h4>
+              <ul class="giorno__corsi" role="list">
+                {elenco
+                  .filter((c) => c.giorno === g)
+                  .map((c) => (
+                    <li class="corso">
+                      <span class="corso__ora cifre">{formattaOra(c.inizio)}</span>
+                      <span class="corso__nome">{c.nome}</span>
+                      {c.sede !== 'podenzano' && <span class="corso__sede">{corsi.sedi[c.sede].nome}</span>}
+                    </li>
+                  ))}
+              </ul>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { oraLocale } from '../../lib/orari.js';
+  // Evidenzia il giorno corrente (ora di Roma) e su mobile lo porta in vista nella riga scorrevole.
+  const oggi = oraLocale().giorno;
+  document.querySelectorAll<HTMLElement>('[data-settimana]').forEach((lista) => {
+    const giorno = lista.querySelector<HTMLElement>(`[data-giorno="${oggi}"]`);
+    if (!giorno) return;
+    giorno.classList.add('giorno--oggi');
+    if (lista.scrollWidth > lista.clientWidth) {
+      lista.scrollLeft = giorno.offsetLeft - lista.offsetLeft - 16;
+    }
+  });
+</script>
+
+<style>
+  .settimana__griglia {
+    display: grid;
+    gap: 3.5rem;
+  }
+  /* senza min-width: 0 la riga scorrevole allargherebbe la colonna oltre lo schermo */
+  .settimana__griglia > * {
+    min-width: 0;
+  }
+  .settimana__titolo {
+    font-size: var(--step-5);
+  }
+  .settimana__lead {
+    max-width: 30rem;
+    margin: 1rem 0 2rem;
+    color: var(--testo-2);
+  }
+  .settimana__testa-corsi {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .settimana__sottotitolo {
+    font-size: var(--step-3);
+  }
+  .settimana__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 700;
+    text-decoration-color: var(--accento);
+    text-decoration-thickness: 2px;
+  }
+
+  /* Riga scorrevole su mobile, griglia a 5 colonne su desktop */
+  .settimana__giorni {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(13.5rem, 72%);
+    gap: 0.75rem;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0.25rem var(--gutter) 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    overscroll-behavior-x: contain;
+  }
+  .giorno {
+    scroll-snap-align: start;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: 1.1rem 1rem 1.25rem;
+    background-color: var(--sfondo-2);
+    border-top: 3px solid transparent;
+  }
+  .giorno--oggi {
+    border-top-color: var(--accento);
+    background-color: color-mix(in srgb, var(--accento) 14%, var(--sfondo));
+  }
+  .giorno__nome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+  }
+  .giorno__oggi {
+    display: none;
+    padding: 0.15rem 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background-color: var(--accento);
+    color: var(--su-accento);
+  }
+  .giorno--oggi .giorno__oggi {
+    display: inline-block;
+  }
+  .giorno__corsi {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+  }
+  .corso {
+    display: grid;
+    grid-template-columns: 3.1rem 1fr;
+    align-items: baseline;
+    column-gap: 0.5rem;
+  }
+  .corso__ora {
+    font-size: 1.15rem;
+    color: var(--accento-testo);
+  }
+  .corso__nome {
+    font-weight: 650;
+    line-height: 1.3;
+  }
+  .corso__sede {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0.15rem;
+    padding: 0.05rem 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 1px solid var(--linea-forte);
+  }
+
+  @media (min-width: 64em) {
+    .settimana__griglia {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .settimana__giorni {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-auto-columns: auto;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+    }
+    .corso {
+      grid-template-columns: 1fr;
+    }
+    .corso__sede {
+      grid-column: 1;
+    }
+  }
+</style>

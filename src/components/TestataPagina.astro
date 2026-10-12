@@ -1,0 +1,139 @@
+---
+// Testata delle pagine interne.
+// Area10: poster nero con curve di livello e una parola gigante tagliata dal bordo.
+// A10 Medical: bianco clinico con carta millimetrata e linee pulite.
+import Briciole from './Briciole.astro';
+
+interface Props {
+  area: 'fitness' | 'medical';
+  briciole: { nome: string; url: string }[];
+  titolo: string;
+  lead?: string;
+  /** parola decorativa enorme, tagliata dal bordo (solo Area10) */
+  gigante?: string;
+  /** riga breve sopra il titolo */
+  occhiello?: string;
+}
+const { area, briciole, titolo, lead, gigante, occhiello } = Astro.props;
+const fitness = area === 'fitness';
+const conLato = Astro.slots.has('lato');
+---
+
+<header
+  class:list={['testata', `testata--${area}`, fitness ? 'texture-topo' : null, { 'testata--con-lato': conLato }]}
+  data-surface={fitness ? 'ink' : undefined}
+  data-area={fitness ? undefined : 'medical'}
+>
+  {!fitness && <div class="testata__mm texture-mm" aria-hidden="true" />}
+  {gigante && <span class="testata__gigante" aria-hidden="true">{gigante}</span>}
+  <div class="contenitore testata__griglia">
+    <div class="testata__testo">
+      <Briciole voci={briciole} />
+      {occhiello && <p class="testata__occhiello">{occhiello}</p>}
+      <h1 class="testata__titolo">{titolo}</h1>
+      {lead && <p class="testata__lead">{lead}</p>}
+      {
+        Astro.slots.has('azioni') && (
+          <div class="testata__azioni">
+            <slot name="azioni" />
+          </div>
+        )
+      }
+      <slot />
+    </div>
+    {
+      conLato && (
+        <div class="testata__lato">
+          <slot name="lato" />
+        </div>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .testata {
+    --topo-opacita: 0.16;
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(3.5rem, 8vw, 6.5rem);
+  }
+  .testata__mm {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-image: linear-gradient(to left, #000 25%, transparent 80%);
+    mask-image: linear-gradient(to left, #000 25%, transparent 80%);
+    pointer-events: none;
+  }
+  .testata__gigante {
+    position: absolute;
+    right: -0.04em;
+    bottom: -0.2em;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(9rem, 34vw, 30rem);
+    line-height: 0.8;
+    text-transform: uppercase;
+    color: rgb(216 168 56 / 0.1);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+  .testata__griglia {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .testata__testo {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .testata__occhiello {
+    margin-top: 0.75rem;
+    font-weight: 700;
+    color: var(--accento-testo);
+  }
+  .testata__titolo {
+    max-width: 18ch;
+    font-size: clamp(2.6rem, 1.5rem + 4.8vw, 5.75rem);
+  }
+  .testata--medical .testata__titolo {
+    max-width: 20ch;
+    font-size: clamp(2.4rem, 1.5rem + 3.8vw, 4.75rem);
+    letter-spacing: -0.035em;
+  }
+  .testata__occhiello + .testata__titolo {
+    margin-top: -0.5rem;
+  }
+  .testata__lead {
+    max-width: 40rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--testo-2);
+  }
+  .testata__azioni {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  /* il lato (foto) ha il bordo sinistro tagliato in diagonale, come il "taglio" dell'hero */
+  .testata__lato :global(.foto) {
+    clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
+    border-radius: 0;
+  }
+  .testata--medical .testata__lato :global(.foto) {
+    clip-path: none;
+    border-radius: 1.25rem;
+  }
+
+  @media (min-width: 64em) {
+    .testata--con-lato .testata__griglia {
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4rem;
+    }
+  }
+</style>

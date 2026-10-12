@@ -1,0 +1,77 @@
+---
+// Pulsante tema chiaro/scuro. La scelta resta salvata nel browser (localStorage, solo preferenza tecnica).
+import Icona from './Icona.astro';
+---
+
+<button type="button" class="tema" data-toggle-tema aria-label="Attiva il tema scuro" aria-pressed="false">
+  <Icona nome="moon" class="tema__luna" />
+  <Icona nome="sun" class="tema__sole" />
+</button>
+
+<script>
+  // Aggiorna etichetta e stato del pulsante, poi alterna il tema al clic.
+  const radice = document.documentElement;
+  const aggiorna = () => {
+    const scuro = radice.dataset.theme === 'dark';
+    document.querySelectorAll<HTMLButtonElement>('[data-toggle-tema]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(scuro));
+      b.setAttribute('aria-label', scuro ? 'Attiva il tema chiaro' : 'Attiva il tema scuro');
+    });
+  };
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-tema]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const nuovo = radice.dataset.theme === 'dark' ? 'light' : 'dark';
+      radice.dataset.theme = nuovo;
+      try {
+        localStorage.setItem('tema', nuovo);
+      } catch {
+        /* navigazione privata: la scelta vale solo per questa pagina */
+      }
+      aggiorna();
+    }),
+  );
+  aggiorna();
+  window.addEventListener('tema-sistema', aggiorna);
+</script>
+
+<style>
+  .tema {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 200ms ease, transform 160ms var(--ease-out);
+  }
+  .tema:active {
+    transform: scale(0.94);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tema:hover {
+      background-color: color-mix(in srgb, currentColor 9%, transparent);
+    }
+  }
+  .tema :global(svg) {
+    grid-area: 1 / 1;
+    width: 1.35rem;
+    height: 1.35rem;
+    transition: opacity 250ms ease, transform 350ms var(--ease-out);
+  }
+  .tema :global(.tema__sole) {
+    opacity: 0;
+    transform: rotate(-60deg) scale(0.8);
+  }
+  :global([data-theme='dark']) .tema :global(.tema__sole) {
+    opacity: 1;
+    transform: none;
+  }
+  :global([data-theme='dark']) .tema :global(.tema__luna) {
+    opacity: 0;
+    transform: rotate(60deg) scale(0.8);
+  }
+</style>

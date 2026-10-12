@@ -1,0 +1,73 @@
+---
+// Il formato della gara HYROX come sequenza: 1 km di corsa prima di ognuna delle 8 stazioni.
+// Dati in data/hyrox.json. È una sequenza reale, per questo le stazioni sono numerate.
+import hyrox from '../../data/hyrox.json';
+---
+
+<ol class="stazioni" role="list" aria-label="Il formato della gara HYROX">
+  {
+    hyrox.stazioni.map((s, i) => (
+      <li class="stazione">
+        <span class="stazione__corsa">+ {hyrox.corsaPerTratto} di corsa</span>
+        <span class="stazione__numero cifre" aria-hidden="true">
+          {String(i + 1).padStart(2, '0')}
+        </span>
+        <span class="stazione__nome">{s.nome}</span>
+        <span class="stazione__misura">{s.misura}</span>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .stazioni {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--linea);
+    border: 1px solid var(--linea);
+  }
+  .stazione {
+    display: grid;
+    align-content: start;
+    gap: 0.2rem;
+    padding: 1rem 0.9rem 1.15rem;
+    background-color: var(--sfondo);
+  }
+  .stazione__corsa {
+    font-size: var(--step--2);
+    font-weight: 600;
+    color: var(--testo-2);
+  }
+  .stazione__numero {
+    margin-top: 0.35rem;
+    font-size: 2.6rem;
+    line-height: 1;
+    color: var(--accento-testo);
+  }
+  .stazione__nome {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+  .stazione__misura {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+
+  @media (min-width: 40em) {
+    .stazioni {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 80em) {
+    .stazioni {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+  }
+</style>
