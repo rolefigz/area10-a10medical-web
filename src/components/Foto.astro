@@ -77,6 +77,7 @@ const area = id.startsWith('medical/') ? 'medical' : 'fitness';
     position: relative;
     overflow: hidden;
     margin: 0;
+    container-type: inline-size;
     border-radius: var(--raggio);
     background-color: var(--sfondo-2);
   }
@@ -150,5 +151,14 @@ const area = id.startsWith('medical/') ? 'medical' : 'fitness';
     font-size: var(--step--1);
     line-height: 1.35;
     opacity: 0.7;
+  }
+  /* nelle celle strette resta solo l'etichetta */
+  @container (max-width: 13rem) {
+    .foto__descrizione {
+      display: none;
+    }
+    .foto__etichetta {
+      font-size: 0.7rem;
+    }
   }
 </style>

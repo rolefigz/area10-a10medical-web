@@ -45,7 +45,7 @@ const dataIso = d.data.toISOString().slice(0, 10);
 ---
 
 <Base
-  titolo={`${d.titolo} | Lo sai che... | A10 Medical`}
+  titolo={d.titolo.length > 54 ? d.titolo : `${d.titolo} | A10 Medical`}
   descrizione={d.descrizione}
   area="medical"
   immagine="og/lo-sai-che.png"

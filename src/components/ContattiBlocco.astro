@@ -12,6 +12,8 @@ interface Props {
 }
 const { titolo = 'Vieni a trovarci', livello = 'h2' } = Astro.props;
 const Titolo = livello;
+// i sottotitoli scendono di un livello rispetto al titolo (h1 -> h2, h2 -> h3)
+const Sotto = livello === 'h1' ? 'h2' : 'h3';
 const a = centro.area10;
 const m = centro.medical;
 ---
@@ -24,7 +26,7 @@ const m = centro.medical;
 
       <div class="sedi">
         <article class="sede" data-tinta="fitness">
-          <h3 class="sede__nome titolo-fitness">Area10 Fitness Club</h3>
+          <Sotto class="sede__nome titolo-fitness">Area10 Fitness Club</Sotto>
           <p class="sede__indirizzo">{indirizzoTesto(a.indirizzo)}</p>
           <ul class="sede__contatti" role="list">
             <li>
@@ -42,7 +44,7 @@ const m = centro.medical;
           </ul>
         </article>
         <article class="sede" data-tinta="medical">
-          <h3 class="sede__nome titolo-medical">A10 Medical</h3>
+          <Sotto class="sede__nome titolo-medical">A10 Medical</Sotto>
           <p class="sede__indirizzo">{indirizzoTesto(m.indirizzo)}</p>
           <ul class="sede__contatti" role="list">
             <li>
@@ -71,7 +73,7 @@ const m = centro.medical;
     </div>
 
     <div class="contatti__modulo" id="prova">
-      <h3 class="contatti__modulo-titolo">Prenota la prova gratuita</h3>
+      <Sotto class="contatti__modulo-titolo">Prenota la prova gratuita</Sotto>
       <p class="contatti__modulo-testo">
         Lasciaci un recapito: ti richiamiamo per fissare la prova in palestra o per darti informazioni su visite e
         trattamenti.

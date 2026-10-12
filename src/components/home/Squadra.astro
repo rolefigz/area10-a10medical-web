@@ -88,10 +88,18 @@ const ruoli = [
 
   .ruoli {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
     gap: 0.75rem;
     margin: 0;
     padding: 0;
+  }
+  @media (min-width: 30em) {
+    .ruoli {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    /* con un numero dispari di ruoli l'ultimo occupa tutta la riga: nessuna cella vuota */
+    .ruolo:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
   }
   .ruolo {
     display: grid;
@@ -127,11 +135,7 @@ const ruoli = [
       grid-column: 1 / -1;
     }
     .ruoli {
-      grid-template-columns: 1fr 1fr;
       align-self: end;
-    }
-    .ruolo:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
     }
   }
 </style>

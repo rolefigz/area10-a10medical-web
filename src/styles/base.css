@@ -88,6 +88,10 @@ a {
 a:hover {
   text-decoration-thickness: 2px;
 }
+/* i numeri di telefono non vanno mai a capo */
+a[href^='tel:'] {
+  white-space: nowrap;
+}
 
 strong,
 b {

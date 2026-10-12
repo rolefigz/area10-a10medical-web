@@ -267,8 +267,12 @@ import { url } from '../../lib/url.js';
     .hero__scatola-dieci {
       grid-row: f-inizio / ponte;
     }
+    /* il pannello nero occupa solo il 61% della larghezza (fin dove arriva il taglio in alto):
+       così la sua area non si sovrappone ai testi di A10 Medical (contrasto calcolato correttamente) */
     .hero__pannello--fitness {
-      clip-path: polygon(0 0, 61% 0, 47% 100%, 0 100%);
+      width: 61%;
+      justify-self: start;
+      clip-path: polygon(0 0, 100% 0, 77.05% 100%, 0 100%);
     }
     .hero__mm {
       -webkit-mask-image: linear-gradient(to left, #000 30%, transparent 70%);
@@ -280,6 +284,10 @@ import { url } from '../../lib/url.js';
       bottom: auto;
       translate: -50% -50%;
       font-size: min(44rem, 86vh);
+    }
+    /* stessa posizione assoluta del "10" turchese: 54% della larghezza intera = 88.52% del pannello al 61% */
+    .hero__pannello--fitness .hero__dieci {
+      left: 88.52%;
     }
     .hero__parola--fitness {
       grid-column: 2 / 9;
@@ -347,7 +355,7 @@ import { url } from '../../lib/url.js';
   @media (min-width: 64em) {
     @keyframes hero-sipario {
       from {
-        clip-path: polygon(0 0, 0 0, -14% 100%, 0 100%);
+        clip-path: polygon(0 0, 0 0, -23% 100%, 0 100%);
       }
     }
   }

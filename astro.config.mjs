@@ -4,8 +4,8 @@
 import { defineConfig, envField, fontProviders } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const SITE_URL = process.env.SITE_URL ?? 'https://rolefigz.github.io';
-const BASE_PATH = process.env.BASE_PATH ?? '/area10-a10medical-web';
+const SITE_URL = process.env.SITE_URL || 'https://rolefigz.github.io';
+const BASE_PATH = process.env.BASE_PATH || '/area10-a10medical-web';
 
 export default defineConfig({
   site: SITE_URL,
