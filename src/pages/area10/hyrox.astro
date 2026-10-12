@@ -26,6 +26,12 @@ const lavoro = [
   { icona: 'target-arrow', titolo: 'Strategia di gara', testo: 'Transizioni, ritmo e scelte per il giorno della prova.' },
 ];
 
+const fatti = [
+  'Abbonamento HYROX: 2 ingressi a settimana con programma di allenamento personalizzato.',
+  'Una simulazione di gara ogni mese.',
+  'Prima gara ufficiale del gruppo: HYROX Verona, dicembre 2025.',
+];
+
 const perChi = [
   { titolo: 'Chi parte da zero', testo: 'HYROX, da dove si comincia: il corso è pensato anche per chi non ha mai gareggiato.' },
   { titolo: 'Chi corre', testo: 'Per aggiungere forza e lavoro funzionale alla corsa che già fai.' },
@@ -114,6 +120,9 @@ const domande = [
             </li>
           ))
         }
+      </ul>
+      <ul class="fatti" role="list">
+        {fatti.map((f) => <li>{f}</li>)}
       </ul>
     </div>
   </section>
@@ -217,6 +226,28 @@ const domande = [
     }
   }
 
+  .fatti {
+    display: grid;
+    gap: 0.6rem;
+    margin: 2rem 0 0;
+    padding: 0;
+  }
+  .fatti li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-weight: 650;
+  }
+  .fatti li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.7rem;
+    height: 0.7rem;
+    background: var(--accento);
+    clip-path: polygon(25% 0, 100% 0, 75% 100%, 0 100%);
+  }
+
   .perchi__lista {
     display: grid;
     gap: 2rem;
@@ -238,7 +269,29 @@ const domande = [
     color: var(--testo-2);
   }
   @media (min-width: 64em) {
-    .perchi__lista {
+    .fatti {
+    display: grid;
+    gap: 0.6rem;
+    margin: 2rem 0 0;
+    padding: 0;
+  }
+  .fatti li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-weight: 650;
+  }
+  .fatti li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.7rem;
+    height: 0.7rem;
+    background: var(--accento);
+    clip-path: polygon(25% 0, 100% 0, 75% 100%, 0 100%);
+  }
+
+  .perchi__lista {
       grid-template-columns: repeat(3, 1fr);
       gap: 3rem;
     }

@@ -10,7 +10,7 @@ inBreve:
   - Non sostituisce la diagnosi medica, la affianca.
   - Se non sai a chi rivolgerti, ti aiutiamo a scegliere il percorso.
 servizi: [poliambulatorio, fisioterapia]
-# TODO: confermare con il cliente se A10 Medical offre osteopatia (citata nei post, assente dalla bio)
+# Osteopatia confermata sui social (Dott. Alessandro Pintabona)
 # TODO: revisione del Dott. Sportelli o del team medico prima della pubblicazione definitiva
 revisionato: false
 ---

@@ -19,7 +19,7 @@
     },
     "funzionale": {
       "nome": "Funzionale",
-      "descrizione": "Circuiti a corpo libero e con attrezzi per forza e resistenza."
+      "descrizione": "Circuiti a corpo libero e con attrezzi per forza e resistenza. In Area10 da oltre 10 anni."
     },
     "yoga": {
       "nome": "Yoga",
@@ -31,15 +31,15 @@
     },
     "spinning": {
       "nome": "Spinning",
-      "descrizione": "Allenamento cardio su bike, a ritmo di musica."
+      "descrizione": "Allenamento cardio di gruppo sulle bike."
     },
     "fitboxe": {
       "nome": "Fitboxe",
-      "descrizione": "Tecniche di pugilato a tempo di musica, senza contatto."
+      "descrizione": "Combinazioni al sacco ed esercizi funzionali a corpo libero."
     },
     "danza-bambini": {
       "nome": "Danza bambini",
-      "descrizione": "Hip hop e classico moderno per i più piccoli."
+      "descrizione": "Hip hop e classico moderno per i più piccoli, con Blue Lemon Dance Studio."
     }
   },
   "giorni": {

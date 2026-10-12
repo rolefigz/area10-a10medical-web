@@ -29,4 +29,4 @@ Mantenere mobilità, forza ed equilibrio significa continuare a fare ciò che ti
 
 ## In A10 Medical
 
-Nel nostro centro, accanto agli ambulatori, c'è la palestra fisioterapica; alla porta accanto, la palestra di Area10. Se hai un dubbio, chiamaci: una valutazione è il punto di partenza giusto.
+Nel nostro centro la palestra fisioterapica si trova al piano inferiore; in via Formaleoni 6 c'è la palestra di Area10. Se hai un dubbio, chiamaci: una valutazione è il punto di partenza giusto.

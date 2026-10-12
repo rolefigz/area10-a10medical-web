@@ -38,4 +38,4 @@ I tempi cambiano da persona a persona e in base all'infortunio: per questo è im
 
 ## Da noi
 
-In A10 Medical la fisioterapia sportiva ti accompagna fino al rientro. Alla porta accanto, in Area10, puoi completare il lavoro in palestra con il recupero post operatorio e il personal training.
+In A10 Medical la fisioterapia sportiva ti accompagna fino al rientro. In Area10, al civico 6 di via Formaleoni, puoi completare il lavoro in palestra con il recupero post operatorio e il personal training.

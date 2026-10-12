@@ -209,13 +209,13 @@ Configurazione di html-validate in `.htmlvalidate.mjs`: le poche regole disattiv
 
 **Da confermare con il cliente** (nel codice sono segnati con `TODO`)
 - Prezzi, abbonamenti e condizioni della prova gratuita (oggi non mostrati).
-- Nomi e foto di allenatori, istruttori, fisioterapisti, ortopedico e nutrizionista (l'unico nome pubblicato è il Dott. Giancarlo Sportelli).
+- Foto e titoli del team (i nomi in `data/squadra.json` vengono dai profili Instagram) e nomi dei personal trainer di Area10.
 - WhatsApp ed email di Area10 (oggi solo telefono).
 - Orari di segreteria di A10 Medical e coordinate esatte del civico 8.
 - Ragione sociale, P.IVA e dati societari di entrambe le attività (campi `datiLegali` in `data/centro.json`), dati per privacy e cookie.
 - Calendario corsi 2026/27 e indirizzo della sede di San Polo.
-- Se A10 Medical offre osteopatia (citata nei post, assente dalla bio).
-- Elettrostimolazione Compex, preparazione atletica per sport e merchandising (dalle storie in evidenza): dettagli.
+- Calendario corsi e sede di San Polo: verificare sull'immagine originale del post "CORSI 2026/27".
+- Distribuzione dei locali (la palestra fisioterapica è al piano inferiore di A10 Medical) e ragione sociale.
 - Giorni, orari e costi del corso HYROX; verifica del formato di gara e della guida al marchio HYROX.
 - Revisione medica degli articoli "Lo sai che..." e dei testi della mappa del corpo da parte del Dott. Sportelli o del team (campo `revisionato` negli articoli).
 - Elenco "cosa portare" e informazioni sulle visite non agonistiche.

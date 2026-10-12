@@ -82,7 +82,7 @@
       "pec": null,
       "direttoreSanitario": null,
       "autorizzazioneSanitaria": null,
-      "_suggerimento": "Dai materiali grafici risulta 'A10 Medical S.r.l.': confermare."
+      "_suggerimento": "Ragione sociale da confermare con il cliente (l'email a10medicalsrl@ fa pensare a una S.r.l., ma non è verificato)."
     },
     "orari": null,
     "_todoOrari": "Orari di segreteria e ambulatori non pubblicati: chiedere al cliente.",

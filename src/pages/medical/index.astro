@@ -12,6 +12,7 @@ import Icona from '../../components/Icona.astro';
 import BandaCta from '../../components/BandaCta.astro';
 import { url } from '../../lib/url.js';
 import { centro, servizi } from '../../lib/dati.js';
+import squadra from '../../../data/squadra.json';
 
 const briciole = [
   { nome: 'Home', url: '/' },
@@ -80,6 +81,12 @@ const fotoServizi: Record<string, string> = {
             </li>
           ))
         }
+        <li class="trattamenti">
+          <h3>Anche in A10 Medical</h3>
+          <ul class="trattamenti__lista" role="list">
+            {squadra.trattamentiMedical.map((t) => <li>{t}</li>)}
+          </ul>
+        </li>
       </ul>
     </div>
   </section>
@@ -93,11 +100,11 @@ const fotoServizi: Record<string, string> = {
   <section class="ponte taglio-sopra" data-area="fitness" aria-labelledby="ponte-titolo">
     <div class="contenitore ponte__griglia">
       <div>
-        <h2 id="ponte-titolo" class="ponte__titolo">Quando sei pronto, la palestra è alla porta accanto.</h2>
+        <h2 id="ponte-titolo" class="ponte__titolo">Quando sei pronto, la palestra è in via Formaleoni 6.</h2>
       </div>
       <div class="ponte__testo">
         <p>
-          A10 Medical e Area10 Fitness Club sono nella stessa struttura di via Formaleoni. Finita la fisioterapia puoi
+          A10 Medical e Area10 Fitness Club sono in via Formaleoni, ai civici 8 e 6. Finita la fisioterapia puoi
           proseguire con il recupero post operatorio, il personal training o il pilates, senza cambiare indirizzo.
         </p>
         <a class="btn" href={url('/area10/')}>Scopri Area10</a>
@@ -226,6 +233,30 @@ const fotoServizi: Record<string, string> = {
       grid-row: 1 / span 2;
       margin-top: 0;
     }
+  }
+
+  .trattamenti {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: inset 0 0 0 1.5px var(--linea);
+  }
+  .trattamenti h3 {
+    margin-bottom: 0.9rem;
+    font-size: var(--step-1);
+  }
+  .trattamenti__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+  }
+  .trattamenti__lista li {
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background-color: var(--sfondo-2);
+    font-weight: 600;
+    font-size: var(--step--1);
   }
 
   .corpo {

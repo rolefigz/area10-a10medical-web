@@ -1,7 +1,7 @@
 ---
 // Visite medico-sportive agonistiche con il Dott. Giancarlo Sportelli.
-// TODO: far confermare al Dott. Sportelli l'elenco "cosa portare", i tempi e se si effettuano
-// anche visite non agonistiche. Costi non pubblicati: si rimanda al telefono.
+// TODO: chiedere al Dott. Sportelli cosa portare, tempi e se si effettuano
+// anche visite non agonistiche (non pubblicato sui social, quindi non indicato qui). Costi non pubblicati: si rimanda al telefono.
 import Base from '../../layouts/Base.astro';
 import TestataPagina from '../../components/TestataPagina.astro';
 import Domande from '../../components/Domande.astro';
@@ -21,17 +21,9 @@ const tel = centro.medical.telefonoLeggibile;
 
 const passi = [
   { titolo: 'Prenota', testo: `Chiama il ${tel} e scegli giorno e ora della visita.` },
-  { titolo: 'Prepara i documenti', testo: 'Porta con te quanto indicato qui sotto, in particolare la richiesta della società sportiva.' },
   { titolo: 'La visita', testo: `Il ${medico} esegue in struttura i controlli previsti per il tuo sport.` },
-  { titolo: 'Il certificato', testo: "Se l'esito è positivo ricevi il certificato di idoneità da consegnare alla tua società." },
 ];
 
-const daPortare = [
-  "Documento d'identità e tessera sanitaria",
-  'Richiesta di visita della società sportiva',
-  'Occhiali o lenti a contatto, se li usi',
-  'Eventuali esami o referti recenti',
-];
 
 const domande = [
   {
@@ -44,13 +36,8 @@ const domande = [
     risposta: `Per costi e disponibilità chiama A10 Medical al ${tel}.`,
   },
   {
-    domanda: 'Ogni quanto va rinnovato il certificato?',
-    risposta:
-      'Dipende dallo sport: nella maggior parte dei casi il certificato agonistico vale un anno. In visita ti indichiamo la scadenza.',
-  },
-  {
     domanda: 'Posso fare la visita anche se mi alleno in Area10?',
-    risposta: 'Certo: A10 Medical è nella stessa struttura di Area10, in via Formaleoni 8 a Podenzano.',
+    risposta: 'Certo: A10 Medical è in via Formaleoni 8, nella stessa via di Area10 (civico 6).',
   },
 ];
 ---
@@ -95,25 +82,6 @@ const domande = [
           ))
         }
       </ol>
-    </div>
-  </section>
-
-  <section class="sezione portare" data-area="medical" aria-labelledby="portare-titolo">
-    <div class="contenitore portare__griglia">
-      <div>
-        <h2 id="portare-titolo" class="titolo-sezione">Cosa portare</h2>
-        <p class="portare__nota">Per gli sportivi minorenni serve la presenza di un genitore o di chi ne fa le veci.</p>
-      </div>
-      <ul class="portare__lista" role="list">
-        {
-          daPortare.map((d) => (
-            <li>
-              <Icona nome="circle-check" />
-              <span>{d}</span>
-            </li>
-          ))
-        }
-      </ul>
     </div>
   </section>
 
@@ -175,49 +143,10 @@ const domande = [
   }
   @media (min-width: 64em) {
     .passi {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  .portare {
-    background-color: var(--sfondo-2) !important;
-  }
-  .portare__griglia {
-    display: grid;
-    gap: 2rem;
-  }
-  .portare__nota {
-    max-width: 30rem;
-    color: var(--testo-2);
-  }
-  .portare__lista {
-    display: grid;
-    gap: 0.75rem;
-    margin: 0;
-    padding: 0;
-  }
-  .portare__lista li {
-    display: flex;
-    gap: 0.9rem;
-    align-items: center;
-    padding: 1.1rem 1.25rem;
-    border-radius: 0.9rem;
-    background-color: var(--sfondo);
-    font-weight: 650;
-  }
-  .portare__lista :global(svg) {
-    width: 1.6rem;
-    height: 1.6rem;
-    flex: none;
-    color: var(--accento-testo);
-  }
-  @media (min-width: 64em) {
-    .portare__griglia {
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-  }
   .faq-visite {
     max-width: 56rem;
   }

@@ -1,6 +1,6 @@
 ---
 titolo: Lavori al computer? Come proteggere collo e schiena
-descrizione: Schermo, sedia, pause e tre esercizi da scrivania. Le abitudini che aiutano chi passa molte ore davanti a un monitor.
+descrizione: Schermo, sedia, pause, la regola 20-20-20 e qualche esercizio semplice. Le abitudini che aiutano chi passa molte ore davanti a un monitor.
 data: 2026-10-12
 tipo: approfondimento
 ordine: 8
@@ -26,7 +26,9 @@ Otto ore davanti a uno schermo mettono alla prova collo, spalle e schiena. Non s
 
 La postura migliore è la prossima: cambia posizione spesso. Ogni 30-45 minuti alzati, cammina, bevi un bicchiere d'acqua. Anche due minuti fanno la differenza.
 
-## Tre esercizi da scrivania
+Per gli occhi vale la regola 20-20-20: ogni 20 minuti guarda per 20 secondi un punto lontano almeno 20 piedi, circa 6 metri.
+
+## Qualche esercizio semplice
 
 1. **Collo**: porta lentamente l'orecchio verso la spalla, resta qualche secondo, poi cambia lato.
 2. **Spalle**: ruotale all'indietro dieci volte, con calma.

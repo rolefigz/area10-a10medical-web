@@ -1,0 +1,18 @@
+{
+  "_nota": "Nomi e ruoli pubblicati sui profili Instagram del centro (verifica del 13/10/2026). Confermare titoli e foto con il cliente.",
+  "medical": [
+    { "nome": "Dott. Giancarlo Sportelli", "ruolo": "Visite medico-sportive" },
+    { "nome": "Dott. Del Vecchio", "ruolo": "Ortopedico" },
+    { "nome": "Dott. Riccardo Bettinardi", "ruolo": "Fisioterapista" },
+    { "nome": "Paolo Mazzoni", "ruolo": "Fisioterapista" },
+    { "nome": "Marco Fogliazza", "ruolo": "Fisioterapista" },
+    { "nome": "Dott. Alessandro Pintabona", "ruolo": "Osteopata" },
+    { "nome": "Dott. Cristian Agnelli", "ruolo": "Massoterapista" },
+    { "nome": "Dott. Paolo Bersani", "ruolo": "Psicologo" }
+  ],
+  "area10": [
+    { "nome": "Personal trainer", "ruolo": "Studio personal e sala" },
+    { "nome": "Blue Lemon Dance Studio", "ruolo": "Corsi di danza per bambini" }
+  ],
+  "trattamentiMedical": ["Osteopatia", "Tecar", "Crioterapia", "Linfodrenaggio", "Kinesio taping", "Riatletizzazione", "Massoterapia", "Supporto psicologico", "Medicina estetica", "ECG"]
+}

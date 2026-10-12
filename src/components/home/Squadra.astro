@@ -1,16 +1,15 @@
 ---
-// Le persone del centro. L'unico nome confermato è quello del Dott. Giancarlo Sportelli:
-// gli altri profili arriveranno con nomi e foto forniti dal cliente (TODO).
+// Le persone del centro, dai profili Instagram (data/squadra.json). Foto e bio: TODO dal cliente.
 import Foto from '../Foto.astro';
 import { url } from '../../lib/url.js';
 import { centro } from '../../lib/dati.js';
 
+import squadra from '../../../data/squadra.json';
 const ruoli = [
-  { ruolo: 'Personal trainer', area: 'Area10', tinta: 'fitness' },
-  { ruolo: 'Istruttori dei corsi', area: 'Area10', tinta: 'fitness' },
-  { ruolo: 'Fisioterapisti', area: 'A10 Medical', tinta: 'medical' },
-  { ruolo: 'Ortopedico', area: 'A10 Medical', tinta: 'medical' },
-  { ruolo: 'Nutrizionista', area: 'A10 Medical', tinta: 'medical' },
+  ...squadra.medical
+    .filter((p) => !p.nome.includes('Sportelli'))
+    .map((p) => ({ ruolo: p.nome, area: `${p.ruolo}, A10 Medical`, tinta: 'medical' })),
+  ...squadra.area10.map((p) => ({ ruolo: p.nome, area: `${p.ruolo}, Area10`, tinta: 'fitness' })),
 ];
 ---
 
@@ -18,7 +17,7 @@ const ruoli = [
   <div class="contenitore squadra__griglia">
     <header class="squadra__testa">
       <h2 id="squadra-titolo" class="squadra__titolo">Le persone</h2>
-      <p class="lead">Allenatori, istruttori, fisioterapisti e medici, nella stessa struttura. Nomi e volti del team in arrivo.</p>
+      <p class="lead">Medici, fisioterapisti, osteopata, psicologo e allenatori: il team di A10 Medical e Area10.</p>
     </header>
 
     <article class="medico" data-tinta="medical">
@@ -30,7 +29,7 @@ const ruoli = [
       </div>
     </article>
 
-    <ul class="ruoli" role="list" aria-label="Le figure professionali del centro">
+    <ul class="ruoli" role="list" aria-label="Il team">
       {
         ruoli.map((r) => (
           <li class="ruolo" data-tinta={r.tinta}>
