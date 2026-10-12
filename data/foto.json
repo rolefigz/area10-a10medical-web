@@ -21,7 +21,7 @@
     { "id": "medical/visita-sportiva", "alt": "Visita medico-sportiva in struttura", "dove": "Pagina visite sportive", "formato": "orizzontale 3:2" },
     { "id": "medical/nutrizione", "alt": "Consulenza nutrizionale in studio", "dove": "A10 Medical, nutrizionista", "formato": "verticale 4:5" },
     { "id": "medical/facciata", "alt": "Ingresso di A10 Medical in via Formaleoni 8", "dove": "Contatti", "formato": "orizzontale 4:3" },
-    { "id": "medical/dott-sportelli", "alt": "Il Dott. Giancarlo Sportelli", "dove": "Visite sportive e squadra", "formato": "verticale 4:5" }
+    { "id": "medical/dott-sportelli", "alt": "Il Dott. Giancarlo Sportelli", "dove": "Visite sportive e squadra", "formato": "verticale 4:5", "posizione": "58% 40%", "fonte": "Foto fornita da Oskar; serve il consenso del Dott. Sportelli" }
   ],
   "loghi": [
     { "id": "brand/area10-logo", "alt": "Area10 Fitness Club", "nota": "Logo originale (SVG preferibile, altrimenti PNG trasparente). Non ridisegnarlo." },
