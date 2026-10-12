@@ -138,10 +138,13 @@ const nomeSede = (id: string) => corsi.sedi[id as keyof typeof corsi.sedi].nome;
                     <span class="riga-corso__fine">-{formattaOra(c.fine)}</span>
                   </span>
                   <span class="riga-corso__nome">{c.nome}</span>
-                  <span class="riga-corso__dettagli">
-                    {nomeDisciplina(c.disciplina)}
-                    {c.sede !== 'podenzano' && <strong> · Sede di {nomeSede(c.sede)}</strong>}
-                  </span>
+                  {(nomeDisciplina(c.disciplina).toLowerCase() !== c.nome.toLowerCase() || c.sede !== 'podenzano') && (
+                    <span class="riga-corso__dettagli">
+                      {nomeDisciplina(c.disciplina).toLowerCase() !== c.nome.toLowerCase() && nomeDisciplina(c.disciplina)}
+                      {nomeDisciplina(c.disciplina).toLowerCase() !== c.nome.toLowerCase() && c.sede !== 'podenzano' && ' · '}
+                      {c.sede !== 'podenzano' && <strong>Sede di {nomeSede(c.sede)}</strong>}
+                    </span>
+                  )}
                 </li>
               ))}
           </ul>
@@ -467,6 +470,7 @@ const nomeSede = (id: string) => corsi.sedi[id as keyof typeof corsi.sedi].nome;
   }
   .riga-corso__ora {
     grid-row: 1 / span 2;
+    align-self: start;
     font-size: 1.45rem;
     line-height: 1.1;
     color: var(--accento-testo);
