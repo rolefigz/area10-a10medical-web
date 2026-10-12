@@ -1,5 +1,5 @@
 {
-  "_istruzioni": "Ogni voce è uno spazio foto del sito. Salva il file in assets/photos/<id> con estensione .jpg, .jpeg, .png, .webp o .avif (es. assets/photos/area10/sala-pesi.jpg). Al build successivo la foto compare da sola, ottimizzata in AVIF/WebP a 480/960/1600 px. Lancia 'npm run foto' per vedere quali mancano. Per le persone riconoscibili serve la liberatoria del cliente.",
+  "_istruzioni": "Ogni voce è uno spazio foto del sito. Campo facoltativo \"posizione\": punto focale del ritaglio (CSS object-position, es. \"50% 80%\"). Salva il file in assets/photos/<id> con estensione .jpg, .jpeg, .png, .webp o .avif (es. assets/photos/area10/sala-pesi.jpg). Al build successivo la foto compare da sola, ottimizzata in AVIF/WebP a 480/960/1600 px. Lancia 'npm run foto' per vedere quali mancano. Per le persone riconoscibili serve la liberatoria del cliente.",
   "foto": [
     { "id": "area10/hero", "alt": "La sala di Area10 Fitness Club a Podenzano", "dove": "Pagina Area10, in alto", "formato": "orizzontale 3:2" },
     { "id": "area10/sala-pesi", "alt": "Zona pesi liberi con manubri e bilancieri", "dove": "Area10, sala pesi-cardio", "formato": "orizzontale 4:3" },
@@ -8,7 +8,7 @@
     { "id": "area10/pilates", "alt": "Lezione di pilates nello studio di Area10", "dove": "Area10, pilates", "formato": "verticale 4:5" },
     { "id": "area10/funzionale", "alt": "Allenamento funzionale in gruppo", "dove": "Galleria e corsi", "formato": "orizzontale 3:2" },
     { "id": "area10/spinning", "alt": "Lezione di spinning in Area10", "dove": "Galleria e corsi", "formato": "orizzontale 3:2" },
-    { "id": "area10/hyrox", "alt": "Allenamento di preparazione HYROX", "dove": "Home e pagina HYROX", "formato": "orizzontale 3:2" },
+    { "id": "area10/hyrox", "alt": "Affondi con il sandbag durante una gara HYROX", "dove": "Home e pagina HYROX", "formato": "orizzontale 3:2", "posizione": "50% 88%", "fonte": "Instagram @area10_centro_fitness (post DSAKy_oiDCl), da sostituire con l'originale ad alta risoluzione" },
     { "id": "area10/corsi", "alt": "Corso fitness di gruppo in Area10", "dove": "Pagina corsi", "formato": "orizzontale 16:9" },
     { "id": "area10/recupero", "alt": "Esercizi di recupero post operatorio con il trainer", "dove": "Area10, recupero post operatorio", "formato": "verticale 4:5" },
     { "id": "area10/staff", "alt": "Lo staff di Area10 Fitness Club", "dove": "Home, squadra", "formato": "orizzontale 3:2" },

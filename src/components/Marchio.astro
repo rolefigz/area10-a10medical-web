@@ -27,7 +27,7 @@ const logoMedical = cerca('a10-medical-logo');
     variante !== 'medical' && (
       <span class="marchio__area10">
         {logoArea10 ? (
-          <Image src={logoArea10} alt="Area10 Fitness Club" height={40} class="marchio__logo" />
+          <Image src={logoArea10} alt="Area10 Fitness Club" height={72} class="marchio__logo marchio__logo--area10" />
         ) : (
           <>
             <span class="marchio__nome-fitness">Area10</span>
@@ -97,6 +97,11 @@ const logoMedical = cerca('a10-medical-logo');
   .marchio__logo {
     height: 2.25rem;
     width: auto;
+  }
+  /* il logo originale è nero: sui fondi scuri (tema scuro, footer) diventa bianco */
+  :global([data-theme='dark']) .marchio__logo--area10,
+  :global([data-surface='ink']) .marchio__logo--area10 {
+    filter: invert(1);
   }
 
   @media (max-width: 26em) {

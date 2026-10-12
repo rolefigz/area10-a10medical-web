@@ -22,3 +22,6 @@ lighthouse/
 
 # documenti interni (brief commerciale, non va pubblicato)
 BRIEF_*.md
+
+# file di lavoro locali
+fotos-map.json

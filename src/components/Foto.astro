@@ -48,7 +48,9 @@ const area = id.startsWith('medical/') ? 'medical' : 'fitness';
 
 <figure
   class:list={['foto', { 'foto--riempi': riempi }, classe]}
-  style={riempi ? undefined : `aspect-ratio: ${rapporto}`}
+  style={[riempi ? '' : `aspect-ratio: ${rapporto}`, voce.posizione ? `--posizione: ${voce.posizione}` : '']
+    .filter(Boolean)
+    .join('; ') || undefined}
   data-tinta={area}
 >
   {
@@ -92,6 +94,7 @@ const area = id.startsWith('medical/') ? 'medical' : 'fitness';
   }
   .foto :global(img) {
     object-fit: cover;
+    object-position: var(--posizione, 50% 50%);
   }
 
   /* Segnaposto Area10: nero caldo con curve di livello dorate */
