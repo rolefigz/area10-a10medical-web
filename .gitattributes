@@ -1,0 +1,8 @@
+# Fine riga LF per tutti i file di testo (coerenza tra Windows, macOS e GitHub Actions)
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.woff2 binary
