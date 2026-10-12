@@ -9,9 +9,11 @@ import { Image } from 'astro:assets';
 interface Props {
   /** "doppio" (header), "fitness" o "medical" */
   variante?: 'doppio' | 'fitness' | 'medical';
+  /** "eager" per il marchio visibile subito (header), "lazy" altrove */
+  caricamento?: 'eager' | 'lazy';
   class?: string;
 }
-const { variante = 'doppio', class: classe } = Astro.props;
+const { variante = 'doppio', caricamento = 'lazy', class: classe } = Astro.props;
 
 const loghi = import.meta.glob<{ default: ImageMetadata }>('/assets/brand/*.{svg,png,webp,SVG,PNG,WEBP}', {
   eager: true,
@@ -27,7 +29,13 @@ const logoMedical = cerca('a10-medical-logo');
     variante !== 'medical' && (
       <span class="marchio__area10">
         {logoArea10 ? (
-          <Image src={logoArea10} alt="Area10 Fitness Club" height={72} class="marchio__logo marchio__logo--area10" />
+          <Image
+            src={logoArea10}
+            alt="Area10 Fitness Club"
+            height={72}
+            loading={caricamento}
+            class="marchio__logo marchio__logo--area10"
+          />
         ) : (
           <>
             <span class="marchio__nome-fitness">Area10</span>
@@ -42,7 +50,7 @@ const logoMedical = cerca('a10-medical-logo');
     variante !== 'fitness' && (
       <span class="marchio__medical">
         {logoMedical ? (
-          <Image src={logoMedical} alt="A10 Medical" height={40} class="marchio__logo" />
+          <Image src={logoMedical} alt="A10 Medical" height={72} loading={caricamento} class="marchio__logo" />
         ) : (
           <span class="marchio__nome-medical">A10 Medical</span>
         )}
