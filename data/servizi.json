@@ -1,0 +1,97 @@
+{
+  "_nota": "Elenco servizi dalle bio Instagram. I testi descrittivi sono originali e vanno fatti rileggere al cliente. 'icona' = nome icona Tabler (https://tabler.io/icons).",
+  "area10": [
+    {
+      "id": "personal-training",
+      "nome": "Studio Personal Training",
+      "breve": "Sessioni individuali in studio, con un programma costruito su di te.",
+      "descrizione": "Un allenatore, un obiettivo, un piano. Partiamo da dove sei oggi e costruiamo il programma passo dopo passo, che tu voglia dimagrire, diventare più forte o tornare in forma dopo una pausa.",
+      "icona": "dumbbell"
+    },
+    {
+      "id": "personal-pilates",
+      "nome": "Studio Personal Pilates",
+      "breve": "Pilates individuale per postura, controllo e forza del core.",
+      "descrizione": "Lezioni di pilates con l'istruttore tutto per te: lavori su postura, respirazione e stabilità, con esercizi calibrati sul tuo corpo e sui tuoi tempi.",
+      "icona": "yoga"
+    },
+    {
+      "id": "sala-pesi-cardio",
+      "nome": "Sala Pesi-Cardio",
+      "breve": "Pesi, macchine e cardio, dal lunedì al sabato.",
+      "descrizione": "La sala è aperta dal lunedì al sabato, con zona pesi e zona cardio. Puoi allenarti in autonomia o farti seguire da un trainer.",
+      "icona": "barbell"
+    },
+    {
+      "id": "recupero-post-operatorio",
+      "nome": "Recupero post operatorio",
+      "breve": "Ritrovare forza e fiducia dopo un intervento, con esercizi graduali.",
+      "descrizione": "Dopo un intervento il lavoro non finisce con la fisioterapia. Ti accompagniamo nel ritorno all'allenamento con carichi progressivi, a pochi passi dai fisioterapisti di A10 Medical.",
+      "icona": "bandage"
+    },
+    {
+      "id": "corsi",
+      "nome": "Corsi Fitness",
+      "breve": "Pilates, funzionale, yoga, spinning, fitboxe e corsi per bambini.",
+      "descrizione": "Un calendario settimanale per tutti i livelli: pilates, funzionale, yoga, ginnastica leggera, spinning, fitboxe e danza per bambini.",
+      "icona": "users-group"
+    },
+    {
+      "id": "hyrox",
+      "nome": "HYROX Club",
+      "breve": "Training club HYROX con corso ufficiale di preparazione alla gara.",
+      "descrizione": "Da ottobre 2025 siamo HYROX Training Club: un corso ufficiale per preparare la prova HYROX in ogni sua parte, dalla corsa alle stazioni.",
+      "icona": "run"
+    }
+  ],
+  "medical": [
+    {
+      "id": "poliambulatorio",
+      "nome": "Poliambulatorio",
+      "breve": "Diversi specialisti sotto lo stesso tetto, vicino a casa.",
+      "descrizione": "Visite e controlli con diversi specialisti nella stessa struttura di Podenzano, senza spostarti da un centro all'altro.",
+      "icona": "stethoscope"
+    },
+    {
+      "id": "fisioterapia",
+      "nome": "Centro Fisioterapico",
+      "breve": "Valutazione e trattamento di dolori muscolari e articolari.",
+      "descrizione": "Partiamo da una valutazione accurata, poi impostiamo il trattamento più adatto: per un dolore che non passa, dopo un trauma o dopo un intervento.",
+      "icona": "physiotherapist"
+    },
+    {
+      "id": "ortopedia",
+      "nome": "Studio Ortopedico",
+      "breve": "Visite ortopediche per ossa, articolazioni e tendini.",
+      "descrizione": "Visite ortopediche per inquadrare il problema e decidere insieme il percorso, dalla fisioterapia all'esercizio.",
+      "icona": "bone"
+    },
+    {
+      "id": "fisioterapia-sportiva",
+      "nome": "Fisioterapia Sportiva",
+      "breve": "Dall'infortunio al ritorno in campo, con tempi e carichi graduali.",
+      "descrizione": "Per chi fa sport, a qualsiasi livello: trattiamo l'infortunio e programmiamo il rientro, perché tornare in campo troppo presto è il modo più rapido per fermarsi di nuovo.",
+      "icona": "stretching"
+    },
+    {
+      "id": "palestra-fisioterapica",
+      "nome": "Palestra Fisioterapica",
+      "breve": "Esercizio terapeutico in uno spazio attrezzato.",
+      "descrizione": "Uno spazio attrezzato dove il recupero diventa attivo: esercizi guidati per ritrovare mobilità, forza e controllo del movimento.",
+      "icona": "treadmill"
+    },
+    {
+      "id": "nutrizionista",
+      "nome": "Nutrizionista",
+      "breve": "Alimentazione su misura per sport, peso e benessere.",
+      "descrizione": "Un percorso alimentare costruito sulle tue abitudini, utile se ti alleni, se vuoi gestire il peso o semplicemente stare meglio.",
+      "icona": "salad"
+    }
+  ],
+  "visiteSportive": {
+    "id": "visite-sportive",
+    "nome": "Visite medico-sportive",
+    "breve": "Visite agonistiche direttamente in struttura, con il Dott. Giancarlo Sportelli.",
+    "icona": "heartbeat"
+  }
+}

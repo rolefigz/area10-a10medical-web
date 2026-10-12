@@ -1,0 +1,79 @@
+{
+  "_nota": "Dati reali raccolti dai profili Instagram pubblici (11-12 ottobre 2026). I campi a null o con TODO vanno confermati con il cliente prima della pubblicazione definitiva.",
+  "fusoOrario": "Europe/Rome",
+  "area10": {
+    "nome": "Area10 Fitness Club",
+    "nomeBreve": "Area10",
+    "indirizzo": {
+      "via": "Via Formaleoni 6",
+      "cap": "29027",
+      "citta": "Podenzano",
+      "provincia": "PC",
+      "paese": "IT"
+    },
+    "geo": { "lat": 44.949094, "lng": 9.678713 },
+    "telefono": "+393381042067",
+    "telefonoLeggibile": "338 1042067",
+    "email": null,
+    "whatsapp": null,
+    "instagram": "https://www.instagram.com/area10_centro_fitness/",
+    "instagramHandle": "@area10_centro_fitness",
+    "_todo": "Confermare: WhatsApp, email, condizioni della prova gratuita, prezzi e abbonamenti.",
+    "orari": {
+      "sala": {
+        "etichetta": "Sala pesi e cardio",
+        "settimana": {
+          "lun": [["09:00", "13:30"], ["16:30", "21:00"]],
+          "mar": [["09:00", "13:30"], ["16:30", "21:00"]],
+          "mer": [["09:00", "13:30"], ["16:30", "21:00"]],
+          "gio": [["09:00", "13:30"], ["16:30", "21:00"]],
+          "ven": [["09:00", "13:30"], ["16:30", "21:00"]],
+          "sab": [["09:00", "12:30"]],
+          "dom": []
+        }
+      },
+      "personal": {
+        "etichetta": "Personal training",
+        "settimana": {
+          "lun": [["08:00", "21:00"]],
+          "mar": [["08:00", "21:00"]],
+          "mer": [["08:00", "21:00"]],
+          "gio": [["08:00", "21:00"]],
+          "ven": [["08:00", "21:00"]],
+          "sab": [["09:00", "12:30"]],
+          "dom": []
+        }
+      }
+    },
+    "_chiusure": "Giorni di chiusura straordinaria (festività, ferie) in formato AAAA-MM-GG. TODO: chiedere al cliente.",
+    "chiusure": []
+  },
+  "medical": {
+    "nome": "A10 Medical",
+    "nomeBreve": "A10 Medical",
+    "ragioneSociale": null,
+    "_todoRagioneSociale": "Dai materiali grafici risulta 'A10 Medical S.r.l.': confermare denominazione, P.IVA e sede legale.",
+    "piva": null,
+    "indirizzo": {
+      "via": "Via Formaleoni 8",
+      "cap": "29027",
+      "citta": "Podenzano",
+      "provincia": "PC",
+      "paese": "IT"
+    },
+    "telefono": "+393355776832",
+    "telefonoLeggibile": "335 5776832",
+    "email": "a10medicalsrl@gmail.com",
+    "instagram": "https://www.instagram.com/a10_medical/",
+    "instagramHandle": "@a10_medical",
+    "orari": null,
+    "_todoOrari": "Orari di segreteria e ambulatori non pubblicati: chiedere al cliente.",
+    "medicoVisiteSportive": "Dott. Giancarlo Sportelli"
+  },
+  "mappe": {
+    "google": "https://www.google.com/maps/dir/?api=1&destination=44.949094,9.678713",
+    "apple": "https://maps.apple.com/?daddr=44.949094,9.678713&q=Area10%20Fitness%20Club",
+    "osmEmbed": "https://www.openstreetmap.org/export/embed.html?bbox=9.6727%2C44.9461%2C9.6847%2C44.9521&layer=mapnik&marker=44.949094%2C9.678713",
+    "osm": "https://www.openstreetmap.org/?mlat=44.949094&mlon=9.678713#map=17/44.949094/9.678713"
+  }
+}

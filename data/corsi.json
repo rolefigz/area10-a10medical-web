@@ -1,0 +1,69 @@
+{
+  "stagione": "2026/27",
+  "_verifica": "Trascritto dal calendario CORSI 2026/27 pubblicato su Instagram. TODO: verificare con il cliente prima della pubblicazione definitiva (orari e sede di San Polo).",
+  "sedi": {
+    "podenzano": {
+      "nome": "Podenzano",
+      "dettaglio": "Area10, via Formaleoni 6"
+    },
+    "san-polo": {
+      "nome": "San Polo",
+      "dettaglio": "Sede di San Polo",
+      "_todo": "Indirizzo esatto della sede di San Polo da confermare."
+    }
+  },
+  "discipline": {
+    "pilates": {
+      "nome": "Pilates",
+      "descrizione": "Controllo, respirazione e forza profonda del core."
+    },
+    "funzionale": {
+      "nome": "Funzionale",
+      "descrizione": "Circuiti a corpo libero e con attrezzi per forza e resistenza."
+    },
+    "yoga": {
+      "nome": "Yoga",
+      "descrizione": "Mobilità, equilibrio e respiro."
+    },
+    "ginnastica-leggera": {
+      "nome": "Ginnastica leggera",
+      "descrizione": "Movimento dolce per mantenersi attivi a ogni età."
+    },
+    "spinning": {
+      "nome": "Spinning",
+      "descrizione": "Allenamento cardio su bike, a ritmo di musica."
+    },
+    "fitboxe": {
+      "nome": "Fitboxe",
+      "descrizione": "Tecniche di pugilato a tempo di musica, senza contatto."
+    },
+    "danza-bambini": {
+      "nome": "Danza bambini",
+      "descrizione": "Hip hop e classico moderno per i più piccoli."
+    }
+  },
+  "giorni": {
+    "lun": "Lunedì",
+    "mar": "Martedì",
+    "mer": "Mercoledì",
+    "gio": "Giovedì",
+    "ven": "Venerdì",
+    "sab": "Sabato",
+    "dom": "Domenica"
+  },
+  "corsi": [
+    { "giorno": "lun", "inizio": "17:00", "fine": "18:00", "nome": "Hip Hop Kids", "disciplina": "danza-bambini", "sede": "podenzano" },
+    { "giorno": "lun", "inizio": "18:30", "fine": "19:15", "nome": "Pilates", "disciplina": "pilates", "sede": "podenzano" },
+    { "giorno": "lun", "inizio": "19:30", "fine": "20:30", "nome": "Funzionale", "disciplina": "funzionale", "sede": "podenzano" },
+    { "giorno": "mar", "inizio": "17:45", "fine": "18:45", "nome": "Yoga", "disciplina": "yoga", "sede": "podenzano" },
+    { "giorno": "mar", "inizio": "19:30", "fine": "20:30", "nome": "Pilates", "disciplina": "pilates", "sede": "san-polo" },
+    { "giorno": "mer", "inizio": "09:00", "fine": "10:00", "nome": "Ginnastica leggera", "disciplina": "ginnastica-leggera", "sede": "podenzano" },
+    { "giorno": "mer", "inizio": "18:30", "fine": "19:30", "nome": "Spinning", "disciplina": "spinning", "sede": "podenzano" },
+    { "giorno": "gio", "inizio": "09:00", "fine": "10:00", "nome": "Ginnastica leggera", "disciplina": "ginnastica-leggera", "sede": "san-polo" },
+    { "giorno": "gio", "inizio": "17:00", "fine": "18:00", "nome": "Classico Modern Kids", "disciplina": "danza-bambini", "sede": "podenzano" },
+    { "giorno": "gio", "inizio": "18:30", "fine": "19:15", "nome": "Pilates", "disciplina": "pilates", "sede": "podenzano" },
+    { "giorno": "gio", "inizio": "19:30", "fine": "20:30", "nome": "Funzionale", "disciplina": "funzionale", "sede": "podenzano" },
+    { "giorno": "ven", "inizio": "18:30", "fine": "19:30", "nome": "Fitboxe", "disciplina": "fitboxe", "sede": "podenzano" },
+    { "giorno": "ven", "inizio": "19:30", "fine": "20:30", "nome": "Spinning", "disciplina": "spinning", "sede": "podenzano" }
+  ]
+}

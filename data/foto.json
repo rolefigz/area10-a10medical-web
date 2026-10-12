@@ -1,0 +1,30 @@
+{
+  "_istruzioni": "Ogni voce è uno spazio foto del sito. Salva il file in assets/photos/<id> con estensione .jpg, .jpeg, .png, .webp o .avif (es. assets/photos/area10/sala-pesi.jpg). Al build successivo la foto compare da sola, ottimizzata in AVIF/WebP a 480/960/1600 px. Lancia 'npm run foto' per vedere quali mancano. Per le persone riconoscibili serve la liberatoria del cliente.",
+  "foto": [
+    { "id": "area10/hero", "alt": "La sala di Area10 Fitness Club a Podenzano", "dove": "Pagina Area10, in alto", "formato": "orizzontale 3:2" },
+    { "id": "area10/sala-pesi", "alt": "Zona pesi liberi con manubri e bilancieri", "dove": "Area10, sala pesi-cardio", "formato": "orizzontale 4:3" },
+    { "id": "area10/cardio", "alt": "Zona cardio della sala Area10", "dove": "Galleria", "formato": "verticale 4:5" },
+    { "id": "area10/personal-training", "alt": "Sessione di personal training in studio", "dove": "Area10, personal training", "formato": "verticale 4:5" },
+    { "id": "area10/pilates", "alt": "Lezione di pilates nello studio di Area10", "dove": "Area10, pilates", "formato": "verticale 4:5" },
+    { "id": "area10/funzionale", "alt": "Allenamento funzionale in gruppo", "dove": "Galleria e corsi", "formato": "orizzontale 3:2" },
+    { "id": "area10/spinning", "alt": "Lezione di spinning in Area10", "dove": "Galleria e corsi", "formato": "orizzontale 3:2" },
+    { "id": "area10/hyrox", "alt": "Allenamento di preparazione HYROX", "dove": "Home e pagina HYROX", "formato": "orizzontale 3:2" },
+    { "id": "area10/corsi", "alt": "Corso fitness di gruppo in Area10", "dove": "Pagina corsi", "formato": "orizzontale 16:9" },
+    { "id": "area10/recupero", "alt": "Esercizi di recupero post operatorio con il trainer", "dove": "Area10, recupero post operatorio", "formato": "verticale 4:5" },
+    { "id": "area10/staff", "alt": "Lo staff di Area10 Fitness Club", "dove": "Home, squadra", "formato": "orizzontale 3:2" },
+    { "id": "area10/ingresso", "alt": "Ingresso di Area10 in via Formaleoni 6", "dove": "Contatti", "formato": "orizzontale 4:3" },
+    { "id": "medical/hero", "alt": "Ambulatorio di A10 Medical a Podenzano", "dove": "Pagina A10 Medical, in alto", "formato": "orizzontale 3:2" },
+    { "id": "medical/ambulatorio", "alt": "Studio medico di A10 Medical", "dove": "Galleria", "formato": "verticale 4:5" },
+    { "id": "medical/lettino", "alt": "Lettino per i trattamenti di fisioterapia", "dove": "Galleria", "formato": "orizzontale 4:3" },
+    { "id": "medical/fisioterapia", "alt": "Fisioterapista durante un trattamento", "dove": "A10 Medical, fisioterapia", "formato": "verticale 4:5" },
+    { "id": "medical/palestra-fisioterapica", "alt": "Palestra fisioterapica di A10 Medical", "dove": "A10 Medical, palestra fisioterapica", "formato": "orizzontale 3:2" },
+    { "id": "medical/visita-sportiva", "alt": "Visita medico-sportiva in struttura", "dove": "Pagina visite sportive", "formato": "orizzontale 3:2" },
+    { "id": "medical/nutrizione", "alt": "Consulenza nutrizionale in studio", "dove": "A10 Medical, nutrizionista", "formato": "verticale 4:5" },
+    { "id": "medical/facciata", "alt": "Ingresso di A10 Medical in via Formaleoni 8", "dove": "Contatti", "formato": "orizzontale 4:3" },
+    { "id": "medical/dott-sportelli", "alt": "Il Dott. Giancarlo Sportelli", "dove": "Visite sportive e squadra", "formato": "verticale 4:5" }
+  ],
+  "loghi": [
+    { "id": "brand/area10-logo", "alt": "Area10 Fitness Club", "nota": "Logo originale (SVG preferibile, altrimenti PNG trasparente). Non ridisegnarlo." },
+    { "id": "brand/a10-medical-logo", "alt": "A10 Medical", "nota": "Logo originale (SVG preferibile, altrimenti PNG trasparente). Non ridisegnarlo." }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "_nota": "Formato standard della gara HYROX (informazione pubblica, non specifica del centro). TODO: verificare con il regolamento HYROX della stagione in corso e con la guida all'uso del marchio prima di pubblicare.",
+  "corsaPerTratto": "1 km",
+  "stazioni": [
+    { "nome": "SkiErg", "misura": "1000 m" },
+    { "nome": "Sled Push", "misura": "50 m" },
+    { "nome": "Sled Pull", "misura": "50 m" },
+    { "nome": "Burpee Broad Jump", "misura": "80 m" },
+    { "nome": "Rowing", "misura": "1000 m" },
+    { "nome": "Farmers Carry", "misura": "200 m" },
+    { "nome": "Sandbag Lunges", "misura": "100 m" },
+    { "nome": "Wall Balls", "misura": "100 ripetizioni" }
+  ]
+}
