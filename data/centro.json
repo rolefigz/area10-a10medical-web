@@ -18,6 +18,15 @@
     "whatsapp": null,
     "instagram": "https://www.instagram.com/area10_centro_fitness/",
     "instagramHandle": "@area10_centro_fitness",
+    "datiLegali": {
+      "_nota": "Dati obbligatori nel sito (art. 35 DPR 633/1972: P.IVA in home; art. 2250 c.c. per le società). Compaiono nel piè di pagina appena compilati.",
+      "ragioneSociale": null,
+      "piva": null,
+      "sedeLegale": null,
+      "registroImprese": null,
+      "capitaleSociale": null,
+      "pec": null
+    },
     "_todo": "Confermare: WhatsApp, email, condizioni della prova gratuita, prezzi e abbonamenti.",
     "orari": {
       "sala": {
@@ -51,9 +60,6 @@
   "medical": {
     "nome": "A10 Medical",
     "nomeBreve": "A10 Medical",
-    "ragioneSociale": null,
-    "_todoRagioneSociale": "Dai materiali grafici risulta 'A10 Medical S.r.l.': confermare denominazione, P.IVA e sede legale.",
-    "piva": null,
     "indirizzo": {
       "via": "Via Formaleoni 8",
       "cap": "29027",
@@ -66,6 +72,18 @@
     "email": "a10medicalsrl@gmail.com",
     "instagram": "https://www.instagram.com/a10_medical/",
     "instagramHandle": "@a10_medical",
+    "datiLegali": {
+      "_nota": "Dati obbligatori nel sito (art. 35 DPR 633/1972: P.IVA in home; art. 2250 c.c. per le S.r.l.: sede, registro imprese e numero, capitale versato). Direttore sanitario e autorizzazione: da confermare con il centro (L. 145/2018). Compaiono nel piè di pagina appena compilati.",
+      "ragioneSociale": null,
+      "piva": null,
+      "sedeLegale": null,
+      "registroImprese": null,
+      "capitaleSociale": null,
+      "pec": null,
+      "direttoreSanitario": null,
+      "autorizzazioneSanitaria": null,
+      "_suggerimento": "Dai materiali grafici risulta 'A10 Medical S.r.l.': confermare."
+    },
     "orari": null,
     "_todoOrari": "Orari di segreteria e ambulatori non pubblicati: chiedere al cliente.",
     "medicoVisiteSportive": "Dott. Giancarlo Sportelli"

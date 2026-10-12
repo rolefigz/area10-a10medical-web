@@ -73,15 +73,18 @@ const interessi = [
 
   <div class="campo campo--largo">
     <label for="m-messaggio">Messaggio <span class="campo__facoltativo">(facoltativo)</span></label>
-    <textarea id="m-messaggio" name="messaggio" rows="4" maxlength="1500"></textarea>
+    <textarea id="m-messaggio" name="messaggio" rows="4" maxlength="1500" aria-describedby="m-messaggio-aiuto"></textarea>
+    <p class="campo__aiuto" id="m-messaggio-aiuto">
+      Per la tua privacy non scrivere qui informazioni sulla salute: ne parliamo al telefono o in visita.
+    </p>
   </div>
 
   <div class="campo campo--largo campo--check">
-    <input id="m-privacy" name="privacy" type="checkbox" value="accettata" required aria-describedby="m-privacy-err" />
+    <input id="m-privacy" name="privacy" type="checkbox" value="letta" required aria-describedby="m-privacy-err" />
     <label for="m-privacy">
-      Ho letto l'<a href={url('/privacy/')}>informativa privacy</a> e acconsento a essere ricontattato.
+      Ho letto l'<a href={url('/privacy/')}>informativa privacy</a>.
     </label>
-    <p class="campo__errore" id="m-privacy-err" data-errore="Per inviare la richiesta serve il consenso."></p>
+    <p class="campo__errore" id="m-privacy-err" data-errore="Per inviare la richiesta conferma di aver letto l'informativa."></p>
   </div>
 
   <div class="modulo__invio campo--largo">

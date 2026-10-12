@@ -23,7 +23,8 @@ Un unico sito con due identità: **Area10** (palestra: nero, bianco osso, oro, t
 9. [Dominio proprio](#dominio-proprio)
 10. [Verifiche di qualità](#verifiche-di-qualità)
 11. [Contenuti, diritti e cose da confermare](#contenuti-diritti-e-cose-da-confermare)
-12. [Struttura del progetto](#struttura-del-progetto)
+12. [Aspetti legali: checklist prima della pubblicazione ufficiale](#aspetti-legali-checklist-prima-della-pubblicazione-ufficiale)
+13. [Struttura del progetto](#struttura-del-progetto)
 
 ---
 
@@ -211,7 +212,7 @@ Configurazione di html-validate in `.htmlvalidate.mjs`: le poche regole disattiv
 - Nomi e foto di allenatori, istruttori, fisioterapisti, ortopedico e nutrizionista (l'unico nome pubblicato è il Dott. Giancarlo Sportelli).
 - WhatsApp ed email di Area10 (oggi solo telefono).
 - Orari di segreteria di A10 Medical e coordinate esatte del civico 8.
-- Ragione sociale e P.IVA di entrambe le attività (obbligatorie nel piè di pagina), dati per privacy e cookie.
+- Ragione sociale, P.IVA e dati societari di entrambe le attività (campi `datiLegali` in `data/centro.json`), dati per privacy e cookie.
 - Calendario corsi 2026/27 e indirizzo della sede di San Polo.
 - Se A10 Medical offre osteopatia (citata nei post, assente dalla bio).
 - Elettrostimolazione Compex, preparazione atletica per sport e merchandising (dalle storie in evidenza): dettagli.
@@ -220,6 +221,20 @@ Configurazione di html-validate in `.htmlvalidate.mjs`: le poche regole disattiv
 - Elenco "cosa portare" e informazioni sulle visite non agonistiche.
 - Liberatorie per le persone riconoscibili nelle foto.
 - Turchese esatto del logo A10 Medical (oggi `#0fa89e`, da campionare dal file originale).
+
+---
+
+## Aspetti legali: checklist prima della pubblicazione ufficiale
+
+Non è una consulenza legale: i punti segnati vanno verificati con il commercialista e con il consulente privacy del centro.
+
+- **Cookie (pronto).** Il sito non usa cookie né strumenti di tracciamento: si collega solo al proprio dominio, i font sono ospitati in locale, la mappa OpenStreetMap si carica solo su richiesta e la preferenza del tema (localStorage) viene salvata solo se l'utente usa il pulsante. Per questo non serve il banner. **Se in futuro si aggiungono Google Analytics, Meta Pixel, Google Maps incorporata, video YouTube o feed Instagram, serve un banner di consenso e va aggiornata la cookie policy.**
+- **Dati societari (obbligatori).** Compilare `datiLegali` in `data/centro.json` per entrambe le attività: compaiono da soli nel piè di pagina. P.IVA in home per tutti (art. 35 DPR 633/1972); per le S.r.l. anche sede legale, ufficio e numero del registro imprese, capitale sociale versato (art. 2250 c.c.); PEC consigliata.
+- **Informativa privacy.** La pagina `/privacy/` è un modello: va completata con i dati dei titolari, idealmente dal consulente privacy del centro (che, come struttura sanitaria, dovrebbe già averne uno).
+- **Modulo contatti.** Web3Forms (Web3Creative) offre un accordo sul trattamento dei dati, ma la sede dei server va verificata. Per una struttura sanitaria è preferibile un servizio con server nell'UE, oppure rinunciare al modulo e lasciare solo telefono ed email. Il modulo invita già a non scrivere dati sulla salute.
+- **Pubblicità sanitaria (A10 Medical).** La L. 145/2018 (comma 525) consente alle strutture sanitarie private solo comunicazioni informative, senza elementi promozionali o suggestivi; le violazioni sono segnalate dagli Ordini professionali. Far approvare i testi di A10 Medical al direttore sanitario e verificare con l'Ordine dei Medici di Piacenza se indicare nel sito direttore sanitario e autorizzazione sanitaria (campi già previsti in `datiLegali`).
+- **Foto.** Liberatoria per ogni persona riconoscibile; foto scattate o fornite dal cliente.
+- **La demo.** Finché il cliente non approva, non diffondere il link e non usarlo nel portfolio. Se il cliente rinuncia, eliminare repository e sito.
 
 ---
 

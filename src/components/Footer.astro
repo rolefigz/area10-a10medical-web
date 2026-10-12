@@ -8,6 +8,24 @@ import { centro, orariRaggruppati, indirizzoTesto } from '../lib/dati.js';
 
 const a = centro.area10;
 const m = centro.medical;
+
+// Dati societari obbligatori (P.IVA, sede legale, registro imprese...): compaiono solo quando
+// sono compilati in data/centro.json, così la demo non mostra segnaposto.
+type DatiLegali = Record<string, string | null | undefined>;
+const ETICHETTE: [string, string][] = [
+  ['ragioneSociale', ''],
+  ['sedeLegale', 'Sede legale: '],
+  ['piva', 'P.IVA '],
+  ['registroImprese', 'Registro imprese: '],
+  ['capitaleSociale', 'Capitale sociale: '],
+  ['pec', 'PEC: '],
+  ['direttoreSanitario', 'Direttore sanitario: '],
+  ['autorizzazioneSanitaria', 'Autorizzazione sanitaria: '],
+];
+const righeLegali = (dati: DatiLegali = {}) =>
+  ETICHETTE.filter(([k]) => dati[k]).map(([k, etichetta]) => `${etichetta}${dati[k]}`);
+const legaliArea10 = righeLegali(a.datiLegali as DatiLegali);
+const legaliMedical = righeLegali(m.datiLegali as DatiLegali);
 const orariSala = orariRaggruppati(a.orari.sala.settimana);
 const anno = new Date().getFullYear();
 ---
@@ -43,6 +61,15 @@ const anno = new Date().getFullYear();
             ))
           }
         </dl>
+        {
+          legaliArea10.length > 0 && (
+            <ul class="footer__societari" role="list">
+              {legaliArea10.map((r) => (
+                <li>{r}</li>
+              ))}
+            </ul>
+          )
+        }
       </section>
 
       <section class="footer__blocco" data-tinta="medical" aria-labelledby="footer-medical">
@@ -66,6 +93,15 @@ const anno = new Date().getFullYear();
           </a>
         </address>
         <p class="footer__nota">Per informazioni e prenotazioni chiama o scrivi.</p>
+        {
+          legaliMedical.length > 0 && (
+            <ul class="footer__societari" role="list">
+              {legaliMedical.map((r) => (
+                <li>{r}</li>
+              ))}
+            </ul>
+          )
+        }
       </section>
 
       <nav class="footer__blocco footer__mappa" aria-label="Mappa del sito">
@@ -96,7 +132,11 @@ const anno = new Date().getFullYear();
         <li><a href={url('/privacy/')}>Privacy</a></li>
         <li><a href={url('/cookie/')}>Cookie</a></li>
       </ul>
-      <Fragment set:html="<!-- TODO: ragione sociale e P.IVA di entrambe le attività (obbligatorie per legge) -->" />
+      {
+        (!legaliArea10.length || !legaliMedical.length) && (
+          <Fragment set:html="<!-- TODO: compilare datiLegali in data/centro.json (P.IVA obbligatoria in home) -->" />
+        )
+      }
       <p class="footer__crediti">
         Proposta di design realizzata da <strong>RoleFigz</strong>. Sito dimostrativo, non è il sito ufficiale del
         centro. HYROX è un marchio dei rispettivi titolari. {anno}
@@ -172,6 +212,15 @@ const anno = new Date().getFullYear();
   }
   .footer__nota {
     margin-top: 1rem;
+    color: var(--testo-2);
+  }
+  .footer__societari {
+    display: grid;
+    gap: 0.15rem;
+    margin: 1.25rem 0 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--linea);
+    font-size: var(--step--2);
     color: var(--testo-2);
   }
   .footer__mappa ul {
