@@ -1,0 +1,66 @@
+# Build del sito Astro e pubblicazione su GitHub Pages a ogni push su "main".
+# Variabili facoltative (Settings > Secrets and variables > Actions > Variables):
+#   PUBLIC_DEMO           "true" (default) = noindex; "false" quando il cliente approva
+#   PUBLIC_WEB3FORMS_KEY  chiave pubblica Web3Forms per attivare il modulo contatti
+#   SITE_URL / BASE_PATH  solo con un dominio proprio (es. https://www.area10.it e /)
+name: Pubblica su GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v7
+
+      - name: Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Dipendenze
+        run: npm ci
+
+      - name: Test unitari (orari "Aperto ora")
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:
+          PUBLIC_DEMO: ${{ vars.PUBLIC_DEMO || 'true' }}
+          PUBLIC_WEB3FORMS_KEY: ${{ vars.PUBLIC_WEB3FORMS_KEY }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+
+      - name: Validazione HTML, JSON-LD e link interni
+        run: npm run valida
+
+      - name: Carica il sito
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Pubblica
+        id: deployment
+        uses: actions/deploy-pages@v5
