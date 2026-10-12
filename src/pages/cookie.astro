@@ -1,0 +1,56 @@
+---
+// Cookie policy: descrive con precisione ciò che il sito fa oggi (nessun cookie di profilazione,
+// solo una preferenza tecnica in localStorage, mappa di terze parti solo su richiesta).
+// TODO: aggiornare se in futuro si aggiungono statistiche (es. Google Analytics) o altri servizi esterni.
+import PaginaLegale from '../components/PaginaLegale.astro';
+import { url } from '../lib/url.js';
+---
+
+<PaginaLegale
+  nome="Cookie policy"
+  titolo="Cookie policy | Area10 Fitness Club e A10 Medical"
+  descrizione="Il sito di Area10 Fitness Club e A10 Medical non usa cookie di profilazione: ecco cosa salva il browser e quando si caricano servizi esterni."
+  percorso="/cookie/"
+>
+  <p>
+    Questo sito <strong>non usa cookie di profilazione né strumenti di statistica</strong>. Per questo non ti mostriamo
+    un banner per il consenso.
+  </p>
+
+  <h2>Cosa viene salvato nel tuo browser</h2>
+  <ul>
+    <li>
+      <strong>Preferenza del tema</strong> (chiaro o scuro): se usi il pulsante del tema, la scelta viene salvata nel
+      localStorage del tuo browser per ricordarla alla visita successiva. Non è un cookie, non contiene dati personali e
+      non viene inviata a nessuno. Puoi cancellarla dalle impostazioni del browser.
+    </li>
+  </ul>
+
+  <h2>Servizi esterni</h2>
+  <ul>
+    <li>
+      <strong>Mappa interattiva (OpenStreetMap)</strong>: viene caricata solo se premi "Mostra la mappa interattiva". Da
+      quel momento OpenStreetMap riceve i dati tecnici necessari a mostrarla (come l'indirizzo IP), secondo la propria
+      informativa (osmfoundation.org).
+    </li>
+    <li>
+      <strong>Link a Instagram, Google Maps e Apple Maps</strong>: si aprono sui siti dei rispettivi servizi, che
+      applicano le proprie regole su cookie e privacy.
+    </li>
+    <li>
+      <strong>Caratteri tipografici</strong>: sono ospitati direttamente su questo sito; non vengono richiesti a servizi
+      esterni come Google Fonts.
+    </li>
+  </ul>
+
+  <h2>Modulo di contatto</h2>
+  <p>
+    Il modulo invia i dati a Web3Forms solo quando premi "Invia la richiesta". Trovi i dettagli
+    nell'<a href={url('/privacy/')}>informativa privacy</a>.
+  </p>
+
+  <h2>Titolari</h2>
+  <p><span class="da-completare">Dati dei titolari, come nell'informativa privacy</span></p>
+
+  <p><span class="da-completare">Data di ultimo aggiornamento</span></p>
+</PaginaLegale>

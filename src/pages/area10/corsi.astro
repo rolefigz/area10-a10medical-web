@@ -1,0 +1,150 @@
+---
+// Calendario corsi 2026/27 con filtri. TODO: verificare orari e sede di San Polo con il cliente.
+import Base from '../../layouts/Base.astro';
+import TestataPagina from '../../components/TestataPagina.astro';
+import CalendarioCorsi from '../../components/CalendarioCorsi.astro';
+import BandaCta from '../../components/BandaCta.astro';
+import { url } from '../../lib/url.js';
+import { corsi } from '../../lib/dati.js';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'Area10 Fitness Club', url: '/area10/' },
+  { nome: `Corsi ${corsi.stagione}`, url: '/area10/corsi/' },
+];
+const discipline = Object.entries(corsi.discipline);
+---
+
+<Base
+  titolo={`Corsi fitness ${corsi.stagione} a Podenzano | Pilates, yoga, spinning | Area10`}
+  descrizione="Calendario dei corsi Area10: pilates, funzionale, yoga, ginnastica leggera, spinning, fitboxe e danza per bambini, a Podenzano e San Polo. Filtra per giorno e sede."
+  area="fitness"
+  immagine="og/corsi.png"
+  briciole={briciole}
+>
+  <TestataPagina
+    area="fitness"
+    briciole={briciole}
+    gigante="Corsi"
+    titolo={`Corsi ${corsi.stagione}`}
+    lead="Pilates, funzionale, yoga, ginnastica leggera, spinning, fitboxe e danza per bambini. Scegli il giorno, la disciplina o la sede."
+  >
+    <Fragment slot="azioni">
+      <a class="btn" href={url('/contatti/#prova')}>Prenota la prova gratuita</a>
+    </Fragment>
+  </TestataPagina>
+
+  <section class="sezione" aria-labelledby="calendario-titolo">
+    <div class="contenitore">
+      <div class="calendario-testa">
+        <h2 id="calendario-titolo" class="calendario-titolo">La settimana</h2>
+        <p class="calendario-nota">
+          Alcuni corsi si tengono nella sede di <strong>San Polo</strong>: sono segnalati in calendario. Gli orari
+          possono cambiare durante la stagione; nel dubbio, chiamaci.
+        </p>
+      </div>
+      <CalendarioCorsi />
+    </div>
+  </section>
+
+  <section class="sezione discipline" data-area="fitness" aria-labelledby="discipline-titolo">
+    <div class="contenitore">
+      <h2 id="discipline-titolo" class="calendario-titolo">Le discipline</h2>
+      <dl class="discipline__elenco">
+        {
+          discipline.map(([id, d]) => (
+            <div class="disciplina">
+              <dt>{d.nome}</dt>
+              <dd>{d.descrizione}</dd>
+              <dd>
+                <a href={url(`/area10/corsi/?disciplina=${id}`)}>Quando si fa</a>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <BandaCta
+    area="fitness"
+    titolo="Scegli un corso e provalo."
+    testo="La prima lezione è gratuita: prenota e vieni a conoscere istruttori e gruppo."
+  />
+</Base>
+
+<style>
+  .calendario-testa {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .calendario-titolo {
+    font-size: var(--step-5);
+  }
+  .calendario-nota {
+    max-width: 42rem;
+    color: var(--testo-2);
+  }
+  .calendario-nota strong {
+    color: var(--testo);
+  }
+  @media (min-width: 64em) {
+    .calendario-testa {
+      grid-template-columns: auto 1fr;
+      align-items: end;
+      gap: 3rem;
+    }
+  }
+
+  .discipline {
+    background-color: var(--sfondo-2) !important;
+  }
+  .discipline__elenco {
+    display: grid;
+    gap: 1px;
+    margin: 2rem 0 0;
+    background-color: var(--linea);
+    border: 1px solid var(--linea);
+  }
+  .disciplina {
+    display: grid;
+    gap: 0.4rem;
+    align-content: start;
+    padding: 1.4rem 1.25rem;
+    background-color: var(--sfondo);
+  }
+  .disciplina dt {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .disciplina dd {
+    margin: 0;
+    color: var(--testo-2);
+  }
+  .disciplina a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    font-weight: 700;
+    color: var(--testo);
+    text-decoration-color: var(--accento);
+    text-decoration-thickness: 2px;
+  }
+  @media (min-width: 48em) {
+    .discipline__elenco {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .discipline__elenco {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .disciplina:last-child:nth-child(4n + 3) {
+      grid-column: span 2;
+    }
+  }
+</style>

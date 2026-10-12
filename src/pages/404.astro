@@ -1,0 +1,65 @@
+---
+// Pagina non trovata. GitHub Pages la serve per ogni indirizzo inesistente.
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/url.js';
+---
+
+<Base titolo="Pagina non trovata | Area10 Fitness Club e A10 Medical" descrizione="La pagina che cercavi non esiste.">
+  <section class="errore texture-topo" data-surface="ink">
+    <span class="errore__numero" aria-hidden="true">404</span>
+    <div class="contenitore errore__testo">
+      <h1 class="errore__titolo">Fuori campo.</h1>
+      <p class="errore__lead">La pagina che cercavi non esiste, o si è spostata. Riparti da qui:</p>
+      <ul class="errore__link" role="list">
+        <li><a class="btn" href={url('/')}>Torna alla home</a></li>
+        <li><a class="btn btn--secondario" href={url('/area10/')}>Area10</a></li>
+        <li><a class="btn btn--secondario" href={url('/medical/')}>A10 Medical</a></li>
+        <li><a class="btn btn--secondario" href={url('/contatti/')}>Contatti</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .errore {
+    --topo-opacita: 0.2;
+    position: relative;
+    display: grid;
+    align-items: center;
+    min-height: min(calc(100dvh - var(--header-h)), 46rem);
+    overflow: hidden;
+    padding-block: 4rem;
+  }
+  .errore__numero {
+    position: absolute;
+    right: -0.05em;
+    bottom: -0.18em;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(12rem, 45vw, 34rem);
+    line-height: 0.8;
+    color: rgb(216 168 56 / 0.14);
+    pointer-events: none;
+  }
+  .errore__testo {
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .errore__titolo {
+    font-size: clamp(3.5rem, 2rem + 8vw, 8rem);
+  }
+  .errore__lead {
+    max-width: 32rem;
+    font-size: var(--step-1);
+    color: var(--testo-2);
+  }
+  .errore__link {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0.5rem 0 0;
+    padding: 0;
+  }
+</style>

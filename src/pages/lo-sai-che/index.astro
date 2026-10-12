@@ -1,0 +1,166 @@
+---
+// Indice di "Lo sai che...": falsi miti in evidenza, poi gli approfondimenti e le giornate a tema.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TestataPagina from '../../components/TestataPagina.astro';
+import ArticoloScheda from '../../components/ArticoloScheda.astro';
+import BandaCta from '../../components/BandaCta.astro';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'Lo sai che...', url: '/lo-sai-che/' },
+];
+const articoli = (await getCollection('loSaiChe')).sort((a, b) => a.data.ordine - b.data.ordine);
+const miti = articoli.filter((a) => a.data.tipo === 'mito');
+const approfondimenti = articoli.filter((a) => a.data.tipo !== 'mito');
+
+// Giornate raccontate nei post di A10 Medical
+const giornate = [
+  { data: '15 marzo', nome: 'Fiocchetto Lilla', tema: 'Giornata nazionale sui disturbi del comportamento alimentare' },
+  { data: '28 aprile', nome: 'Sicurezza sul lavoro', tema: 'Giornata mondiale per la salute e la sicurezza sul lavoro' },
+  { data: '14 giugno', nome: 'Donatore di sangue', tema: 'Giornata mondiale del donatore di sangue' },
+  { data: '22 luglio', nome: 'Cervello', tema: 'Giornata mondiale del cervello' },
+];
+---
+
+<Base
+  titolo="Lo sai che... | Fisioterapia, dolore e prevenzione | A10 Medical Podenzano"
+  descrizione="Articoli brevi del team di A10 Medical su fisioterapia, mal di schiena, dolore, ritorno allo sport e prevenzione. Falsi miti smontati, consigli pratici."
+  area="medical"
+  immagine="og/lo-sai-che.png"
+  briciole={briciole}
+>
+  <TestataPagina
+    area="medical"
+    briciole={briciole}
+    titolo="Lo sai che..."
+    lead="Piccole verità su dolore, movimento e prevenzione, spiegate in modo semplice dal team di A10 Medical."
+  />
+
+  <section class="sezione" aria-labelledby="miti-titolo">
+    <div class="contenitore">
+      <h2 id="miti-titolo" class="titolo-sezione">Falsi miti</h2>
+      <div class="griglia-miti">
+        {miti.map((a, i) => <ArticoloScheda articolo={a} grande={i === 0} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sezione approfondimenti" data-area="medical" aria-labelledby="appr-titolo">
+    <div class="contenitore">
+      <h2 id="appr-titolo" class="titolo-sezione">Approfondimenti</h2>
+      <div class="griglia-appr">
+        {approfondimenti.map((a) => <ArticoloScheda articolo={a} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="sezione" aria-labelledby="giornate-titolo">
+    <div class="contenitore giornate">
+      <div>
+        <h2 id="giornate-titolo" class="titolo-sezione">Le giornate che raccontiamo</h2>
+        <p class="giornate__testo">Durante l'anno dedichiamo i nostri post alle giornate della salute e della prevenzione.</p>
+      </div>
+      <ol class="giornate__lista" role="list">
+        {
+          giornate.map((g) => (
+            <li class="giornata">
+              <span class="giornata__data">{g.data}</span>
+              <span class="giornata__nome">{g.nome}</span>
+              <span class="giornata__tema">{g.tema}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <BandaCta
+    area="medical"
+    titolo="Hai un dubbio? Chiedi a noi."
+    testo="Gli articoli non sostituiscono una visita: se un fastidio non passa, prenota una valutazione."
+  />
+</Base>
+
+<style>
+  .titolo-sezione {
+    margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+    font-size: var(--step-4);
+    letter-spacing: -0.035em;
+  }
+  .griglia-miti,
+  .griglia-appr {
+    display: grid;
+    gap: 1rem;
+  }
+  .approfondimenti {
+    background-color: var(--sfondo-2) !important;
+  }
+  .approfondimenti :global(.scheda) {
+    background-color: var(--sfondo);
+  }
+  @media (min-width: 48em) {
+    .griglia-appr {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .griglia-miti {
+      grid-template-columns: 1.3fr 1fr;
+    }
+    .griglia-miti > :global(:first-child) {
+      grid-row: span 2;
+    }
+    .griglia-appr {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    .griglia-appr > :global(*) {
+      grid-column: span 2;
+    }
+    .griglia-appr > :global(:nth-child(4)),
+    .griglia-appr > :global(:nth-child(5)) {
+      grid-column: span 3;
+    }
+  }
+
+  .giornate {
+    display: grid;
+    gap: 2rem;
+  }
+  .giornate__testo {
+    max-width: 30rem;
+    color: var(--testo-2);
+  }
+  .giornate__lista {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--linea-forte);
+  }
+  .giornata {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 0.15rem 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--linea);
+  }
+  .giornata__data {
+    grid-row: span 2;
+    font-weight: 800;
+    color: var(--accento-testo);
+  }
+  .giornata__nome {
+    font-weight: 700;
+  }
+  .giornata__tema {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  @media (min-width: 64em) {
+    .giornate {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+    }
+  }
+</style>

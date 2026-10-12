@@ -1,0 +1,340 @@
+---
+// Pagina di un singolo articolo di "Lo sai che...".
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Briciole from '../../components/Briciole.astro';
+import ArticoloScheda from '../../components/ArticoloScheda.astro';
+import Icona from '../../components/Icona.astro';
+import { url } from '../../lib/url.js';
+import { centro, servizi } from '../../lib/dati.js';
+import { articolo as articoloLd } from '../../lib/jsonld.js';
+
+export async function getStaticPaths() {
+  const articoli = await getCollection('loSaiChe');
+  return articoli.map((a) => ({ params: { id: a.id }, props: { articolo: a } }));
+}
+
+interface Props {
+  articolo: CollectionEntry<'loSaiChe'>;
+}
+const { articolo } = Astro.props;
+const { Content } = await render(articolo);
+const d = articolo.data;
+const percorso = `/lo-sai-che/${articolo.id}/`;
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'Lo sai che...', url: '/lo-sai-che/' },
+  { nome: d.titolo, url: percorso },
+];
+const tutti = [...servizi.medical, ...servizi.area10];
+const collegati = d.servizi
+  .map((id) => {
+    const s = tutti.find((x) => x.id === id);
+    if (!s) return null;
+    const fitness = servizi.area10.some((x) => x.id === id);
+    return { ...s, href: url(`${fitness ? '/area10/' : '/medical/'}#${id}`), tinta: fitness ? 'fitness' : 'medical' };
+  })
+  .filter((s) => s !== null);
+const altri = (await getCollection('loSaiChe'))
+  .filter((a) => a.id !== articolo.id)
+  .sort((a, b) => a.data.ordine - b.data.ordine)
+  .slice(0, 3);
+const dataLeggibile = new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }).format(d.data);
+const dataIso = d.data.toISOString().slice(0, 10);
+---
+
+<Base
+  titolo={`${d.titolo} | Lo sai che... | A10 Medical`}
+  descrizione={d.descrizione}
+  area="medical"
+  immagine="og/lo-sai-che.png"
+  briciole={briciole}
+  tipoOg="article"
+  jsonld={[articoloLd({ titolo: d.titolo, descrizione: d.descrizione, data: dataIso, percorso }, Astro.site!)]}
+>
+  <article class="articolo">
+    <header class="articolo__testa texture-mm">
+      <div class="contenitore articolo__colonna">
+        <Briciole voci={briciole} />
+        {
+          d.tipo === 'mito' && d.mito && (
+            <p class="articolo__mito">
+              <span class="visually-hidden">Falso mito: </span>
+              <span class="articolo__mito-frase">“{d.mito}”</span>
+              <span class="articolo__timbro" aria-hidden="true">
+                Falso
+              </span>
+            </p>
+          )
+        }
+        <h1 class="articolo__titolo">{d.titolo}</h1>
+        <p class="articolo__descrizione">{d.descrizione}</p>
+        <p class="articolo__meta">
+          A cura del team di A10 Medical · <time datetime={dataIso}>{dataLeggibile}</time>
+        </p>
+      </div>
+    </header>
+
+    <div class="contenitore articolo__colonna articolo__corpo-griglia">
+      {
+        d.inBreve.length > 0 && (
+          <aside class="in-breve" aria-labelledby="in-breve-titolo">
+            <h2 id="in-breve-titolo" class="in-breve__titolo">In breve</h2>
+            <ul role="list">
+              {d.inBreve.map((frase) => (
+                <li>{frase}</li>
+              ))}
+            </ul>
+          </aside>
+        )
+      }
+
+      <div class="prosa">
+        <Content />
+      </div>
+
+      {
+        collegati.length > 0 && (
+          <section class="collegati" aria-labelledby="collegati-titolo">
+            <h2 id="collegati-titolo" class="collegati__titolo">Chi può aiutarti</h2>
+            <ul role="list">
+              {collegati.map((s) => (
+                <li>
+                  <a href={s.href} data-tinta={s.tinta}>
+                    <Icona nome={s.icona} />
+                    <span>
+                      <strong>{s.nome}</strong>
+                      <span>{s.tinta === 'fitness' ? 'Area10, civico 6' : 'A10 Medical, civico 8'}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      <aside class="avviso" aria-label="Avviso">
+        <Icona nome="info-circle" />
+        <p>
+          Questo articolo ha scopo divulgativo e non sostituisce la visita medica. Per un consiglio sul tuo caso chiama A10
+          Medical al <a href={`tel:${centro.medical.telefono}`}>{centro.medical.telefonoLeggibile}</a>.
+        </p>
+      </aside>
+    </div>
+  </article>
+
+  <section class="sezione altri" data-area="medical" aria-labelledby="altri-titolo">
+    <div class="contenitore">
+      <h2 id="altri-titolo" class="altri__titolo">Altri articoli</h2>
+      <div class="altri__griglia">
+        {altri.map((a) => <ArticoloScheda articolo={a} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .articolo__colonna {
+    max-width: 46rem;
+  }
+  .articolo__testa {
+    padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(2.5rem, 6vw, 4rem);
+    border-bottom: 1px solid var(--linea);
+  }
+  .articolo__testa .articolo__colonna {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .articolo__mito {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1rem;
+  }
+  .articolo__mito-frase {
+    font-size: var(--step-2);
+    font-weight: 650;
+    line-height: 1.25;
+    text-decoration: line-through;
+    text-decoration-color: var(--accento-testo);
+    text-decoration-thickness: 2px;
+    color: var(--testo-2);
+  }
+  .articolo__timbro {
+    padding: 0.25rem 0.65rem;
+    border: 2.5px solid var(--accento-testo);
+    border-radius: 0.4rem;
+    color: var(--accento-testo);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: rotate(-6deg);
+  }
+  .articolo__titolo {
+    font-size: clamp(2.25rem, 1.5rem + 3.2vw, 4rem);
+    letter-spacing: -0.035em;
+  }
+  .articolo__descrizione {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--testo-2);
+  }
+  .articolo__meta {
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--testo-2);
+  }
+
+  .articolo__corpo-griglia {
+    display: grid;
+    gap: 2.5rem;
+    padding-block: clamp(2rem, 5vw, 3.5rem) var(--sezione);
+  }
+  .in-breve {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--sfondo-2);
+  }
+  .in-breve__titolo {
+    margin-bottom: 0.9rem;
+    font-size: var(--step-1);
+  }
+  .in-breve ul {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+  }
+  .in-breve li {
+    position: relative;
+    padding-left: 1.6rem;
+    font-weight: 600;
+  }
+  .in-breve li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 0.85rem;
+    height: 0.5rem;
+    border-left: 2.5px solid var(--accento-testo);
+    border-bottom: 2.5px solid var(--accento-testo);
+    transform: rotate(-45deg);
+  }
+
+  /* Testo dell'articolo (Markdown) */
+  .prosa {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+  .prosa :global(> * + *) {
+    margin-top: 1.1em;
+  }
+  .prosa :global(h2) {
+    margin-top: 2em;
+    font-size: var(--step-3);
+    letter-spacing: -0.025em;
+  }
+  .prosa :global(h2 + *) {
+    margin-top: 0.6em;
+  }
+  .prosa :global(ul),
+  .prosa :global(ol) {
+    display: grid;
+    gap: 0.45em;
+    padding-left: 1.4em;
+  }
+  .prosa :global(li::marker) {
+    color: var(--accento-testo);
+    font-weight: 700;
+  }
+  .prosa :global(strong) {
+    font-weight: 750;
+  }
+  .prosa :global(a) {
+    color: var(--accento-testo);
+    font-weight: 650;
+  }
+
+  .collegati__titolo {
+    margin-bottom: 1rem;
+    font-size: var(--step-2);
+  }
+  .collegati ul {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+  }
+  .collegati a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border-radius: 0.9rem;
+    box-shadow: inset 0 0 0 1.5px var(--linea);
+    text-decoration: none;
+    transition: box-shadow 160ms ease;
+  }
+  .collegati a :global(svg) {
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    color: var(--tinta-testo);
+  }
+  .collegati a > span {
+    display: grid;
+  }
+  .collegati a > span > span {
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .collegati a:hover {
+      box-shadow: inset 0 0 0 2px var(--tinta);
+    }
+  }
+  .avviso {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 1.15rem 1.25rem;
+    border-left: 3px solid var(--accento);
+    background-color: var(--sfondo-2);
+    font-size: var(--step--1);
+  }
+  .avviso :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+    flex: none;
+    color: var(--accento-testo);
+  }
+  .avviso a {
+    font-weight: 750;
+  }
+
+  .altri {
+    background-color: var(--sfondo-2) !important;
+  }
+  .altri :global(.scheda) {
+    background-color: var(--sfondo);
+  }
+  .altri__titolo {
+    margin-bottom: 1.75rem;
+    font-size: var(--step-4);
+    letter-spacing: -0.035em;
+  }
+  .altri__griglia {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 64em) {
+    .altri__griglia {
+      grid-template-columns: 1.2fr 1fr 1fr;
+    }
+  }
+</style>

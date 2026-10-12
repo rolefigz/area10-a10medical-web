@@ -1,0 +1,280 @@
+---
+// Pagina A10 Medical: servizi, mappa del corpo, approccio integrato con Area10.
+// Claim originale del centro: "Torna in forma, senza rischi". Qui volutamente attenuato
+// ("nel modo giusto") per evitare promesse di risultato: TODO valutarlo con il cliente.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import TestataPagina from '../../components/TestataPagina.astro';
+import MappaCorpo from '../../components/MappaCorpo.astro';
+import ArticoloScheda from '../../components/ArticoloScheda.astro';
+import Foto from '../../components/Foto.astro';
+import Icona from '../../components/Icona.astro';
+import BandaCta from '../../components/BandaCta.astro';
+import { url } from '../../lib/url.js';
+import { centro, servizi } from '../../lib/dati.js';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'A10 Medical', url: '/medical/' },
+];
+const articoli = (await getCollection('loSaiChe')).sort((a, b) => a.data.ordine - b.data.ordine).slice(0, 3);
+const fotoServizi: Record<string, string> = {
+  fisioterapia: 'medical/fisioterapia',
+  'palestra-fisioterapica': 'medical/palestra-fisioterapica',
+  nutrizionista: 'medical/nutrizione',
+};
+---
+
+<Base
+  titolo="A10 Medical | Fisioterapia, ortopedia e nutrizionista a Podenzano (PC)"
+  descrizione="Poliambulatorio A10 Medical: centro fisioterapico, fisioterapia sportiva, studio ortopedico, palestra fisioterapica, nutrizionista e visite medico-sportive. Via Formaleoni 8, Podenzano."
+  area="medical"
+  immagine="og/medical.png"
+  briciole={briciole}
+>
+  <TestataPagina
+    area="medical"
+    briciole={briciole}
+    occhiello="A10 Medical, poliambulatorio a Podenzano"
+    titolo="Torna in forma, nel modo giusto."
+    lead="Fisioterapia, ortopedia, nutrizione e visite medico-sportive in via Formaleoni 8. Dopo un infortunio conta come recuperi, non solo quanto in fretta."
+  >
+    <Fragment slot="azioni">
+      <a class="btn" href={`tel:${centro.medical.telefono}`}>
+        <Icona nome="phone" />
+        Prenota una visita
+      </a>
+      <a class="btn btn--secondario" href={url('/medical/visite-sportive/')}>Visite sportive</a>
+    </Fragment>
+    <Foto slot="lato" id="medical/hero" rapporto="4/5" priorita sizes="(min-width: 64em) 40vw, 100vw" />
+  </TestataPagina>
+
+  <section class="sezione servizi-med" aria-labelledby="servizi-med-titolo">
+    <div class="contenitore servizi-med__griglia">
+      <header class="servizi-med__testa">
+        <h2 id="servizi-med-titolo" class="titolo-sezione">I nostri servizi</h2>
+        <p class="lead">
+          Specialisti diversi nella stessa struttura: dalla valutazione al trattamento, fino al ritorno alle tue
+          attività.
+        </p>
+        <a class="servizi-med__visite" href={url('/medical/visite-sportive/')}>
+          <Icona nome={servizi.visiteSportive.icona} />
+          <span>
+            <strong>{servizi.visiteSportive.nome}</strong>
+            <span>{servizi.visiteSportive.breve}</span>
+          </span>
+        </a>
+      </header>
+      <ul class="servizi-med__lista" role="list">
+        {
+          servizi.medical.map((s) => (
+            <li class="servizio-med" id={s.id}>
+              <Icona nome={s.icona} class="servizio-med__icona" />
+              <div class="servizio-med__testo">
+                <h3>{s.nome}</h3>
+                <p>{s.descrizione}</p>
+              </div>
+              {fotoServizi[s.id] && (
+                <Foto id={fotoServizi[s.id]} rapporto="16/10" sizes="(min-width: 64em) 30vw, 90vw" class="servizio-med__foto" />
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="sezione corpo" data-area="medical" aria-label="Dove senti fastidio?">
+    <div class="contenitore">
+      <MappaCorpo />
+    </div>
+  </section>
+
+  <section class="ponte taglio-sopra" data-area="fitness" aria-labelledby="ponte-titolo">
+    <div class="contenitore ponte__griglia">
+      <div>
+        <h2 id="ponte-titolo" class="ponte__titolo">Quando sei pronto, la palestra è alla porta accanto.</h2>
+      </div>
+      <div class="ponte__testo">
+        <p>
+          A10 Medical e Area10 Fitness Club sono nella stessa struttura di via Formaleoni. Finita la fisioterapia puoi
+          proseguire con il recupero post operatorio, il personal training o il pilates, senza cambiare indirizzo.
+        </p>
+        <a class="btn" href={url('/area10/')}>Scopri Area10</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sezione" aria-labelledby="articoli-titolo">
+    <div class="contenitore">
+      <div class="articoli-testa">
+        <h2 id="articoli-titolo" class="titolo-sezione">Lo sai che...</h2>
+        <a class="link-freccia" href={url('/lo-sai-che/')}>Tutti gli articoli</a>
+      </div>
+      <div class="articoli-griglia">
+        {articoli.map((a) => <ArticoloScheda articolo={a} />)}
+      </div>
+    </div>
+  </section>
+
+  <BandaCta
+    area="medical"
+    titolo="Prenota una visita o una valutazione."
+    testo="Chiamaci o scrivici: ti diciamo a quale specialista rivolgerti e fissiamo l'appuntamento."
+  />
+</Base>
+
+<style>
+  .titolo-sezione {
+    font-size: var(--step-5);
+    letter-spacing: -0.04em;
+  }
+  .servizi-med__griglia {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .servizi-med__testa {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+  .servizi-med__visite {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-top: 0.5rem;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    background-color: var(--cta-sfondo);
+    color: var(--cta-testo);
+    text-decoration: none;
+    transition: transform 200ms var(--ease-out);
+  }
+  .servizi-med__visite :global(svg) {
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+  }
+  .servizi-med__visite span {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .servizi-med__visite strong {
+    font-size: 1.15rem;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .servizi-med__visite:hover {
+      transform: translateY(-2px);
+    }
+    .servizi-med__visite:hover strong {
+      text-decoration: underline;
+    }
+  }
+  .servizi-med__lista {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+  .servizio-med {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1.1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--sfondo-2);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  .servizio-med :global(.servizio-med__icona) {
+    width: 3rem;
+    height: 3rem;
+    padding: 0.6rem;
+    border-radius: 50%;
+    background-color: var(--sfondo);
+    color: var(--accento-testo);
+  }
+  .servizio-med__testo {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .servizio-med__testo h3 {
+    font-size: var(--step-2);
+  }
+  .servizio-med__testo p {
+    color: var(--testo-2);
+  }
+  .servizio-med :global(.servizio-med__foto) {
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
+    border-radius: 0.75rem;
+  }
+  @media (min-width: 64em) {
+    .servizi-med__griglia {
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: 4rem;
+    }
+    .servizi-med__testa {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+    }
+    .servizio-med:has(:global(.servizio-med__foto)) {
+      grid-template-columns: auto 1fr 0.9fr;
+    }
+    .servizio-med :global(.servizio-med__foto) {
+      grid-column: 3;
+      grid-row: 1 / span 2;
+      margin-top: 0;
+    }
+  }
+
+  .corpo {
+    background-color: var(--sfondo) !important;
+  }
+
+  .ponte {
+    padding-bottom: var(--sezione);
+  }
+  .ponte__griglia {
+    display: grid;
+    gap: 2rem;
+    align-items: end;
+  }
+  .ponte__titolo {
+    font-size: var(--step-5);
+    max-width: 14ch;
+  }
+  .ponte__testo {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    color: var(--testo-2);
+  }
+  @media (min-width: 64em) {
+    .ponte__griglia {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 4rem;
+    }
+  }
+
+  .articoli-testa {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .articoli-testa .link-freccia {
+    color: var(--accento-testo);
+  }
+  .articoli-griglia {
+    display: grid;
+    gap: 1rem;
+  }
+  @media (min-width: 64em) {
+    .articoli-griglia {
+      grid-template-columns: 1.2fr 1fr 1fr;
+    }
+  }
+</style>

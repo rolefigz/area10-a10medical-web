@@ -1,0 +1,88 @@
+---
+// Informativa privacy: MODELLO con campi da completare. Non inventare dati legali.
+// TODO: far completare e validare da un consulente privacy (GDPR, Reg. UE 2016/679).
+import PaginaLegale from '../components/PaginaLegale.astro';
+import { url } from '../lib/url.js';
+---
+
+<PaginaLegale
+  nome="Informativa privacy"
+  titolo="Informativa privacy | Area10 Fitness Club e A10 Medical"
+  descrizione="Come trattiamo i dati personali raccolti attraverso il sito di Area10 Fitness Club e A10 Medical, Podenzano."
+  percorso="/privacy/"
+>
+  <p>
+    Questa informativa, resa ai sensi dell'art. 13 del Regolamento (UE) 2016/679 (GDPR), descrive come vengono trattati i
+    dati personali di chi visita il sito e di chi compila il modulo di contatto.
+  </p>
+
+  <h2>Titolari del trattamento</h2>
+  <ul>
+    <li>
+      Area10 Fitness Club: <span class="da-completare">ragione sociale, sede legale, P.IVA, email di contatto</span>
+    </li>
+    <li>
+      A10 Medical: <span class="da-completare">ragione sociale (A10 Medical S.r.l.?), sede legale, P.IVA, email</span>
+    </li>
+  </ul>
+  <p>
+    <span class="da-completare">Indicare se i due titolari trattano i dati separatamente o in contitolarità.</span>
+  </p>
+
+  <h2>Quali dati trattiamo</h2>
+  <ul>
+    <li>
+      <strong>Dati di navigazione</strong>: dati tecnici (ad esempio indirizzo IP, data e ora della richiesta) registrati
+      dal servizio di hosting per garantire il funzionamento e la sicurezza del sito.
+    </li>
+    <li>
+      <strong>Dati forniti con il modulo</strong>: nome e cognome, telefono, email (facoltativa), servizio di interesse
+      ed eventuale messaggio.
+    </li>
+  </ul>
+  <p>
+    Ti chiediamo di non inserire nel modulo informazioni sul tuo stato di salute: ne parleremo, se necessario, al telefono
+    o in visita.
+  </p>
+
+  <h2>Perché li trattiamo</h2>
+  <ul>
+    <li>
+      Rispondere alla tua richiesta di informazioni o di prova gratuita (base giuridica: misure precontrattuali adottate su
+      tua richiesta, art. 6.1.b GDPR).
+    </li>
+    <li>Garantire la sicurezza del sito (base giuridica: legittimo interesse, art. 6.1.f GDPR).</li>
+  </ul>
+
+  <h2>A chi li comunichiamo</h2>
+  <ul>
+    <li>
+      Web3Forms, servizio che inoltra via email i messaggi del modulo
+      <span class="da-completare">(verificare la nomina a responsabile del trattamento e il trasferimento extra UE)</span>.
+    </li>
+    <li>
+      Il fornitore di hosting del sito
+      <span class="da-completare">(oggi GitHub Pages: aggiornare se si passa a un altro servizio o a un dominio proprio)</span>.
+    </li>
+  </ul>
+  <p>I dati non vengono venduti né usati per pubblicità o profilazione.</p>
+
+  <h2>Per quanto tempo</h2>
+  <p>
+    I dati del modulo sono conservati per il tempo necessario a gestire la richiesta
+    <span class="da-completare">e comunque non oltre ... mesi</span>.
+  </p>
+
+  <h2>I tuoi diritti</h2>
+  <p>
+    Puoi chiedere in ogni momento l'accesso ai tuoi dati, la rettifica, la cancellazione, la limitazione del trattamento,
+    la portabilità e opporti al trattamento (artt. 15-22 GDPR), scrivendo a
+    <span class="da-completare">indirizzo email del titolare</span>. Hai inoltre diritto di proporre reclamo al Garante
+    per la protezione dei dati personali (www.garanteprivacy.it).
+  </p>
+
+  <h2>Cookie</h2>
+  <p>Per l'uso di cookie e tecnologie simili consulta la <a href={url('/cookie/')}>cookie policy</a>.</p>
+
+  <p><span class="da-completare">Data di ultimo aggiornamento</span></p>
+</PaginaLegale>

@@ -1,0 +1,249 @@
+---
+// Landing HYROX Training Club.
+// TODO: verificare la guida all'uso del marchio HYROX prima di inserire loghi; qui il nome è solo testo,
+// come lo usa il centro nei suoi post. Giorni, orari e costi del corso: da chiedere al cliente.
+import Base from '../../layouts/Base.astro';
+import TestataPagina from '../../components/TestataPagina.astro';
+import StazioniHyrox from '../../components/StazioniHyrox.astro';
+import Domande from '../../components/Domande.astro';
+import Foto from '../../components/Foto.astro';
+import Icona from '../../components/Icona.astro';
+import BandaCta from '../../components/BandaCta.astro';
+import { url } from '../../lib/url.js';
+import { centro } from '../../lib/dati.js';
+import { faq } from '../../lib/jsonld.js';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'Area10 Fitness Club', url: '/area10/' },
+  { nome: 'HYROX Training Club', url: '/area10/hyrox/' },
+];
+
+const lavoro = [
+  { icona: 'run', titolo: 'Corsa e ritmo', testo: 'Gestire il passo nei tratti da 1 km, anche con le gambe stanche.' },
+  { icona: 'barbell', titolo: 'Le otto stazioni', testo: 'Tecnica ed efficienza su slitta, vogatore, wall ball e affondi.' },
+  { icona: 'flame', titolo: 'Forza e resistenza', testo: 'La base fisica per arrivare in fondo senza calare.' },
+  { icona: 'target-arrow', titolo: 'Strategia di gara', testo: 'Transizioni, ritmo e scelte per il giorno della prova.' },
+];
+
+const perChi = [
+  { titolo: 'Chi parte da zero', testo: 'HYROX, da dove si comincia: il corso è pensato anche per chi non ha mai gareggiato.' },
+  { titolo: 'Chi corre', testo: 'Per aggiungere forza e lavoro funzionale alla corsa che già fai.' },
+  { titolo: 'Chi fa funzionale', testo: 'Per dare un obiettivo concreto, e un cronometro, ai tuoi allenamenti.' },
+];
+
+const domande = [
+  {
+    domanda: 'Devo essere già allenato per iniziare?',
+    risposta:
+      'No. Il corso è pensato anche per chi inizia: con la prova gratuita valutiamo insieme il tuo punto di partenza.',
+  },
+  {
+    domanda: 'Quando si svolge il corso e quanto costa?',
+    risposta: `Per giorni, orari e costi del corso HYROX chiamaci al ${centro.area10.telefonoLeggibile}: ti diamo le informazioni aggiornate.`,
+  },
+  {
+    domanda: 'Devo per forza iscrivermi a una gara?',
+    risposta:
+      "No. Puoi allenarti con il metodo HYROX anche solo per la tua forma fisica; se decidi di gareggiare, il corso ti prepara alla prova.",
+  },
+  {
+    domanda: 'Che cosa significa HYROX Training Club?',
+    risposta:
+      'È una palestra affiliata a HYROX come luogo di allenamento per la gara. Area10 lo è da ottobre 2025.',
+  },
+];
+---
+
+<Base
+  titolo="HYROX Training Club a Podenzano | Corso ufficiale HYROX in Area10"
+  descrizione="Area10 è HYROX Training Club da ottobre 2025: corso ufficiale per preparare la gara HYROX, 8 km di corsa e 8 stazioni. Vicino a Piacenza, prova gratuita."
+  area="fitness"
+  immagine="og/hyrox.png"
+  briciole={briciole}
+  jsonld={[faq(domande)]}
+>
+  <TestataPagina
+    area="fitness"
+    briciole={briciole}
+    gigante="Hyrox"
+    occhiello="Siamo diventati training club HYROX"
+    titolo="HYROX Training Club a Podenzano"
+    lead="HYROX, da dove si comincia: in Area10 trovi il corso ufficiale per la preparazione completa della prova."
+  >
+    <Fragment slot="azioni">
+      <a class="btn" href={url('/contatti/#prova')}>Prenota la prova gratuita</a>
+      <a class="btn btn--secondario" href={`tel:${centro.area10.telefono}`}>
+        <Icona nome="phone" />
+        Chiedi del corso
+      </a>
+    </Fragment>
+    <Foto slot="lato" id="area10/hyrox" rapporto="4/5" priorita sizes="(min-width: 64em) 40vw, 100vw" />
+  </TestataPagina>
+
+  <section class="sezione" aria-labelledby="cosa-titolo">
+    <div class="contenitore">
+      <div class="cosa">
+        <h2 id="cosa-titolo" class="titolo-sezione">Cos'è HYROX</h2>
+        <div class="cosa__testo">
+          <p class="lead">
+            Una gara di fitness aperta a tutti: 8 km di corsa, divisi in otto tratti da 1 km, ognuno seguito da una
+            stazione di lavoro funzionale.
+          </p>
+          <p>
+            Il formato è lo stesso in ogni gara del mondo, quindi puoi confrontare il tuo tempo con quello di chiunque.
+            Si gareggia da soli, in coppia o a staffetta.
+          </p>
+        </div>
+      </div>
+      <StazioniHyrox />
+      <p class="nota">Distanze del formato standard; i pesi cambiano in base alla categoria.</p>
+    </div>
+  </section>
+
+  <section class="sezione corso" data-area="fitness" aria-labelledby="corso-titolo">
+    <div class="contenitore">
+      <h2 id="corso-titolo" class="titolo-sezione">Il corso in Area10</h2>
+      <ul class="corso__lista" role="list">
+        {
+          lavoro.map((l) => (
+            <li class="corso__voce">
+              <Icona nome={l.icona} class="corso__icona" />
+              <h3>{l.titolo}</h3>
+              <p>{l.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="sezione" aria-labelledby="perchi-titolo">
+    <div class="contenitore perchi">
+      <h2 id="perchi-titolo" class="titolo-sezione">Per chi è</h2>
+      <ol class="perchi__lista" role="list">
+        {
+          perChi.map((p) => (
+            <li class="perchi__voce">
+              <h3>{p.titolo}</h3>
+              <p>{p.testo}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="sezione" aria-label="Domande frequenti su HYROX">
+    <div class="contenitore faq-hyrox">
+      <Domande domande={domande} />
+    </div>
+  </section>
+
+  <BandaCta
+    area="fitness"
+    titolo="Il primo allenamento lo offriamo noi."
+    testo="Prenota la prova gratuita: proviamo insieme corsa e stazioni e ti spieghiamo come funziona il corso."
+  />
+</Base>
+
+<style>
+  .titolo-sezione {
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    font-size: var(--step-5);
+  }
+  .cosa {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .cosa__testo {
+    display: grid;
+    gap: 1rem;
+    max-width: 44rem;
+  }
+  .cosa__testo p:not(.lead) {
+    color: var(--testo-2);
+  }
+  .nota {
+    margin-top: 1rem;
+    font-size: var(--step--1);
+    color: var(--testo-2);
+  }
+  @media (min-width: 64em) {
+    .cosa {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+
+  .corso {
+    background-color: var(--sfondo-2) !important;
+  }
+  .corso__lista {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+  }
+  .corso__voce {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 1.5rem;
+    background-color: var(--sfondo);
+    border-top: 3px solid var(--accento);
+  }
+  .corso__voce :global(.corso__icona) {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--accento-testo);
+  }
+  .corso__voce h3 {
+    font-size: 1.75rem;
+  }
+  .corso__voce p {
+    color: var(--testo-2);
+  }
+  @media (min-width: 48em) {
+    .corso__lista {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 64em) {
+    .corso__lista {
+      grid-template-columns: 1.3fr 1fr 1fr 1.3fr;
+    }
+  }
+
+  .perchi__lista {
+    display: grid;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    counter-reset: perchi;
+  }
+  .perchi__voce {
+    display: grid;
+    gap: 0.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--linea-forte);
+  }
+  .perchi__voce h3 {
+    font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  }
+  .perchi__voce p {
+    max-width: 34ch;
+    color: var(--testo-2);
+  }
+  @media (min-width: 64em) {
+    .perchi__lista {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3rem;
+    }
+  }
+  .faq-hyrox {
+    max-width: 56rem;
+  }
+</style>

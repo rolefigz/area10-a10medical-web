@@ -1,0 +1,224 @@
+---
+// Visite medico-sportive agonistiche con il Dott. Giancarlo Sportelli.
+// TODO: far confermare al Dott. Sportelli l'elenco "cosa portare", i tempi e se si effettuano
+// anche visite non agonistiche. Costi non pubblicati: si rimanda al telefono.
+import Base from '../../layouts/Base.astro';
+import TestataPagina from '../../components/TestataPagina.astro';
+import Domande from '../../components/Domande.astro';
+import Foto from '../../components/Foto.astro';
+import Icona from '../../components/Icona.astro';
+import BandaCta from '../../components/BandaCta.astro';
+import { centro } from '../../lib/dati.js';
+import { faq } from '../../lib/jsonld.js';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'A10 Medical', url: '/medical/' },
+  { nome: 'Visite medico-sportive', url: '/medical/visite-sportive/' },
+];
+const medico = centro.medical.medicoVisiteSportive;
+const tel = centro.medical.telefonoLeggibile;
+
+const passi = [
+  { titolo: 'Prenota', testo: `Chiama il ${tel} e scegli giorno e ora della visita.` },
+  { titolo: 'Prepara i documenti', testo: 'Porta con te quanto indicato qui sotto, in particolare la richiesta della società sportiva.' },
+  { titolo: 'La visita', testo: `Il ${medico} esegue in struttura i controlli previsti per il tuo sport.` },
+  { titolo: 'Il certificato', testo: "Se l'esito è positivo ricevi il certificato di idoneità da consegnare alla tua società." },
+];
+
+const daPortare = [
+  "Documento d'identità e tessera sanitaria",
+  'Richiesta di visita della società sportiva',
+  'Occhiali o lenti a contatto, se li usi',
+  'Eventuali esami o referti recenti',
+];
+
+const domande = [
+  {
+    domanda: "Che differenza c'è tra visita agonistica e non agonistica?",
+    risposta:
+      "La visita agonistica serve a chi partecipa a gare e campionati ufficiali ed è richiesta dalla società sportiva. Per la visita non agonistica chiamaci: ti diciamo come procedere.",
+  },
+  {
+    domanda: 'Quanto costa la visita?',
+    risposta: `Per costi e disponibilità chiama A10 Medical al ${tel}.`,
+  },
+  {
+    domanda: 'Ogni quanto va rinnovato il certificato?',
+    risposta:
+      'Dipende dallo sport: nella maggior parte dei casi il certificato agonistico vale un anno. In visita ti indichiamo la scadenza.',
+  },
+  {
+    domanda: 'Posso fare la visita anche se mi alleno in Area10?',
+    risposta: 'Certo: A10 Medical è nella stessa struttura di Area10, in via Formaleoni 8 a Podenzano.',
+  },
+];
+---
+
+<Base
+  titolo="Visite medico-sportive agonistiche a Podenzano (PC) | A10 Medical"
+  descrizione={`Visite medico-sportive per l'idoneità agonistica in struttura con il ${medico}. Prenota al ${tel}. A10 Medical, via Formaleoni 8, Podenzano, vicino a Piacenza.`}
+  area="medical"
+  immagine="og/visite.png"
+  briciole={briciole}
+  jsonld={[faq(domande)]}
+>
+  <TestataPagina
+    area="medical"
+    briciole={briciole}
+    occhiello="Visita medica direttamente in struttura"
+    titolo="Visite medico-sportive a Podenzano"
+    lead={`La visita per l'idoneità sportiva agonistica, da noi in via Formaleoni 8, con il ${medico}.`}
+  >
+    <Fragment slot="azioni">
+      <a class="btn" href={`tel:${centro.medical.telefono}`}>
+        <Icona nome="phone" />
+        Prenota la visita: {tel}
+      </a>
+    </Fragment>
+    <Foto slot="lato" id="medical/visita-sportiva" rapporto="4/5" priorita sizes="(min-width: 64em) 40vw, 100vw" />
+  </TestataPagina>
+
+  <section class="sezione" aria-labelledby="come-titolo">
+    <div class="contenitore">
+      <h2 id="come-titolo" class="titolo-sezione">Come funziona</h2>
+      <ol class="passi" role="list">
+        {
+          passi.map((p, i) => (
+            <li class="passo-v">
+              <span class="passo-v__numero" aria-hidden="true">
+                {i + 1}
+              </span>
+              <h3>{p.titolo}</h3>
+              <p>{p.testo}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="sezione portare" data-area="medical" aria-labelledby="portare-titolo">
+    <div class="contenitore portare__griglia">
+      <div>
+        <h2 id="portare-titolo" class="titolo-sezione">Cosa portare</h2>
+        <p class="portare__nota">Per gli sportivi minorenni serve la presenza di un genitore o di chi ne fa le veci.</p>
+      </div>
+      <ul class="portare__lista" role="list">
+        {
+          daPortare.map((d) => (
+            <li>
+              <Icona nome="circle-check" />
+              <span>{d}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="sezione" aria-label="Domande frequenti sulle visite sportive">
+    <div class="contenitore faq-visite">
+      <Domande domande={domande} />
+    </div>
+  </section>
+
+  <BandaCta
+    area="medical"
+    titolo="Prenota ora la tua visita sportiva."
+    testo={`Chiama il ${tel}: fissiamo l'appuntamento con il ${medico}.`}
+  />
+</Base>
+
+<style>
+  .titolo-sezione {
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    font-size: var(--step-5);
+    letter-spacing: -0.04em;
+  }
+  .passi {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+  }
+  .passo-v {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: var(--sfondo-2);
+  }
+  .passo-v__numero {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--cta-sfondo);
+    color: var(--cta-testo);
+    font-weight: 800;
+    font-size: 1.15rem;
+  }
+  .passo-v h3 {
+    font-size: var(--step-2);
+  }
+  .passo-v p {
+    color: var(--testo-2);
+  }
+  @media (min-width: 48em) {
+    .passi {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .passi {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .portare {
+    background-color: var(--sfondo-2) !important;
+  }
+  .portare__griglia {
+    display: grid;
+    gap: 2rem;
+  }
+  .portare__nota {
+    max-width: 30rem;
+    color: var(--testo-2);
+  }
+  .portare__lista {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+  .portare__lista li {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    padding: 1.1rem 1.25rem;
+    border-radius: 0.9rem;
+    background-color: var(--sfondo);
+    font-weight: 650;
+  }
+  .portare__lista :global(svg) {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex: none;
+    color: var(--accento-testo);
+  }
+  @media (min-width: 64em) {
+    .portare__griglia {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+  .faq-visite {
+    max-width: 56rem;
+  }
+</style>

@@ -1,0 +1,345 @@
+---
+// Pagina Area10 Fitness Club: servizi, attività, orari.
+import Base from '../../layouts/Base.astro';
+import TestataPagina from '../../components/TestataPagina.astro';
+import StatoApertura from '../../components/StatoApertura.astro';
+import OrariArea10 from '../../components/OrariArea10.astro';
+import Foto from '../../components/Foto.astro';
+import Icona from '../../components/Icona.astro';
+import BandaCta from '../../components/BandaCta.astro';
+import { url } from '../../lib/url.js';
+import { centro, servizi } from '../../lib/dati.js';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'Area10 Fitness Club', url: '/area10/' },
+];
+const s = Object.fromEntries(servizi.area10.map((x) => [x.id, x]));
+
+// Attività ricavate da post e storie in evidenza di Instagram (TODO: confermare dettagli con il cliente)
+const altro = [
+  {
+    icona: 'ball-tennis',
+    titolo: 'Preparazione atletica',
+    testo: 'Programmi per lo sport che pratichi: tennis, pallavolo, calcio.',
+  },
+  {
+    icona: 'bolt',
+    titolo: 'Elettrostimolazione',
+    testo: 'Sedute con elettrostimolatori Compex, per forza e recupero.',
+  },
+  {
+    icona: 'brand-instagram',
+    titolo: 'Daily Workout',
+    testo: 'Su Instagram spieghiamo esercizi, serie, ripetizioni e recuperi.',
+    href: centro.area10.instagram,
+  },
+  {
+    icona: 'shirt',
+    titolo: 'Merchandising',
+    testo: 'Abbigliamento e accessori con il marchio Area10.',
+  },
+];
+---
+
+<Base
+  titolo="Area10 Fitness Club | Palestra e personal trainer a Podenzano (PC)"
+  descrizione="Sala pesi e cardio, studio di personal training e personal pilates, corsi fitness, recupero post operatorio e HYROX Training Club in via Formaleoni 6, Podenzano."
+  area="fitness"
+  immagine="og/area10.png"
+  briciole={briciole}
+>
+  <TestataPagina
+    area="fitness"
+    briciole={briciole}
+    gigante="Area10"
+    titolo="Palestra, personal training e corsi a Podenzano"
+    lead="Sala pesi e cardio, studio personal, pilates, corsi per tutte le età e il nostro HYROX Training Club. In via Formaleoni 6."
+  >
+    <Fragment slot="azioni">
+      <a class="btn" href={url('/contatti/#prova')}>Prenota la prova gratuita</a>
+      <a class="btn btn--secondario" href={url('/area10/corsi/')}>Vedi i corsi</a>
+    </Fragment>
+    <StatoApertura
+      settimana={centro.area10.orari.sala.settimana}
+      chiusure={centro.area10.chiusure}
+      etichetta="Sala pesi e cardio"
+    />
+    <Foto slot="lato" id="area10/hero" rapporto="4/5" priorita sizes="(min-width: 64em) 40vw, 100vw" />
+  </TestataPagina>
+
+  <section class="sezione" aria-labelledby="servizi-titolo">
+    <div class="contenitore">
+      <h2 id="servizi-titolo" class="titolo-sezione">Cosa puoi fare in Area10</h2>
+      <div class="bento">
+        <article class="cella cella--larga cella--foto" id="personal-training">
+          <Foto id="area10/personal-training" rapporto="4/5" sizes="(min-width: 64em) 26vw, 100vw" />
+          <div class="cella__testo">
+            <Icona nome={s['personal-training'].icona} class="cella__icona" />
+            <h3>{s['personal-training'].nome}</h3>
+            <p>{s['personal-training'].descrizione}</p>
+          </div>
+        </article>
+
+        <article class="cella" id="personal-pilates">
+          <Foto id="area10/pilates" rapporto="3/2" sizes="(min-width: 64em) 26vw, 100vw" />
+          <div class="cella__testo">
+            <h3>{s['personal-pilates'].nome}</h3>
+            <p>{s['personal-pilates'].descrizione}</p>
+          </div>
+        </article>
+
+        <article class="cella" id="sala-pesi-cardio">
+          <div class="cella__testo">
+            <Icona nome={s['sala-pesi-cardio'].icona} class="cella__icona" />
+            <h3>{s['sala-pesi-cardio'].nome}</h3>
+            <p>{s['sala-pesi-cardio'].descrizione}</p>
+          </div>
+          <a class="cella__link" href="#orari">Orari della sala</a>
+        </article>
+
+        <article class="cella cella--larga cella--medical" id="recupero-post-operatorio" data-area="medical">
+          <div class="cella__testo">
+            <Icona nome={s['recupero-post-operatorio'].icona} class="cella__icona" />
+            <h3 class="titolo-fitness">{s['recupero-post-operatorio'].nome}</h3>
+            <p>{s['recupero-post-operatorio'].descrizione}</p>
+          </div>
+          <a class="cella__link" href={url('/medical/#fisioterapia')}>La fisioterapia di A10 Medical</a>
+        </article>
+
+        <article class="cella" id="corsi">
+          <div class="cella__testo">
+            <Icona nome={s.corsi.icona} class="cella__icona" />
+            <h3>{s.corsi.nome}</h3>
+            <p>{s.corsi.descrizione}</p>
+          </div>
+          <a class="cella__link" href={url('/area10/corsi/')}>Calendario 2026/27</a>
+        </article>
+
+        <article class="cella cella--larga cella--ink texture-topo" id="hyrox" data-surface="ink">
+          <div class="cella__testo">
+            <Icona nome={s.hyrox.icona} class="cella__icona" />
+            <h3>{s.hyrox.nome}</h3>
+            <p>{s.hyrox.descrizione}</p>
+          </div>
+          <a class="cella__link" href={url('/area10/hyrox/')}>Il corso HYROX</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sezione altro" aria-labelledby="altro-titolo">
+    <div class="contenitore">
+      <h2 id="altro-titolo" class="titolo-sezione">E poi</h2>
+      <ul class="altro__lista" role="list">
+        {
+          altro.map((a) => (
+            <li class="altro__voce">
+              <Icona nome={a.icona} class="altro__icona" />
+              <h3 class="altro__titolo">
+                {a.href ? (
+                  <a href={a.href} rel="noopener" target="_blank">
+                    {a.titolo}
+                    <span class="visually-hidden"> (Instagram, nuova scheda)</span>
+                  </a>
+                ) : (
+                  a.titolo
+                )}
+              </h3>
+              <p>{a.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="sezione orari-pagina" id="orari" aria-labelledby="orari-titolo" data-area="fitness">
+    <div class="contenitore orari-pagina__griglia">
+      <div>
+        <h2 id="orari-titolo" class="titolo-sezione">Orari</h2>
+        <p class="orari-pagina__testo">
+          La sala è aperta dal lunedì al sabato; il personal training si prenota anche dalle 8:00. Domenica chiuso.
+        </p>
+        <p class="orari-pagina__indirizzo">
+          <Icona nome="map-pin" />
+          <span>{centro.area10.indirizzo.via}, {centro.area10.indirizzo.citta}</span>
+        </p>
+      </div>
+      <OrariArea10 conStato={false} />
+    </div>
+  </section>
+
+  <BandaCta
+    area="fitness"
+    titolo="La prima volta è gratis."
+    testo="Vieni a provare la palestra o un corso: ti mostriamo la sala e capiamo insieme da dove partire."
+  />
+</Base>
+
+<style>
+  .titolo-sezione {
+    margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+    font-size: var(--step-5);
+  }
+
+  /* Griglia irregolare: 6 servizi in 3 righe (2+1, 1+2, 1+2), nessuna cella vuota */
+  .bento {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .cella {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background-color: var(--sfondo-2);
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+  .cella--foto {
+    padding: 0;
+    display: grid;
+  }
+  .cella--foto .cella__testo {
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+  .cella :global(.foto) {
+    border-radius: 0;
+  }
+  .cella:not(.cella--foto) :global(.foto) {
+    margin: calc(-1 * clamp(1.25rem, 3vw, 2rem));
+    margin-bottom: 0;
+  }
+  .cella__testo {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+  }
+  .cella__testo h3 {
+    font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.4rem);
+  }
+  .cella__testo p {
+    max-width: 46ch;
+    color: var(--testo-2);
+  }
+  .cella :global(.cella__icona) {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: var(--accento-testo);
+  }
+  .cella__link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-weight: 700;
+    text-decoration-color: var(--accento);
+    text-decoration-thickness: 2px;
+  }
+  .cella--medical {
+    border-radius: 0;
+    background-color: var(--sfondo-2);
+  }
+  .cella--ink {
+    --topo-opacita: 0.16;
+    background-color: var(--sfondo);
+  }
+
+  @media (min-width: 48em) {
+    .bento {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .cella--larga {
+      grid-column: span 2;
+    }
+    .cella--foto {
+      grid-template-columns: 1fr 1fr;
+    }
+    .cella--foto :global(.foto) {
+      height: 100%;
+      aspect-ratio: auto !important;
+      min-height: 22rem;
+    }
+  }
+
+  /* Altre attività: lista orizzontale con filetti verticali, non schede */
+  .altro {
+    padding-top: 0;
+  }
+  .altro__lista {
+    display: grid;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+  }
+  .altro__voce {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+  }
+  .altro__voce :global(.altro__icona) {
+    width: 2rem;
+    height: 2rem;
+    color: var(--accento-testo);
+  }
+  .altro__titolo {
+    font-size: 1.6rem;
+  }
+  .altro__titolo a {
+    text-decoration-color: var(--accento);
+    text-decoration-thickness: 2px;
+  }
+  .altro__voce p {
+    color: var(--testo-2);
+  }
+  @media (min-width: 48em) {
+    .altro__lista {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 64em) {
+    .altro__lista {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .altro__voce {
+      padding: 0 1.75rem;
+      border-left: 1px solid var(--linea-forte);
+    }
+    .altro__voce:first-child {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+
+  .orari-pagina {
+    background-color: var(--sfondo-2) !important;
+  }
+  .orari-pagina__griglia {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .orari-pagina__testo {
+    max-width: 30rem;
+    color: var(--testo-2);
+  }
+  .orari-pagina__indirizzo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    font-weight: 650;
+  }
+  .orari-pagina__indirizzo :global(svg) {
+    color: var(--accento-testo);
+  }
+  @media (min-width: 64em) {
+    .orari-pagina__griglia {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+</style>

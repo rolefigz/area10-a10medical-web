@@ -1,0 +1,101 @@
+---
+// Contatti: recapiti delle due aree, orari, mappa e modulo per la prova gratuita.
+import Base from '../layouts/Base.astro';
+import Briciole from '../components/Briciole.astro';
+import ContattiBlocco from '../components/ContattiBlocco.astro';
+import OrariArea10 from '../components/OrariArea10.astro';
+import Icona from '../components/Icona.astro';
+import { centro } from '../lib/dati.js';
+
+const briciole = [
+  { nome: 'Home', url: '/' },
+  { nome: 'Contatti', url: '/contatti/' },
+];
+---
+
+<Base
+  titolo="Contatti e orari | Area10 Fitness Club e A10 Medical, Podenzano (PC)"
+  descrizione="Telefoni, email, orari e mappa di Area10 Fitness Club (via Formaleoni 6) e A10 Medical (via Formaleoni 8) a Podenzano. Prenota la prova gratuita in palestra."
+  immagine="og/contatti.png"
+  briciole={briciole}
+>
+  <div class="contenitore testa-contatti">
+    <Briciole voci={briciole} />
+  </div>
+  <ContattiBlocco titolo="Contatti e orari" livello="h1" />
+
+  <section class="sezione orari-contatti" aria-labelledby="orari-c-titolo">
+    <div class="contenitore orari-contatti__griglia">
+      <div class="orari-contatti__area10" data-tinta="fitness">
+        <h2 id="orari-c-titolo" class="orari-contatti__titolo titolo-fitness">Orari di Area10</h2>
+        <OrariArea10 />
+      </div>
+      <div class="orari-contatti__medical" data-tinta="medical">
+        <h2 class="orari-contatti__titolo titolo-medical">Orari di A10 Medical</h2>
+        <p class="orari-contatti__testo">
+          Per visite e trattamenti chiama o scrivi: ti indichiamo giorni e orari degli specialisti.
+        </p>
+        <Fragment set:html="<!-- TODO: orari di segreteria di A10 Medical da confermare con il cliente -->" />
+        <ul class="orari-contatti__recapiti" role="list">
+          <li>
+            <a href={`tel:${centro.medical.telefono}`}>
+              <Icona nome="phone" />
+              <span>{centro.medical.telefonoLeggibile}</span>
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${centro.medical.email}`}>
+              <Icona nome="mail" />
+              <span>{centro.medical.email}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .testa-contatti {
+    padding-top: clamp(1.25rem, 3vw, 2rem);
+    margin-bottom: calc(-1 * var(--sezione) + 1.5rem);
+  }
+  .orari-contatti {
+    background-color: var(--sfondo-2);
+  }
+  .orari-contatti__griglia {
+    display: grid;
+    gap: 3rem;
+  }
+  .orari-contatti__titolo {
+    margin-bottom: 1.5rem;
+    font-size: var(--step-4);
+  }
+  .orari-contatti__testo {
+    max-width: 30rem;
+    color: var(--testo-2);
+  }
+  .orari-contatti__recapiti {
+    display: grid;
+    gap: 0.25rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+  }
+  .orari-contatti__recapiti a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.75rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .orari-contatti__recapiti :global(svg) {
+    color: var(--tinta-testo);
+  }
+  @media (min-width: 64em) {
+    .orari-contatti__griglia {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>
