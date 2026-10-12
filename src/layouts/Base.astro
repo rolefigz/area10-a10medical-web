@@ -26,6 +26,8 @@ interface Props {
   jsonld?: object[];
   /** Tipo Open Graph */
   tipoOg?: 'website' | 'article';
+  /** pagina di errore (404): niente canonical, sempre noindex */
+  errore?: boolean;
 }
 
 const {
@@ -36,6 +38,7 @@ const {
   briciole,
   jsonld = [],
   tipoOg = 'website',
+  errore = false,
 } = Astro.props;
 
 const site = Astro.site!;
@@ -56,9 +59,9 @@ const coloreTema = area === 'medical' ? '#fafdfd' : area === 'fitness' ? '#ecebe
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titolo}</title>
     <meta name="description" content={descrizione} />
-    <link rel="canonical" href={canonico} />
+    {!errore && <link rel="canonical" href={canonico} />}
     {/* Sito dimostrativo: niente indicizzazione finché il cliente non approva (PUBLIC_DEMO=false) */}
-    {PUBLIC_DEMO && <meta name="robots" content="noindex, nofollow" />}
+    {(PUBLIC_DEMO || errore) && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content={coloreTema} media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0f0e0c" media="(prefers-color-scheme: dark)" />
     <meta name="color-scheme" content="light dark" />
@@ -71,7 +74,7 @@ const coloreTema = area === 'medical' ? '#fafdfd' : area === 'fitness' ? '#ecebe
     <meta property="og:site_name" content="Area10 Fitness Club e A10 Medical" />
     <meta property="og:title" content={titolo} />
     <meta property="og:description" content={descrizione} />
-    <meta property="og:url" content={canonico} />
+    {!errore && <meta property="og:url" content={canonico} />}
     <meta property="og:image" content={immagineAssoluta} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
